@@ -51,6 +51,11 @@
         public const int CourseDescriptionMaxLength = 200;
 
         /// <summary>
+        /// Student Personal Id Minimum and Maximum Length
+        /// </summary>
+        public const int StudentPersonalIdMinMaxLength = 10;
+
+        /// <summary>
         /// Student Name Minimum Length
         /// </summary>
         public const int StudentNameMinLength = 5;
