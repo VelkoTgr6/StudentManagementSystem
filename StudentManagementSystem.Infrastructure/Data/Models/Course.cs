@@ -38,6 +38,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [ForeignKey(nameof(PublisherId))]
         public IdentityUser Publisher { get; set; } = null!;
 
+        public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
 
     }
 }

@@ -34,6 +34,11 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public string LastName { get; set; }= null!;
 
         [Required]
+        [MaxLength(StudentEmailMaxValue)]
+        [Comment("Student Email Address")]
+        public string Email { get; set; } = null!;
+
+        [Required]
         [Comment("Date of birth of Student")]
         public DateTime DateOfBirth { get; set; }
 
@@ -44,13 +49,13 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
 
         [Required]
         [Comment("User Identifier")]
-        public string UserId { get; set; } = string.Empty;
+        public string UserId { get; set; } = null!;
 
         [ForeignKey(nameof(UserId))]
         public IdentityUser User { get; set; } = null!;
 
         [Comment("Courses that student enrolled")]
-        public ICollection<Course> CoursesEnrolled { get; set; } = new List<Course>();
+        public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
 
         [Comment("Student Performance")]
         public double Performance {  get; set; }

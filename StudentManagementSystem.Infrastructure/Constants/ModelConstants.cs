@@ -66,6 +66,16 @@
         public const int StudentNameMaxLength = 100;
 
         /// <summary>
+        /// Student Email Minimum Length
+        /// </summary>
+        public const int StudentEmailMinValue = 10;
+
+        /// <summary>
+        /// Student Email Maximum Length
+        /// </summary>
+        public const int StudentEmailMaxValue = 50;
+
+        /// <summary>
         /// Student Contact Details Minimum Length
         /// </summary>
         public const int StudentContactMinLength = 2;
