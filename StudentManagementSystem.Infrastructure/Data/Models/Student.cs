@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static StudentManageApp.Infrastructure.Constants.ModelConstants;
 
 
@@ -39,6 +41,13 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [MaxLength(StudentContactMaxLength)]
         [Comment("Student Contact Details")]
         public string ContactDetails {  get; set; }= null!;
+
+        [Required]
+        [Comment("User Identifier")]
+        public string UserId { get; set; } = string.Empty;
+
+        [ForeignKey(nameof(UserId))]
+        public IdentityUser User { get; set; } = null!;
 
         [Comment("Courses that student enrolled")]
         public ICollection<Course> CoursesEnrolled { get; set; } = new List<Course>();
