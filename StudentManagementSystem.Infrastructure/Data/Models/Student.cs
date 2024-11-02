@@ -12,6 +12,11 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(StudentPersonalIdMinMaxLength)]
+        [Comment("Student Personal Identification Number")]
+        public string PersonalId { get; set; } = null!;
+
+        [Required]
         [MaxLength(StudentNameMaxLength)]
         [Comment("Student First Name")]
         public string FirstName { get; set; } = null!;
