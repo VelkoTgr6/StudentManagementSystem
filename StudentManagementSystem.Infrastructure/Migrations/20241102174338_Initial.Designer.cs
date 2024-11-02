@@ -12,8 +12,8 @@ using StudentManagementSystem.Infrastructure;
 namespace StudentManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(StudentManagementDbContext))]
-    [Migration("20241102143907_InitialAndSeed")]
-    partial class InitialAndSeed
+    [Migration("20241102174338_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -253,9 +253,6 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasComment("Publisher Identification");
 
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TeacherId")
                         .HasColumnType("int")
                         .HasComment("Teacher of the Course");
@@ -263,8 +260,6 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PublisherId");
-
-                    b.HasIndex("StudentId");
 
                     b.HasIndex("TeacherId");
 
@@ -330,6 +325,12 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasComment("Date of birth of Student");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Student Email Address");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -358,33 +359,16 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(10)")
                         .HasComment("Student Personal Identification Number");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasComment("User Identifier");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Students");
+                    b.HasIndex("UserId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ContactDetails = "GSM:0881237865",
-                            DateOfBirth = new DateTime(2024, 11, 2, 16, 39, 5, 931, DateTimeKind.Local).AddTicks(9222),
-                            FirstName = "Gosho",
-                            LastName = "Grigorov",
-                            MiddleName = "Petrov",
-                            Performance = 0.0,
-                            PersonalId = "0230456078"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ContactDetails = "GSM:0881237865",
-                            DateOfBirth = new DateTime(2024, 11, 2, 16, 39, 5, 931, DateTimeKind.Local).AddTicks(9270),
-                            FirstName = "Pesho",
-                            LastName = "Ivanov",
-                            MiddleName = "Petrov",
-                            Performance = 0.0,
-                            PersonalId = "0140656070"
-                        });
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.StudentCourse", b =>
@@ -522,10 +506,6 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Student", null)
-                        .WithMany("CoursesEnrolled")
-                        .HasForeignKey("StudentId");
-
                     b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Teacher", "Teacher")
                         .WithMany("Courses")
                         .HasForeignKey("TeacherId")
@@ -548,26 +528,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Student", "Student")
                         .WithMany("Grades")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.StudentCourse", b =>
-                {
-                    b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -577,9 +538,44 @@ namespace StudentManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Student", b =>
                 {
-                    b.Navigation("CoursesEnrolled");
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.StudentCourse", b =>
+                {
+                    b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Course", "Course")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Student", "Student")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Course", b =>
+                {
+                    b.Navigation("StudentCourses");
+                });
+
+            modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Student", b =>
+                {
                     b.Navigation("Grades");
+
+                    b.Navigation("StudentCourses");
                 });
 
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Teacher", b =>
