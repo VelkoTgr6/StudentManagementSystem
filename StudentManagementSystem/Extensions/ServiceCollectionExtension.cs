@@ -4,6 +4,7 @@ using StudentManagementSystem.Core.Contracts;
 using StudentManagementSystem.Core.Services;
 using StudentManagementSystem.Infrastructure;
 using StudentManagementSystem.Infrastructure.Data.Common;
+using StudentManagementSystem.Services;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -34,7 +35,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services,IConfiguration config)
         {
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddDefaultIdentity<IdentityUser>(options => 
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            })
                 .AddEntityFrameworkStores<StudentManagementDbContext>();
 
             return services;
