@@ -1,9 +1,5 @@
 using Microsoft.Extensions.Options;
-using StudentManagementSystem.Core.Services;
 using StudentManagementSystem.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using StudentManagementSystem.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
