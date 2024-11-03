@@ -1,0 +1,25 @@
+﻿@model IEnumerable<StudentFormViewModel>
+
+<h2>User Management</h2>
+<a asp-action="Create">Add New User</a>
+
+<table>
+    <tr>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.Email</td>
+            @* <td>@user.Name</td> *@
+            @* <td>@user.Role</td> *@
+            <td>
+                <a asp-action="Edit" asp-route-id="@user.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@user.Id">Delete</a>
+            </td>
+        </tr>
+    }
+</table>

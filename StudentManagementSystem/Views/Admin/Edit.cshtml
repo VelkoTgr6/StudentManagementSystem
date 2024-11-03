@@ -1,0 +1,22 @@
+﻿@model StudentFormViewModel
+
+<h2>Edit User</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <label>Email:</label>
+    <input asp-for="Email" />
+    <label>First Name:</label>
+    <input asp-for="FirstName" />
+    <label>Middle Name:</label>
+    <input asp-for="MiddleName" />
+    <label>Last Name:</label>
+    <input asp-for="LastName" />
+    <label>Personal Identification Number:</label>
+    <input asp-for="PersonalId" />
+    <label>Date of Birth:</label>
+    <input asp-for="DateOfBirth" />
+    <label>Contact Details:</label>
+    <input asp-for="ContactDetails" />
+    <button type="submit">Update</button>
+</form>
