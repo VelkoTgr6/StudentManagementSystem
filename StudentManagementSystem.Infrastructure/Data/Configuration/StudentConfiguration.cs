@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StudentManagementSystem.Infrastructure.Data.Models;
-using System.Runtime.Intrinsics.X86;
 
 namespace StudentManagementSystem.Infrastructure.Data.Configuration
 {

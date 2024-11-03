@@ -15,4 +15,9 @@
     <Folder Include="Models\Teacher\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.8.0" />
+    <PackageReference Include="MimeKit" Version="4.8.0" />
+  </ItemGroup>
+
 </Project>

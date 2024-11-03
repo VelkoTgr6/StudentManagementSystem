@@ -84,5 +84,15 @@
         /// Student Contact Details Maximum Length
         /// </summary>
         public const int StudentContactMaxLength = 30;
+
+        /// <summary>
+        /// Date Format 
+        /// </summary>
+        public const string DateFormat = "dd.MM.yyyy";
+
+        /// <summary>
+        /// Regular Expression for Date Format
+        /// </summary>
+        public const string RegexDateFormat = "^(0[1-9]|[12][0-9]|3[01])\\.(0[1-9]|1[0-2])\\.(\\d{4})$";
     }
 }
