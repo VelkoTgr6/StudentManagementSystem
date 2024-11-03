@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using StudentManagementSystem.Attributes;
+using StudentManagementSystem.Infrastructure.Data.Models;
 using StudentManagementSystem.Services;
 
 namespace StudentManagementSystem.Areas.Identity.Pages.Account
@@ -98,6 +100,13 @@ namespace StudentManagementSystem.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [StringLength(10,MinimumLength = 10,ErrorMessage = "The {0} field must be {2} characters long.")]
+            [RegularExpression(@"^\d{10}$", ErrorMessage = "The field {0} must contain only digits.")]
+            [NoMoreThanThreeOccurrences(ErrorMessage = "No digit may appear more than 3 times.")]
+            [Display(Name = "Personal Identification Number")]
+            public string PersonalId { get; set; }
         }
 
 
@@ -117,7 +126,11 @@ namespace StudentManagementSystem.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                user.PersonalId = Input.PersonalId;
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                
+                
 
                 if (result.Succeeded)
                 {
@@ -157,11 +170,11 @@ namespace StudentManagementSystem.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private ApplicationUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {
