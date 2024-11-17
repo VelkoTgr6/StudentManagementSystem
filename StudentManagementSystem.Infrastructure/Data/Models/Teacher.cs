@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using static StudentManageApp.Infrastructure.Constants.ModelConstants;
+using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
 namespace StudentManagementSystem.Infrastructure.Data.Models 
 { 
@@ -23,6 +23,9 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [MaxLength(TeacherNameMaxLength)]
         [Comment("Teacher Last Name")]
         public string LastName { get; set;} = null!;
+
+        [Comment("Shows if teacher is Deleted")]
+        public bool IsDeleted { get; set; } = false;
 
         [Required]
         [MaxLength(TeacherContactMaxLength)]

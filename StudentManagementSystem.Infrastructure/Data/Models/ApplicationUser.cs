@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using static StudentManageApp.Infrastructure.Constants.ModelConstants;
+using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
 namespace StudentManagementSystem.Infrastructure.Data.Models
 {

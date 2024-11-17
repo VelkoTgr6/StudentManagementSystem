@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static StudentManageApp.Infrastructure.Constants.ModelConstants;
+using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
 
 namespace StudentManagementSystem.Infrastructure.Data.Models
@@ -46,6 +46,9 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [MaxLength(StudentContactMaxLength)]
         [Comment("Student Contact Details")]
         public string ContactDetails {  get; set; }= null!;
+
+        [Comment("Shows if student is Deleted")]
+        public bool IsDeleted { get; set; } = false;
 
         [Required]
         [Comment("User Identifier")]

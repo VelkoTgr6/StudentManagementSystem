@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static StudentManageApp.Infrastructure.Constants.ModelConstants;
+using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
 
 
@@ -23,6 +23,9 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [MaxLength(CourseDescriptionMaxLength)]
         [Comment("Course Description")]
         public string Description { get; set; } = null!;
+
+        [Comment("Shows if course is Deleted")]
+        public bool IsDeleted { get; set; } = false;
 
         [Required]
         [Comment("Teacher of the Course")]

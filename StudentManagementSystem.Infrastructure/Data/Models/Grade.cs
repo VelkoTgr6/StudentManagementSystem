@@ -27,10 +27,10 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public double GradeScore { get; set; }
 
         [Comment("Date when the grade was assigned")]
-        public DateTime GradeAssignedDate { get; set; } = DateTime.Now; // Default to current time
+        public DateTime GradeAssignedDate { get; set; } = DateTime.Now;
 
         [Comment("Description or type of the grade (e.g., Midterm, Final, Homework)")]
         [MaxLength(100)]
-        public string GradeType { get; set; } = "Assignment";  // Optional: for naming grades
+        public string GradeType { get; set; } = "Assignment"; 
     }
 }

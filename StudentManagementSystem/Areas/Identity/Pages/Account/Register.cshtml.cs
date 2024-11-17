@@ -104,7 +104,7 @@ namespace StudentManagementSystem.Areas.Identity.Pages.Account
             [Required]
             [StringLength(10,MinimumLength = 10,ErrorMessage = "The {0} field must be {2} characters long.")]
             [RegularExpression(@"^\d{10}$", ErrorMessage = "The field {0} must contain only digits.")]
-            [NoMoreThanThreeOccurrences(ErrorMessage = "No digit may appear more than 3 times.")]
+            [NoMoreThanThreeOccurrences(ErrorMessage = "Please enter valid Personal Identification Number")]
             [Display(Name = "Personal Identification Number")]
             public string PersonalId { get; set; }
         }
