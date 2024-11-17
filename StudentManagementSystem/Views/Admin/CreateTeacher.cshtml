@@ -1,0 +1,58 @@
+﻿@model TeacherFormViewModel
+
+@{
+    ViewData["Title"] = "Add Teacher";
+}
+
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form method="post">
+            <form>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Titles"></label>
+                        <input asp-for="Titles" class="form-control" placeholder="First Name...">
+                        <span asp-validation-for="Titles" class="small text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" class="form-control" placeholder="First Name...">
+                        <span asp-validation-for="FirstName" class="small text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="LastName"></label>
+                        <input asp-for="LastName" class="form-control" placeholder="Last Name...">
+                        <span asp-validation-for="LastName" class="small text-danger"></span>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" placeholder="Email...">
+                <span asp-validation-for="Email" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactDetails"></label>
+                <textarea asp-for="ContactDetails" rows="4" class="form-control" placeholder="Gsm,Address..."></textarea>
+                <span asp-validation-for="ContactDetails" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseId"></label>
+                <select asp-for="CourseId" class="form-control">
+                    @foreach (var course in Model.Courses)
+                    {
+                        <option value="@course.Id">@course.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="CourseId" class="small text-danger"></span>
+            </div>
+
+            <div class="text-center">
+                <input class="btn btn-primary mt-3" type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</div>

@@ -8,8 +8,24 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
     {
         private Teacher[] initialTeachers = new Teacher[]
         {
-            new Teacher(){Id = 1,Titles="prof. dr. ",FirstName="Stanimir",LastName="Grigorov",ContactDetails="for more info visit ..."},
-            new Teacher(){Id = 2,Titles="doc. ",FirstName="Ivan",LastName="Draganov",ContactDetails="gsm:12345678655" }
+            new Teacher(){Id = 1,
+                Titles="prof. dr. ",
+                FirstName="Stanimir",
+                LastName="Grigorov",
+                ContactDetails="for more info visit ...",
+                Email = "stan12@gmail.com",
+                CourseId = 1,
+                UserId = "1"
+            },
+            new Teacher(){Id = 2,
+                Titles="doc. ",
+                FirstName="Ivan",
+                LastName="Draganov",
+                ContactDetails="gsm:12345678655",
+                Email = "ivdra23@gmailcom",
+                CourseId = 2,
+                UserId = "2"
+            }
         };
 
         public void Configure(EntityTypeBuilder<Teacher> builder)

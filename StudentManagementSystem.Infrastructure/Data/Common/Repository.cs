@@ -63,7 +63,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
             return await DbSet<T>().FindAsync(id);
         }
 
-        public async Task<bool> StudentEmailExistAsync(string email)
+        public async Task<bool> EmailExistAsync(string email)
         {
             return await DbSet<ApplicationUser>().Where(u => u.Email == email).AnyAsync();
         }

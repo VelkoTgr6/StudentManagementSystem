@@ -85,13 +85,17 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<int> CreateTeacherAsync(TeacherFormViewModel model)
         {
+            var userId = await repository.GetIdByEmailAsync(model.Email);
+
             var entity = new Teacher
             {
-                Id = model.Id,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 ContactDetails = model.ContactDetails,
-                Titles = model.Titles
+                Titles = model.Titles,
+                Email = model.Email,
+                UserId = userId,
+                CourseId = model.CourseId
             };
 
             await repository.AddAsync(entity);
@@ -186,9 +190,20 @@ namespace StudentManagementSystem.Core.Services
             return await repository.GetIdByEmailAsync(email);
         }
 
-        public Task<bool> StudentEmailExistAsync(string email)
+        public async Task<bool> EmailExistAsync(string email)
         {
-            throw new NotImplementedException();
+            return await repository.EmailExistAsync(email);
+        }
+
+        public async Task<IEnumerable<CourseModel>> AllCoursesAsync()
+        {
+            return await repository.All<Course>()
+                .Select(c => new CourseModel
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToListAsync();
         }
     }
 }

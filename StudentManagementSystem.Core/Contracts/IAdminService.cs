@@ -16,9 +16,10 @@ namespace StudentManagementSystem.Core.Contracts
         Task DeleteAsync<T>();
         Task<IEnumerable<T>> GetAllAsync<T>() where T : class;
         Task<T> GetByIdAsync<T>() where T : class;
-        Task<bool> StudentEmailExistAsync(string email);
+        Task<bool> EmailExistAsync(string email);
         Task<IEnumerable<ClassServiceModel>> AllClassesAsync();
         Task<IEnumerable<TeacherServiceModel>> AllTeachersAsync();
         Task<bool> CourseExistAsync(int id);
+        Task<IEnumerable<CourseModel>> AllCoursesAsync();
     }
 }

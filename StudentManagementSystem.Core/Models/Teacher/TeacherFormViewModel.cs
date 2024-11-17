@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StudentManagementSystem.Core.Models.Course;
+using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
@@ -28,7 +29,6 @@ namespace StudentManagementSystem.Core.Models.Teacher
         [StringLength(TeacherNameMaxLength,
             MinimumLength = TeacherContactMinLength,
             ErrorMessage = InvalidLengthMessage)]
-        [MaxLength(TeacherNameMaxLength)]
         public string LastName { get; set; } = null!;
 
         /// <summary>
@@ -38,8 +38,22 @@ namespace StudentManagementSystem.Core.Models.Teacher
         [StringLength(TeacherContactMaxLength,
             MinimumLength = TeacherContactMinLength,
             ErrorMessage = InvalidLengthMessage)]
-        [MaxLength(TeacherContactMaxLength)]
         public string ContactDetails { get; set; } = null!;
-        public int Id { get; internal set; }
+
+        /// <summary>
+        /// Teacher email
+        /// </summary>
+        [Required(ErrorMessage = RequiredMessage)]
+        [StringLength(StudentEmailMaxValue,
+            MinimumLength = StudentEmailMinValue,
+            ErrorMessage = InvalidLengthMessage)]
+        public string Email { get; set; } = null!;
+
+        /// <summary>
+        /// Teacher course id
+        /// </summary>
+        [Required(ErrorMessage = RequiredMessage)]
+        public int CourseId { get; set; }
+        public IEnumerable<CourseModel> Courses { get; set; } = new List<CourseModel>();
     }
 }
