@@ -1,4 +1,4 @@
-﻿namespace StudentManageApp.Infrastructure.Constants
+﻿namespace StudentManagementSystem.Infrastructure.Constants
 {
     /// <summary>
     /// Constant used for model Validation

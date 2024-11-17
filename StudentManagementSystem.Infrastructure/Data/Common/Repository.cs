@@ -1,5 +1,5 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using StudentManagementSystem.Infrastructure.Data.Models;
 
 namespace StudentManagementSystem.Infrastructure.Data.Common
 {
@@ -35,6 +35,32 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
         public async Task<int> SaveChangesAsync()
         {
             return await context.SaveChangesAsync();
+        }
+
+        public void DeleteStudent(Student entity)
+        {
+            DbSet<Student>().Where(s => s.Id == entity.Id)
+                .Select(s=>s.IsDeleted==true)
+                .FirstOrDefault();
+        }
+
+        public void DeleteTeacher(Teacher entity)
+        {
+            DbSet<Teacher>().Where(t => t.Id == entity.Id)
+                .Select(t => t.IsDeleted == true)
+                .FirstOrDefault();
+        }
+
+        public void DeleteCourse(Course entity)
+        {
+            DbSet<Course>().Where(c => c.Id == entity.Id)
+                .Select(c => c.IsDeleted == true)
+                .FirstOrDefault();
+        }
+
+        public async Task<T?> GetByIdAsync<T>(object id) where T : class
+        {
+            return await DbSet<T>().FindAsync(id);
         }
     }
 }

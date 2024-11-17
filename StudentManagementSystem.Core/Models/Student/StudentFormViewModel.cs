@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using static StudentManageApp.Infrastructure.Constants.ModelConstants;
+using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
 
 namespace StudentManagementSystem.Core.Models.Student
