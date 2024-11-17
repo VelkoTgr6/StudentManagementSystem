@@ -1,38 +1,52 @@
 ﻿@model StudentFormViewModel
 
-<h2>Add Student</h2>
+@{
+    ViewData["Title"] = "Add Student";
+}
+
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
+
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
         <form method="post">
-            <div class="form-group">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" class="form-control" placeholder="First Name...">
-                <span asp-validation-for="FirstName" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MiddleName"></label>
-                <input asp-for="MiddleName" class="form-control" placeholder="Middle Name...">
-                <span asp-validation-for="MiddleName" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" class="form-control" placeholder="Last Name...">
-                <span asp-validation-for="LastName" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PersonalId"></label>
-                <input asp-for="PersonalId" class="form-control" placeholder="Personal Identification Number...">
-                <span asp-validation-for="PersonalId" class="small text-danger"></span>
-            </div>
+            <form>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" class="form-control" placeholder="First Name...">
+                        <span asp-validation-for="FirstName" class="small text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="MiddleName"></label>
+                        <input asp-for="MiddleName" class="form-control" placeholder="Middle Name...">
+                        <span asp-validation-for="MiddleName" class="small text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="LastName"></label>
+                        <input asp-for="LastName" class="form-control" placeholder="Last Name...">
+                        <span asp-validation-for="LastName" class="small text-danger"></span>
+                    </div>
+                </div>
+            </form>
+            <form>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="PersonalId"></label>
+                        <input asp-for="PersonalId" class="form-control" placeholder="Personal Identification Number...">
+                        <span asp-validation-for="PersonalId" class="small text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" placeholder="Email...">
+                        <span asp-validation-for="Email" class="small text-danger"></span>
+                    </div>
+                </div>
+            </form>
             <div class="form-group">
                 <label asp-for="ContactDetails"></label>
                 <textarea asp-for="ContactDetails" rows="4" class="form-control" placeholder="Gsm,Address..."></textarea>
                 <span asp-validation-for="ContactDetails" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" placeholder="Email...">
-                <span asp-validation-for="Email" class="small text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateOfBirth"></label>
@@ -56,20 +70,3 @@
         </form>
     </div>
 </div>
-@* <form asp-action="Create" method="post">
-    <label>Email:</label>
-   <input asp-for="Email" value="@Model.Email" />
-   <label>First Name:</label>
-   <input asp-for="FirstName" value="@Model.FirstName" />
-   <label>Middle Name:</label>
-   <input asp-for="MiddleName" value="@Model.MiddleName" />
-   <label>Last Name:</label>
-   <input asp-for="LastName" value="@Model.LastName" />
-   <label>Personal Identification Number:</label>
-   <input asp-for="PersonalId" value="@Model.PersonalId" />
-   <label>Date of Birth:</label>
-   <input asp-for="DateOfBirth" value="@Model.DateOfBirth" />
-   <label>Contact Details:</label>
-   <input asp-for="ContactDetails" value="@Model.ContactDetails" />
-   <button type="submit">Create</button>
-</form> *@
