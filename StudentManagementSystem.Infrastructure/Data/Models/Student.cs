@@ -57,6 +57,13 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [ForeignKey(nameof(UserId))]
         public IdentityUser User { get; set; } = null!;
 
+        [Required]
+        [Comment("Class Identifier")]
+        public int ClassId { get; set; }
+
+        [ForeignKey(nameof(ClassId))]
+        public Class Class { get; set; } = null!;
+
         [Comment("Courses that student enrolled")]
         public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
 

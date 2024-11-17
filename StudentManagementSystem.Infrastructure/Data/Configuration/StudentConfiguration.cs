@@ -17,7 +17,8 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                 DateOfBirth = DateTime.Now.AddYears(-20), // Example date of birth
                 ContactDetails = "GSM:0881237865",
                 Email = "gosho123@gmail.com",
-                UserId = "1" // This must match the Id of the user seeded above
+                UserId = "1" ,// This must match the Id of the user seeded above
+                ClassId = 1
             },
             new Student() {
                 Id = 2,
@@ -28,7 +29,8 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                 DateOfBirth = DateTime.Now.AddYears(-22), // Example date of birth
                 ContactDetails = "GSM:0881237865",
                 Email = "pesho321@gmail.com",
-                UserId = "2" // This must match the Id of the user seeded above
+                UserId = "2",// This must match the Id of the user seeded above
+                ClassId = 1
             }
         };
        

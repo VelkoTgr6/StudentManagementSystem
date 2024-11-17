@@ -4,7 +4,7 @@ using StudentManagementSystem.Infrastructure.Data.Models;
 
 namespace StudentManagementSystem.Infrastructure.Data.Configuration
 {
-    internal class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
+    public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
     {
         private Teacher[] initialTeachers = new Teacher[]
         {

@@ -43,5 +43,8 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
 
         public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
 
+        [Comment("Grades assigned to the course")]
+        public ICollection<Grade> Grades { get; set; } = new List<Grade>();
+
     }
 }

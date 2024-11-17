@@ -32,7 +32,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [Comment("Teacher Contact Details")]
         public string ContactDetails { get; set; } = null!;
 
-        [Comment("Teacher Assigned Courses")]
-        public ICollection<Course> Courses { get; set; }=new List<Course>();
+        [Comment("The collection of classes taught by this teacher")]
+        public ICollection<Class> Classes { get; set; } = new List<Class>();
     }
 }
