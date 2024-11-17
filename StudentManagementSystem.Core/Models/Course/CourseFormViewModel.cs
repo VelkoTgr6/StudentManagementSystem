@@ -24,5 +24,6 @@ namespace StudentManagementSystem.Core.Models.Course
         [Required]
         [Comment("Publisher Identification")]
         public string PublisherId { get; set; } = null!;
+        public int Id { get; set; }
     }
 }

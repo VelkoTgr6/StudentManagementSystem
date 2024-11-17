@@ -16,24 +16,6 @@ namespace StudentManagementSystem.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            //builder.Entity<Grade>()
-            //     .HasOne(g => g.Student)
-            //     .WithMany(s => s.Grades)
-            //     .OnDelete(DeleteBehavior.NoAction);
-
-            //builder.Entity<StudentCourse>()
-            //    .HasKey(sc => new { sc.StudentId, sc.CourseId });
-
-            //builder.Entity<StudentCourse>()
-            //    .HasOne(sc => sc.Student)
-            //    .WithMany(s => s.StudentCourses) 
-            //    .HasForeignKey(sc => sc.StudentId);
-
-            //builder.Entity<StudentCourse>()
-            //    .HasOne(sc => sc.Course)
-            //    .WithMany(c => c.StudentCourses) 
-            //    .HasForeignKey(sc => sc.CourseId);
-
             base.OnModelCreating(builder);
 
             builder.Entity<StudentCourse>()
@@ -43,7 +25,7 @@ namespace StudentManagementSystem.Infrastructure
                 .HasOne(sc => sc.Student)
                 .WithMany(s => s.StudentCourses)
                 .HasForeignKey(sc => sc.StudentId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<StudentCourse>()
                 .HasOne(sc => sc.Course)
@@ -55,7 +37,7 @@ namespace StudentManagementSystem.Infrastructure
                  .HasOne(g => g.Course)
                  .WithMany(c => c.Grades)
                  .HasForeignKey(g => g.CourseId)
-                 .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete for courses
+                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Grade>()
                 .HasOne(g => g.Student)

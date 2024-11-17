@@ -8,5 +8,7 @@
         public const string InvalidRoleMessage = "Role does not exist.";
 
         public const string InvalidPersonalIdLengthMessage = "The {0} must be {1} characters long.";
+
+        public const string InvalidEmailMessage = "Email does not exist.";
     }
 }

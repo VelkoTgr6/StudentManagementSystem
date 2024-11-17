@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
+﻿using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
-using StudentManagementSystem.Core.Models.Course;
+using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
 namespace StudentManagementSystem.Core.Models.Teacher
 {
@@ -42,5 +40,6 @@ namespace StudentManagementSystem.Core.Models.Teacher
             ErrorMessage = InvalidLengthMessage)]
         [MaxLength(TeacherContactMaxLength)]
         public string ContactDetails { get; set; } = null!;
+        public int Id { get; internal set; }
     }
 }

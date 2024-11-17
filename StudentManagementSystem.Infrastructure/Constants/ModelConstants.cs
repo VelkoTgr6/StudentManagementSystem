@@ -8,7 +8,7 @@
         /// <summary>
         /// Teacher Name Minimal Length
         /// </summary>
-        public const int TeacherNameMinLength = 5;
+        public const int TeacherNameMinLength = 2;
 
         /// <summary>
         /// Teacher Name Maximum Length
@@ -58,7 +58,7 @@
         /// <summary>
         /// Student Name Minimum Length
         /// </summary>
-        public const int StudentNameMinLength = 5;
+        public const int StudentNameMinLength = 2;
 
         /// <summary>
         /// Student Name Maximum Length
@@ -88,11 +88,12 @@
         /// <summary>
         /// Date Format 
         /// </summary>
-        public const string DateFormat = "dd.MM.yyyy";
+        public const string DateFormat = "MM/dd/yyyy";
 
         /// <summary>
         /// Regular Expression for Date Format
         /// </summary>
-        public const string RegexDateFormat = "^(0[1-9]|[12][0-9]|3[01])\\.(0[1-9]|1[0-2])\\.(\\d{4})$";
+        public const string RegexDateFormat = @"^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$";
+
     }
 }

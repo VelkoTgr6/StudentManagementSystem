@@ -2,6 +2,8 @@
 using StudentManagementSystem.Core.Contracts;
 using StudentManagementSystem.Core.Models.Student;
 using StudentManagementSystem.Infrastructure.Data.Models;
+using System.Security.Claims;
+using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
 
 namespace StudentManagementSystem.Controllers
 {
@@ -20,27 +22,35 @@ namespace StudentManagementSystem.Controllers
         }
 
         // Show the create user form
-        public IActionResult Create()
+        public async Task<IActionResult> CreateStudent()
         {
-            var model = new StudentFormViewModel();
+            var model = new StudentFormViewModel()
+            {
+                Classes =await adminService.AllClassesAsync()
+            };
+            
             return View(model);
         }
 
         // Process the create user form
         [HttpPost]
-        public async Task<IActionResult> Create(StudentFormViewModel model)
+        public async Task<IActionResult> CreateStudent(StudentFormViewModel model)
         {
-            var entity = new Student
+            if (await adminService.StudentEmailExistAsync(model.Email) == false)
             {
-                Id = model.Id,
-                FirstName = model.FirstName,
-                MiddleName = model.MiddleName,
-                LastName = model.LastName,
-                ContactDetails = model.ContactDetails,
-                Email = model.Email,
-                PersonalId = model.PersonalId,
-                DateOfBirth = model.DateOfBirth
-            };
+                ModelState.AddModelError(nameof(model.Email), InvalidEmailMessage);
+            }
+
+            //var userId = await adminService.GetUserIdByEmail(model.Email);
+            //model.UserId = userId;
+
+            if (!ModelState.IsValid)
+            {
+                model.Classes = await adminService.AllClassesAsync();
+                return View(model);
+            }
+
+            var id = await adminService.CreateStudentAsync(model);
 
             return RedirectToAction(nameof(Index));
         }

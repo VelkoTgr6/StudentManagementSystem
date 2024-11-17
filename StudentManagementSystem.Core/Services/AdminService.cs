@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts;
+using StudentManagementSystem.Core.Models.Class;
 using StudentManagementSystem.Core.Models.Course;
 using StudentManagementSystem.Core.Models.Student;
 using StudentManagementSystem.Core.Models.Teacher;
@@ -17,11 +18,22 @@ namespace StudentManagementSystem.Core.Services
             repository = _repository;
         }
 
+        public async Task<IEnumerable<ClassServiceModel>> AllClassesAsync()
+        {
+            return await repository.All<Class>()
+                .Select(x => new ClassServiceModel
+            {
+                Id = x.Id,
+                Name = x.Name
+            }).ToListAsync();
+        }
+
         public async Task<int> CreateCourseAsync(CourseFormViewModel model, string publisherId)
         {
             
             var entity = new Course
             {
+                Id = model.Id,
                 Name = model.Name,
                 Description = model.Description,
                 TeacherId = model.TeacherId,
@@ -36,9 +48,10 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<int> CreateStudentAsync(StudentFormViewModel model)
         {
+            var userId = await repository.GetIdByEmailAsync(model.Email);
+
             var entity = new Student
             {
-                Id = model.Id,
                 FirstName = model.FirstName,
                 MiddleName = model.MiddleName,
                 LastName = model.LastName,
@@ -46,6 +59,8 @@ namespace StudentManagementSystem.Core.Services
                 Email = model.Email,
                 PersonalId = model.PersonalId,
                 DateOfBirth = model.DateOfBirth,
+                UserId = userId,
+                ClassId = model.ClassId
             };
 
             await repository.AddAsync(entity);
@@ -58,6 +73,7 @@ namespace StudentManagementSystem.Core.Services
         {
             var entity = new Teacher
             {
+                Id = model.Id,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 ContactDetails = model.ContactDetails,
@@ -151,5 +167,9 @@ namespace StudentManagementSystem.Core.Services
             return repository.AllAsReadOnly<T>().FirstAsync();
         }
 
+        public async Task<string> GetUserIdByEmail(string email)
+        {
+            return await repository.GetIdByEmailAsync(email);
+        }
     }
 }

@@ -12,5 +12,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
         void DeleteTeacher(Teacher entity);
         void DeleteCourse(Course entity);
         Task<T?> GetByIdAsync<T>(object id) where T : class;
+        Task<bool> StudentEmailExistAsync(string email);
+        Task<string> GetIdByEmailAsync(string email);
     }
 }

@@ -2,20 +2,18 @@
 using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
+using StudentManagementSystem.Core.Models.Class;
 
 namespace StudentManagementSystem.Core.Models.Student
 {
     public class StudentFormViewModel
     {
         [Required(ErrorMessage = RequiredMessage)]
-        [Comment("Student Identifier")]
-        public int Id { get; set; }
-
-        [Required(ErrorMessage = RequiredMessage)]
         [StringLength(StudentPersonalIdMinMaxLength,
             MinimumLength = StudentPersonalIdMinMaxLength,
             ErrorMessage = InvalidPersonalIdLengthMessage)]
         [Comment("Student Personal Identification Number")]
+        [Display(Name = "Personal Identification Number")]
         public string PersonalId { get; set; } = null!;
 
         [Required(ErrorMessage = RequiredMessage)]
@@ -23,6 +21,7 @@ namespace StudentManagementSystem.Core.Models.Student
             MinimumLength = StudentNameMinLength,
             ErrorMessage = InvalidLengthMessage)]
         [Comment("Student First Name")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; } = null!;
 
         [Required]
@@ -30,6 +29,7 @@ namespace StudentManagementSystem.Core.Models.Student
             MinimumLength = StudentNameMinLength,
             ErrorMessage = InvalidLengthMessage)]
         [Comment("Student Middle Name")]
+        [Display(Name = "Middle Name")]
         public string MiddleName { get; set; } = null!;
 
         [Required]
@@ -37,6 +37,7 @@ namespace StudentManagementSystem.Core.Models.Student
             MinimumLength = StudentNameMinLength,
             ErrorMessage = InvalidLengthMessage)]
         [Comment("Student Last Name")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; } = null!;
 
         [Required]
@@ -48,7 +49,8 @@ namespace StudentManagementSystem.Core.Models.Student
 
         [Required]
         [Comment("Date of birth of Student")]
-        [RegularExpression(RegexDateFormat, ErrorMessage = "Date format should be yyyy.MM.dd")]
+       // [RegularExpression(RegexDateFormat, ErrorMessage = "Date format should be MM/dd/yyyy")]
+        [Display(Name = "Date Of Birth")]
         public DateTime DateOfBirth { get; set; }
 
         [Required]
@@ -56,10 +58,13 @@ namespace StudentManagementSystem.Core.Models.Student
             MinimumLength = StudentContactMinLength,
             ErrorMessage = InvalidLengthMessage)]
         [Comment("Student Contact Details")]
+        [Display(Name = "Contact Details")]
         public string ContactDetails { get; set; } = null!;
 
-        [Required]
-        [Comment("User Identifier")]
-        public string UserId { get; set; } = null!;
+        [Comment("Class Identifier")]
+        [Display(Name = "Class")]
+        public int ClassId { get; set; }
+
+        public IEnumerable<ClassServiceModel> Classes { get; set; } = new List<ClassServiceModel>();
     }
 }
