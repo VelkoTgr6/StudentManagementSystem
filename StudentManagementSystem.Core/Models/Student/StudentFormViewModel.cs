@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
 using StudentManagementSystem.Core.Models.Class;
+using StudentManagementSystem.Core.Models.Course;
 
 namespace StudentManagementSystem.Core.Models.Student
 {
@@ -64,7 +65,8 @@ namespace StudentManagementSystem.Core.Models.Student
         [Comment("Class Identifier")]
         [Display(Name = "Class")]
         public int ClassId { get; set; }
-
         public IEnumerable<ClassServiceModel> Classes { get; set; } = new List<ClassServiceModel>();
+        public IEnumerable<int> SelectedCourseIds { get; set; } = new List<int>(); // IDs of selected courses
+        public IEnumerable<CourseModel> AvailableCourses { get; set; } = new List<CourseModel>();
     }
 }

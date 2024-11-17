@@ -28,7 +28,8 @@ namespace StudentManagementSystem.Controllers
         {
             var model = new StudentFormViewModel()
             {
-                Classes =await adminService.AllClassesAsync()
+                Classes = await adminService.AllClassesAsync(),
+                AvailableCourses = await adminService.AllCoursesAsync()
             };
             
             return View(model);

@@ -74,7 +74,14 @@ namespace StudentManagementSystem.Core.Services
                 PersonalId = model.PersonalId,
                 DateOfBirth = model.DateOfBirth,
                 UserId = userId,
-                ClassId = model.ClassId
+                ClassId = model.ClassId,
+                StudentCourses = model.SelectedCourseIds
+                .Select(courseId => new StudentCourse
+                {
+                    CourseId = courseId,
+                    EnrollmentDate = DateTime.UtcNow
+                })
+                .ToList()
             };
 
             await repository.AddAsync(entity);
