@@ -25,15 +25,29 @@ namespace StudentManagementSystem.Core.Services
             {
                 Id = x.Id,
                 Name = x.Name
-            }).ToListAsync();
+            })
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<TeacherServiceModel>> AllTeachersAsync()
+        {
+            return await repository.All<Teacher>()
+                .Select(t => new TeacherServiceModel
+                {
+                    Id = t.Id,
+                    Name = $"{t.Titles} {t.FirstName} {t.LastName}"
+                })
+                .ToListAsync();
+        }
+
+        public async Task<bool> CourseExistAsync(int id)
+        {
+            return await repository.AllAsReadOnly<Course>().AnyAsync(c => c.Id == id);
         }
 
         public async Task<int> CreateCourseAsync(CourseFormViewModel model, string publisherId)
         {
-            
             var entity = new Course
             {
-                Id = model.Id,
                 Name = model.Name,
                 Description = model.Description,
                 TeacherId = model.TeacherId,
@@ -170,6 +184,11 @@ namespace StudentManagementSystem.Core.Services
         public async Task<string> GetUserIdByEmail(string email)
         {
             return await repository.GetIdByEmailAsync(email);
+        }
+
+        public Task<bool> StudentEmailExistAsync(string email)
+        {
+            throw new NotImplementedException();
         }
     }
 }

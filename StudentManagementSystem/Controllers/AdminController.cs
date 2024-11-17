@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentManagementSystem.Core.Contracts;
+using StudentManagementSystem.Core.Models.Course;
 using StudentManagementSystem.Core.Models.Student;
 using StudentManagementSystem.Infrastructure.Data.Models;
 using System.Security.Claims;
@@ -21,7 +22,7 @@ namespace StudentManagementSystem.Controllers
             return View(await adminService.GetAllAsync<Student>());
         }
 
-        // Show the create user form
+        [HttpGet]
         public async Task<IActionResult> CreateStudent()
         {
             var model = new StudentFormViewModel()
@@ -41,9 +42,6 @@ namespace StudentManagementSystem.Controllers
                 ModelState.AddModelError(nameof(model.Email), InvalidEmailMessage);
             }
 
-            //var userId = await adminService.GetUserIdByEmail(model.Email);
-            //model.UserId = userId;
-
             if (!ModelState.IsValid)
             {
                 model.Classes = await adminService.AllClassesAsync();
@@ -51,6 +49,33 @@ namespace StudentManagementSystem.Controllers
             }
 
             var id = await adminService.CreateStudentAsync(model);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateCourse()
+        {
+            var model = new CourseFormViewModel()
+            {
+                Teachers = await adminService.AllTeachersAsync()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCourse(CourseFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Teachers = await adminService.AllTeachersAsync();
+                return View(model);
+            }
+
+            var publisherId = User.GetId();
+
+            var id = await adminService.CreateCourseAsync(model, publisherId);
 
             return RedirectToAction(nameof(Index));
         }

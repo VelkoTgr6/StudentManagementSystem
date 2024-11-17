@@ -18,5 +18,7 @@ namespace StudentManagementSystem.Core.Contracts
         Task<T> GetByIdAsync<T>() where T : class;
         Task<bool> StudentEmailExistAsync(string email);
         Task<IEnumerable<ClassServiceModel>> AllClassesAsync();
+        Task<IEnumerable<TeacherServiceModel>> AllTeachersAsync();
+        Task<bool> CourseExistAsync(int id);
     }
 }

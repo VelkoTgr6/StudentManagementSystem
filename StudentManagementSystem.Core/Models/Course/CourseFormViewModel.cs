@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
+using StudentManagementSystem.Core.Models.Teacher;
 
 namespace StudentManagementSystem.Core.Models.Course
 {
@@ -19,11 +20,9 @@ namespace StudentManagementSystem.Core.Models.Course
 
         [Required]
         [Comment("Teacher of the Course")]
+        [Display(Name = "Teacher")]
         public int TeacherId { get; set; }
 
-        [Required]
-        [Comment("Publisher Identification")]
-        public string PublisherId { get; set; } = null!;
-        public int Id { get; set; }
+        public IEnumerable<TeacherServiceModel> Teachers { get; set; } = new List<TeacherServiceModel>();
     }
 }
