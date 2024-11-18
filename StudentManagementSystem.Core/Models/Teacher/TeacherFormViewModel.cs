@@ -1,4 +1,5 @@
-﻿using StudentManagementSystem.Core.Models.Course;
+﻿using Microsoft.EntityFrameworkCore;
+using StudentManagementSystem.Core.Models.Course;
 using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
@@ -55,5 +56,10 @@ namespace StudentManagementSystem.Core.Models.Teacher
         [Required(ErrorMessage = RequiredMessage)]
         public int CourseId { get; set; }
         public IEnumerable<CourseServiceModel> Courses { get; set; } = new List<CourseServiceModel>();
+
+        [Required]
+        [Comment("The collection of course IDs selected for this teacher")]
+        public IEnumerable<int> SelectedCourseIds { get; set; } = new List<int>();
+        public IEnumerable<CourseServiceModel> AvailableCourses { get; set; } = new List<CourseServiceModel>();
     }
 }

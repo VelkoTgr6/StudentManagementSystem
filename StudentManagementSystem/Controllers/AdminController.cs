@@ -97,7 +97,7 @@ namespace StudentManagementSystem.Controllers
         {
             var model = new TeacherFormViewModel()
             {
-                Courses = await adminCourseService.GetAllCoursesAsync()
+                AvailableCourses = await adminCourseService.GetAllCoursesAsync()
             };
 
             return View(model);

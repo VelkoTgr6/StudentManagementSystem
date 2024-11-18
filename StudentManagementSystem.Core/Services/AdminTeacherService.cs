@@ -17,7 +17,7 @@ namespace StudentManagementSystem.Core.Services
         public async Task<int> CreateTeacherAsync(TeacherFormViewModel model)
         {
             var userId = await repository.GetIdByEmailAsync(model.Email);
-
+            
             var entity = new Teacher
             {
                 FirstName = model.FirstName,
@@ -27,6 +27,14 @@ namespace StudentManagementSystem.Core.Services
                 Email = model.Email,
                 UserId = userId
             };
+
+            foreach (var course in model.SelectedCourseIds)
+            {
+                entity.Courses.Add(new Course
+                {
+                    Id = course
+                });
+            }
 
             await repository.AddAsync(entity);
             await repository.SaveChangesAsync();
