@@ -14,6 +14,10 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IAdminClassService, AdminClassService>();
+            services.AddScoped<IAdminCourseService, AdminCourseService>();
+            services.AddScoped<IAdminTeacherService, AdminTeacherService>();
+            services.AddScoped<IAdminStudentService, AdminStudentService>();
 
             return services;
         }

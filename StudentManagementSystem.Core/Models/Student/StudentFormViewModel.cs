@@ -42,8 +42,8 @@ namespace StudentManagementSystem.Core.Models.Student
         public string LastName { get; set; } = null!;
 
         [Required]
-        [StringLength(StudentEmailMaxValue,
-            MinimumLength = StudentEmailMinValue,
+        [StringLength(EmailMaxValue,
+            MinimumLength = EmailMinValue,
             ErrorMessage = InvalidLengthMessage)]
         [Comment("Student Email Address")]
         public string Email { get; set; } = null!;
@@ -66,7 +66,5 @@ namespace StudentManagementSystem.Core.Models.Student
         [Display(Name = "Class")]
         public int ClassId { get; set; }
         public IEnumerable<ClassServiceModel> Classes { get; set; } = new List<ClassServiceModel>();
-        public IEnumerable<int> SelectedCourseIds { get; set; } = new List<int>(); // IDs of selected courses
-        public IEnumerable<CourseModel> AvailableCourses { get; set; } = new List<CourseModel>();
     }
 }

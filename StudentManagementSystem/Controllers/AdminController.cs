@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentManagementSystem.Core.Contracts;
+using StudentManagementSystem.Core.Models.Class;
 using StudentManagementSystem.Core.Models.Course;
 using StudentManagementSystem.Core.Models.Student;
 using StudentManagementSystem.Core.Models.Teacher;
@@ -12,10 +13,22 @@ namespace StudentManagementSystem.Controllers
     public class AdminController : Controller
     {
         private readonly IAdminService adminService;
+        private readonly IAdminClassService adminClassService;
+        private readonly IAdminCourseService adminCourseService;
+        private readonly IAdminTeacherService adminTeacherService;
+        private readonly IAdminStudentService adminStudentService;
 
-        public AdminController(IAdminService _adminService)
+        public AdminController(IAdminService adminService,
+            IAdminClassService adminClassService,
+            IAdminCourseService adminCourseService,
+            IAdminTeacherService adminTeacherService,
+            IAdminStudentService adminStudentService)
         {
-            adminService = _adminService;
+            this.adminService = adminService;
+            this.adminClassService = adminClassService;
+            this.adminCourseService = adminCourseService;
+            this.adminTeacherService = adminTeacherService;
+            this.adminStudentService = adminStudentService;
         }
 
         public async Task<IActionResult> Index()
@@ -28,8 +41,7 @@ namespace StudentManagementSystem.Controllers
         {
             var model = new StudentFormViewModel()
             {
-                Classes = await adminService.AllClassesAsync(),
-                AvailableCourses = await adminService.AllCoursesAsync()
+                Classes = await adminClassService.GetAllClassesAsync()
             };
             
             return View(model);
@@ -45,11 +57,11 @@ namespace StudentManagementSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                model.Classes = await adminService.AllClassesAsync();
+                model.Classes = await adminClassService.GetAllClassesAsync();
                 return View(model);
             }
 
-            var id = await adminService.CreateStudentAsync(model);
+            var id = await adminStudentService.CreateStudentAsync(model);
 
             return RedirectToAction(nameof(Index));
         }
@@ -59,7 +71,7 @@ namespace StudentManagementSystem.Controllers
         {
             var model = new CourseFormViewModel()
             {
-                Teachers = await adminService.AllTeachersAsync()
+                Teachers = await adminTeacherService.GetAllTeachersAsync()
             };
 
             return View(model);
@@ -70,13 +82,13 @@ namespace StudentManagementSystem.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Teachers = await adminService.AllTeachersAsync();
+                model.Teachers = await adminTeacherService.GetAllTeachersAsync();
                 return View(model);
             }
 
             var publisherId = User.GetId();
 
-            var id = await adminService.CreateCourseAsync(model, publisherId);
+            var id = await adminCourseService.CreateCourseAsync(model, publisherId);
 
             return RedirectToAction(nameof(Index));
         }
@@ -85,7 +97,7 @@ namespace StudentManagementSystem.Controllers
         {
             var model = new TeacherFormViewModel()
             {
-                Courses = await adminService.AllCoursesAsync()
+                Courses = await adminCourseService.GetAllCoursesAsync()
             };
 
             return View(model);
@@ -101,12 +113,38 @@ namespace StudentManagementSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                model.Courses = await adminService.AllCoursesAsync();
+                model.Courses = await adminCourseService.GetAllCoursesAsync();
                 return View(model);
             }
 
-            var id = await adminService.CreateTeacherAsync(model);
+            var id = await adminTeacherService.CreateTeacherAsync(model);
 
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateClass()
+        {
+            var model = new ClassFormViewModel()
+            {
+                Teachers = await adminTeacherService.GetAllTeachersAsync(),
+                AvailableCourses = await adminCourseService.GetAllCoursesAsync()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateClass(ClassFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Teachers = await adminTeacherService.GetAllTeachersAsync();
+                model.AvailableCourses = await adminCourseService.GetAllCoursesAsync();
+                return View(model);
+            }
+
+            var id = await adminClassService.CreateClassAsync(model);
             return RedirectToAction(nameof(Index));
         }
     }

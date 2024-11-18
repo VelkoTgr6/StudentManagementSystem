@@ -1,6 +1,6 @@
 ﻿namespace StudentManagementSystem.Core.Models.Course
 {
-    public class CourseModel
+    public class CourseServiceModel
     {
         /// <summary>
         /// Course Identifier
