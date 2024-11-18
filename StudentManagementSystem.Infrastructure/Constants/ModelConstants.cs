@@ -26,7 +26,7 @@
         /// <summary>
         /// Teacher Contact Details Maximum Length
         /// </summary>
-        public const int TeacherContactMaxLength = 30;
+        public const int TeacherContactMaxLength = 200;
 
         /// <summary>
         /// Course Name Minimum Length
@@ -50,6 +50,11 @@
         /// Student Personal Id Minimum and Maximum Length
         /// </summary>
         public const int StudentPersonalIdMinMaxLength = 10;
+
+        /// <summary>
+        /// Student Remarks Maximum Length
+        /// </summary>
+        public const int StudentRemarksMaxLength = 200;
 
         /// <summary>
         /// Student Name Minimum Length
@@ -76,7 +81,7 @@
         /// <summary>
         /// Student Contact Details Maximum Length
         /// </summary>
-        public const int StudentContactMaxLength = 30;
+        public const int StudentContactMaxLength = 200;
 
 
         /// <summary>

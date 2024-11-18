@@ -34,7 +34,6 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [Comment("Student Email Address")]
         public string Email { get; set; } = null!;
 
-        [Required]
         [MaxLength(ProfilePictureMaxLength)]
         [Comment("Path to the profile picture of the student")]
         public string ProfilePicturePath { get; set; } = "images/profiles/default.png";

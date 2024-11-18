@@ -38,6 +38,13 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [Comment("Student Email Address")]
         public string Email { get; set; } = null!;
 
+        [MaxLength(StudentRemarksMaxLength)]
+        [Comment("Remarks about the student")]
+        public string? Remark { get; set; }
+
+        [Comment("Shows if student is Active")]
+        public double Аbsence { get; set; }
+
         [Required]
         [Comment("Date of birth of Student")]
         public DateTime DateOfBirth { get; set; }
@@ -64,7 +71,6 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [ForeignKey(nameof(ClassId))]
         public Class Class { get; set; } = null!;
 
-        [Required]
         [MaxLength(ProfilePictureMaxLength)]
         [Comment("Path to the profile picture of the student")]
         public string ProfilePicturePath { get; set; } = "images/profiles/default.png";
