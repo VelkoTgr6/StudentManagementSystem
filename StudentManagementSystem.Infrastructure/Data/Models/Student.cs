@@ -34,7 +34,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public string LastName { get; set; }= null!;
 
         [Required]
-        [MaxLength(StudentEmailMaxValue)]
+        [MaxLength(EmailMaxValue)]
         [Comment("Student Email Address")]
         public string Email { get; set; } = null!;
 
@@ -64,8 +64,10 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [ForeignKey(nameof(ClassId))]
         public Class Class { get; set; } = null!;
 
-        [Comment("Courses that student enrolled")]
-        public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
+        [Required]
+        [MaxLength(ProfilePictureMaxLength)]
+        [Comment("Path to the profile picture of the student")]
+        public string ProfilePicturePath { get; set; } = "images/profiles/default.png";
 
         [Comment("Student Performance")]
         public double Performance {  get; set; }

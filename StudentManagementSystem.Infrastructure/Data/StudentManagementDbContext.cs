@@ -16,34 +16,62 @@ namespace StudentManagementSystem.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
+            // Configure composite key for ClassCourse
+            builder.Entity<ClassCourse>()
+                .HasKey(cc => new { cc.ClassId, cc.CourseId });
 
-            builder.Entity<StudentCourse>()
-                .HasKey(sc => new { sc.StudentId, sc.CourseId });
-
-            builder.Entity<StudentCourse>()
-                .HasOne(sc => sc.Student)
-                .WithMany(s => s.StudentCourses)
-                .HasForeignKey(sc => sc.StudentId)
+            builder.Entity<ClassCourse>()
+                .HasOne(cc => cc.Class)
+                .WithMany(c => c.ClassCourses)
+                .HasForeignKey(cc => cc.ClassId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<StudentCourse>()
-                .HasOne(sc => sc.Course)
-                .WithMany(c => c.StudentCourses)
-                .HasForeignKey(sc => sc.CourseId)
+            builder.Entity<ClassCourse>()
+                .HasOne(cc => cc.Course)
+                .WithMany(c => c.CourseClasses)
+                .HasForeignKey(cc => cc.CourseId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Configure relationships for Grade
             builder.Entity<Grade>()
-                 .HasOne(g => g.Course)
-                 .WithMany(c => c.Grades)
-                 .HasForeignKey(g => g.CourseId)
-                 .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(g => g.Course)
+                .WithMany(c => c.Grades)
+                .HasForeignKey(g => g.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Grade>()
                 .HasOne(g => g.Student)
                 .WithMany(s => s.Grades)
                 .HasForeignKey(g => g.StudentId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure relationships for Course
+            builder.Entity<Course>()
+                .HasOne(c => c.Teacher)
+                .WithMany(t => t.Courses)
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Course>()
+                .HasOne(c => c.Publisher)
+                .WithMany()
+                .HasForeignKey(c => c.PublisherId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure relationships for Student
+            builder.Entity<Student>()
+                .HasOne(s => s.Class)
+                .WithMany(c => c.Students)
+                .HasForeignKey(s => s.ClassId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Student>()
+                .HasOne(s => s.User)
+                .WithMany()
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
 
             builder.ApplyConfiguration(new IdentityUserConfiguration());
             builder.ApplyConfiguration(new TeacherConfiguration());
@@ -58,7 +86,7 @@ namespace StudentManagementSystem.Infrastructure
         public DbSet<Course> Courses { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<StudentCourse> StudentsCourses { get; set; }
+        public DbSet<ClassCourse> ClassCourses { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Class> Classes { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }

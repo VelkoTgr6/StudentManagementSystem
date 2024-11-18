@@ -55,23 +55,6 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Teachers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false, comment: "Teacher Identifier")
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Titles = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true, comment: "Teacher Titles"),
-                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Teacher First Name"),
-                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Teacher Last Name"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Shows if teacher is Deleted"),
-                    ContactDetails = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, comment: "Teacher Contact Details")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teachers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -178,6 +161,31 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Teachers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "Teacher Identifier")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Titles = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true, comment: "Teacher Titles"),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Teacher First Name"),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Teacher Last Name"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Shows if teacher is Deleted"),
+                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "Student Email Address"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false, comment: "User Identifier"),
+                    ContactDetails = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, comment: "Teacher Contact Details")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teachers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Teachers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Classes",
                 columns: table => new
                 {
@@ -207,6 +215,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "Course Name"),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, comment: "Course Description"),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Shows if course is Deleted"),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Course Start Date"),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Course End Date"),
+                    EnrollmentCap = table.Column<int>(type: "int", nullable: false, comment: "Maximum number of students allowed"),
                     TeacherId = table.Column<int>(type: "int", nullable: false, comment: "Teacher of the Course"),
                     PublisherId = table.Column<string>(type: "nvarchar(450)", nullable: false, comment: "Publisher Identification")
                 },
@@ -218,13 +229,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         column: x => x.PublisherId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Courses_Teachers_TeacherId",
                         column: x => x.TeacherId,
                         principalTable: "Teachers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -243,6 +254,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Shows if student is Deleted"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false, comment: "User Identifier"),
                     ClassId = table.Column<int>(type: "int", nullable: false, comment: "Class Identifier"),
+                    ProfilePicturePath = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false, comment: "Path to the profile picture of the student"),
                     Performance = table.Column<double>(type: "float", nullable: false, comment: "Student Performance")
                 },
                 constraints: table =>
@@ -259,7 +271,32 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         column: x => x.ClassId,
                         principalTable: "Classes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClassCourses",
+                columns: table => new
+                {
+                    ClassId = table.Column<int>(type: "int", nullable: false, comment: "Class Identifier"),
+                    CourseId = table.Column<int>(type: "int", nullable: false, comment: "Course Identifier"),
+                    EnrollmentDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date of enrollment")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClassCourses", x => new { x.ClassId, x.CourseId });
+                    table.ForeignKey(
+                        name: "FK_ClassCourses_Classes_ClassId",
+                        column: x => x.ClassId,
+                        principalTable: "Classes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ClassCourses_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -272,7 +309,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     StudentId = table.Column<int>(type: "int", nullable: false, comment: "Identifier of the Student"),
                     GradeScore = table.Column<double>(type: "float", nullable: false, comment: "Grade received by the student for a specific course assessment"),
                     GradeAssignedDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date when the grade was assigned"),
-                    GradeType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Description or type of the grade (e.g., Midterm, Final, Homework)")
+                    GradeType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Description or type of the grade (e.g., Midterm, Final, Homework)"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Shows if grade is Deleted")
                 },
                 constraints: table =>
                 {
@@ -282,7 +320,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Grades_Students_StudentId",
                         column: x => x.StudentId,
@@ -291,47 +329,22 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "StudentsCourses",
-                columns: table => new
-                {
-                    StudentId = table.Column<int>(type: "int", nullable: false, comment: "Student Identifier"),
-                    CourseId = table.Column<int>(type: "int", nullable: false, comment: "Course Identifier"),
-                    EnrollmentDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date of enrollment")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudentsCourses", x => new { x.StudentId, x.CourseId });
-                    table.ForeignKey(
-                        name: "FK_StudentsCourses_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_StudentsCourses_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1", 0, "af3c7fb5-f2ca-4193-a2d6-56d7dd04a12f", "IdentityUser", "gosho123@gmail.com", true, false, null, "GOSHO123@GMAIL.COM", "GOSHO123@GMAIL.COM", "AQAAAAIAAYagAAAAEGzYTpr8unRzsDPpzzEwvLZWva9jv8Yl2stwlNmOvwEkx6x6TkHBfVysgYluw7qa2g==", null, false, "627ccdd7-f7da-4788-b442-8eb85fab9e55", false, "gosho123@gmail.com" },
-                    { "2", 0, "bebe4261-9487-4f75-acfc-0a75585fa98b", "IdentityUser", "pesho321@gmail.com", true, false, null, "PESHO321@GMAIL.COM", "PESHO321@GMAIL.COM", "AQAAAAIAAYagAAAAEH7Q6XQ9FEd6CT6Qk3IVDGsp1eco4i+XC6XBLT4oOoDSrZLfmcS9DmZZrJe3x0Jg6w==", null, false, "6b41578c-c555-4190-ae95-c7a782d96cb0", false, "pesho321@gmail.com" }
+                    { "1", 0, "69d55643-d517-4412-b0a6-2c501dea7416", "IdentityUser", "gosho123@gmail.com", true, false, null, "GOSHO123@GMAIL.COM", "GOSHO123@GMAIL.COM", "AQAAAAIAAYagAAAAEK8GaWoKFz93yEglW/O2JMvEw8ye5KabGkkPOMnUDvHr85roC9wQJZKWIysB1OFU9A==", null, false, "eda3d778-eda8-4c84-856e-62b3d5b1a9dd", false, "gosho123@gmail.com" },
+                    { "2", 0, "3fd49f65-7b88-456c-9c9f-792a2a826c50", "IdentityUser", "pesho321@gmail.com", true, false, null, "PESHO321@GMAIL.COM", "PESHO321@GMAIL.COM", "AQAAAAIAAYagAAAAEC8aVvUEHMh3KN4dHsZOAgTKQZ/fxEZDw7M9hacvHEo2OjVSnUkoeSS9GTgZEXJdKw==", null, false, "26269e73-b1f6-4f29-a62a-c609dc29ce1a", false, "pesho321@gmail.com" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Teachers",
-                columns: new[] { "Id", "ContactDetails", "FirstName", "IsDeleted", "LastName", "Titles" },
+                columns: new[] { "Id", "ContactDetails", "Email", "FirstName", "IsDeleted", "LastName", "Titles", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "for more info visit ...", "Stanimir", false, "Grigorov", "prof. dr. " },
-                    { 2, "gsm:12345678655", "Ivan", false, "Draganov", "doc. " }
+                    { 1, "for more info visit ...", "stan12@gmail.com", "Stanimir", false, "Grigorov", "prof. dr. ", "1" },
+                    { 2, "gsm:12345678655", "ivdra23@gmailcom", "Ivan", false, "Draganov", "doc. ", "2" }
                 });
 
             migrationBuilder.InsertData(
@@ -345,20 +358,20 @@ namespace StudentManagementSystem.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "Id", "Description", "IsDeleted", "Name", "PublisherId", "TeacherId" },
+                columns: new[] { "Id", "Description", "EndDate", "EnrollmentCap", "IsDeleted", "Name", "PublisherId", "StartDate", "TeacherId" },
                 values: new object[,]
                 {
-                    { 1, "Best bilogy learning system in the world", false, "Biology", "1", 1 },
-                    { 2, "Best History learning system in the world", false, "History", "1", 2 }
+                    { 1, "Best bilogy learning system in the world", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, false, "Biology", "1", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
+                    { 2, "Best History learning system in the world", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, false, "History", "1", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Students",
-                columns: new[] { "Id", "ClassId", "ContactDetails", "DateOfBirth", "Email", "FirstName", "IsDeleted", "LastName", "MiddleName", "Performance", "PersonalId", "UserId" },
+                columns: new[] { "Id", "ClassId", "ContactDetails", "DateOfBirth", "Email", "FirstName", "IsDeleted", "LastName", "MiddleName", "Performance", "PersonalId", "ProfilePicturePath", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 1, "GSM:0881237865", new DateTime(2004, 11, 17, 18, 32, 50, 289, DateTimeKind.Local).AddTicks(8406), "gosho123@gmail.com", "Gosho", false, "Grigorov", "Petrov", 0.0, "0230456078", "1" },
-                    { 2, 1, "GSM:0881237865", new DateTime(2002, 11, 17, 18, 32, 50, 289, DateTimeKind.Local).AddTicks(8489), "pesho321@gmail.com", "Pesho", false, "Ivanov", "Petrov", 0.0, "0140656070", "2" }
+                    { 1, 1, "GSM:0881237865", new DateTime(2004, 11, 18, 21, 12, 25, 878, DateTimeKind.Local).AddTicks(6495), "gosho123@gmail.com", "Gosho", false, "Grigorov", "Petrov", 0.0, "0230456078", "images/profiles/default.png", "1" },
+                    { 2, 1, "GSM:0881237865", new DateTime(2002, 11, 18, 21, 12, 25, 878, DateTimeKind.Local).AddTicks(6587), "pesho321@gmail.com", "Pesho", false, "Ivanov", "Petrov", 0.0, "0140656070", "images/profiles/default.png", "2" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -401,6 +414,11 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ClassCourses_CourseId",
+                table: "ClassCourses",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Classes_TeacherId",
                 table: "Classes",
                 column: "TeacherId");
@@ -436,9 +454,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentsCourses_CourseId",
-                table: "StudentsCourses",
-                column: "CourseId");
+                name: "IX_Teachers_UserId",
+                table: "Teachers",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -460,10 +478,10 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Grades");
+                name: "ClassCourses");
 
             migrationBuilder.DropTable(
-                name: "StudentsCourses");
+                name: "Grades");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -475,13 +493,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 name: "Students");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Classes");
 
             migrationBuilder.DropTable(
                 name: "Teachers");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

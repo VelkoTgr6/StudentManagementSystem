@@ -31,6 +31,9 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
 
         [Comment("Description or type of the grade (e.g., Midterm, Final, Homework)")]
         [MaxLength(100)]
-        public string GradeType { get; set; } = "Assignment"; 
+        public string GradeType { get; set; } = "Assignment";
+
+        [Comment("Shows if grade is Deleted")]
+        public bool IsDeleted { get; set; } = false;
     }
 }

@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
-namespace StudentManagementSystem.Infrastructure.Data.Models 
-{ 
+namespace StudentManagementSystem.Infrastructure.Data.Models
+{
     public class Teacher
     {
         [Key]
@@ -14,7 +14,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
 
         [MaxLength(TeacherTitlesMaxLength)]
         [Comment("Teacher Titles")]
-        public string? Titles {  get; set; }
+        public string? Titles { get; set; }
 
         [Required]
         [MaxLength(TeacherNameMaxLength)]
@@ -24,15 +24,20 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [Required]
         [MaxLength(TeacherNameMaxLength)]
         [Comment("Teacher Last Name")]
-        public string LastName { get; set;} = null!;
+        public string LastName { get; set; } = null!;
 
         [Comment("Shows if teacher is Deleted")]
         public bool IsDeleted { get; set; } = false;
 
         [Required]
-        [MaxLength(StudentEmailMaxValue)]
+        [MaxLength(EmailMaxValue)]
         [Comment("Student Email Address")]
         public string Email { get; set; } = null!;
+
+        [Required]
+        [MaxLength(ProfilePictureMaxLength)]
+        [Comment("Path to the profile picture of the student")]
+        public string ProfilePicturePath { get; set; } = "images/profiles/default.png";
 
         [Required]
         [Comment("User Identifier")]
@@ -46,14 +51,10 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [Comment("Teacher Contact Details")]
         public string ContactDetails { get; set; } = null!;
 
-        [Required]
-        [Comment("The ID of the course taught by this teacher")]
-        public int CourseId { get; set; }
+        [Comment("The courses taught by this teacher")]
+        public ICollection<Course> Courses { get; set; } = new List<Course>();
 
-        [ForeignKey(nameof(CourseId))]
-        public Course Course { get; set; } = null!;
-
-        [Comment("The collection of classes taught by this teacher")]
+        [Comment("The classes taught by this teacher")]
         public ICollection<Class> Classes { get; set; } = new List<Class>();
     }
 }

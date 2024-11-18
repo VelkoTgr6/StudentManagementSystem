@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudentManagementSystem.Infrastructure.Data.Models
 {
-    [PrimaryKey(nameof(StudentId), nameof(CourseId))]
-    public class StudentCourse
+    [PrimaryKey(nameof(ClassId), nameof(CourseId))]
+    public class ClassCourse
     {
-        [Comment("Student Identifier")]
-        public int StudentId { get; set; }
+        [Comment("Class Identifier")]
+        public int ClassId { get; set; }
 
-        [ForeignKey(nameof(StudentId))]
-        public Student Student { get; set; } = null!;
+        [ForeignKey(nameof(ClassId))]
+        public Class Class { get; set; } = null!;
 
         [Comment("Course Identifier")]
         public int CourseId { get; set; }

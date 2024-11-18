@@ -152,15 +152,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "36aad082-8562-45aa-a8ed-5fb5107039d9",
+                            ConcurrencyStamp = "fd9460bd-d32c-43e8-9428-7835df05c0cc",
                             Email = "gosho123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "GOSHO123@GMAIL.COM",
                             NormalizedUserName = "GOSHO123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFIkBCCu+B6cwIreXYsRdO0FbS6sPRT8UZZe3oXndc6vDScpfzT1Xa8eGyxxV1NwqA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMz+Pc1+ZhNFG6peqcXk4/zDwq4MF5chVeKMky/HHk+hy0nFdKXpxguR7gt8TAylgQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d4991144-9b42-44fe-9f3e-8ca04336fdb9",
+                            SecurityStamp = "02995e4c-421e-4461-9dcc-d76060091dbb",
                             TwoFactorEnabled = false,
                             UserName = "gosho123@gmail.com"
                         },
@@ -168,15 +168,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8754c5c1-028d-4671-8db1-0f2a9fb919bf",
+                            ConcurrencyStamp = "1c2a5895-afbc-484c-8a8c-c60a5661b65a",
                             Email = "pesho321@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PESHO321@GMAIL.COM",
                             NormalizedUserName = "PESHO321@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFt5OOiwF5hJ/oNoGZZUhyre0YoYez/QLXYgO2WRBVzBzmc55XpaA7bOnnlgAr0TlQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPebuDDs/fsTgFNOp+a6/zktCq6Pg1E4opSG3jIL2mFKt+BaeMF7yp9VK0xWvFJGJQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6e91c5eb-ce85-409f-8be7-e394728225c4",
+                            SecurityStamp = "94b0c24d-a8f4-4286-85c5-d8caf318cedb",
                             TwoFactorEnabled = false,
                             UserName = "pesho321@gmail.com"
                         });
@@ -312,6 +312,27 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.ClassCourse", b =>
+                {
+                    b.Property<int>("ClassId")
+                        .HasColumnType("int")
+                        .HasComment("Class Identifier");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int")
+                        .HasComment("Course Identifier");
+
+                    b.Property<DateTime>("EnrollmentDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date of enrollment");
+
+                    b.HasKey("ClassId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("ClassCourses");
+                });
+
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Course", b =>
                 {
                     b.Property<int>("Id")
@@ -327,6 +348,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasComment("Course Description");
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Course End Date");
+
+                    b.Property<int>("EnrollmentCap")
+                        .HasColumnType("int")
+                        .HasComment("Maximum number of students allowed");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasComment("Shows if course is Deleted");
@@ -341,6 +370,10 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasComment("Publisher Identification");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Course Start Date");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("int")
@@ -359,18 +392,24 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 1,
                             Description = "Best bilogy learning system in the world",
+                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "Biology",
                             PublisherId = "1",
+                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 1
                         },
                         new
                         {
                             Id = 2,
                             Description = "Best History learning system in the world",
+                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "History",
                             PublisherId = "1",
+                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 2
                         });
                 });
@@ -401,6 +440,10 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasComment("Description or type of the grade (e.g., Midterm, Final, Homework)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasComment("Shows if grade is Deleted");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int")
@@ -476,6 +519,12 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(10)")
                         .HasComment("Student Personal Identification Number");
 
+                    b.Property<string>("ProfilePicturePath")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasComment("Path to the profile picture of the student");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
@@ -495,7 +544,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 1,
                             ClassId = 1,
                             ContactDetails = "GSM:0881237865",
-                            DateOfBirth = new DateTime(2004, 11, 17, 23, 11, 11, 533, DateTimeKind.Local).AddTicks(3466),
+                            DateOfBirth = new DateTime(2004, 11, 18, 21, 15, 6, 830, DateTimeKind.Local).AddTicks(8956),
                             Email = "gosho123@gmail.com",
                             FirstName = "Gosho",
                             IsDeleted = false,
@@ -503,6 +552,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             MiddleName = "Petrov",
                             Performance = 0.0,
                             PersonalId = "0230456078",
+                            ProfilePicturePath = "images/profiles/default.png",
                             UserId = "1"
                         },
                         new
@@ -510,7 +560,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 2,
                             ClassId = 1,
                             ContactDetails = "GSM:0881237865",
-                            DateOfBirth = new DateTime(2002, 11, 17, 23, 11, 11, 533, DateTimeKind.Local).AddTicks(3552),
+                            DateOfBirth = new DateTime(2002, 11, 18, 21, 15, 6, 830, DateTimeKind.Local).AddTicks(9007),
                             Email = "pesho321@gmail.com",
                             FirstName = "Pesho",
                             IsDeleted = false,
@@ -518,29 +568,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             MiddleName = "Petrov",
                             Performance = 0.0,
                             PersonalId = "0140656070",
+                            ProfilePicturePath = "images/profiles/default.png",
                             UserId = "2"
                         });
-                });
-
-            modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.StudentCourse", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int")
-                        .HasComment("Student Identifier");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int")
-                        .HasComment("Course Identifier");
-
-                    b.Property<DateTime>("EnrollmentDate")
-                        .HasColumnType("datetime2")
-                        .HasComment("Date of enrollment");
-
-                    b.HasKey("StudentId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("StudentsCourses");
                 });
 
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Teacher", b =>
@@ -557,10 +587,6 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)")
                         .HasComment("Teacher Contact Details");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int")
-                        .HasComment("The ID of the course taught by this teacher");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -584,6 +610,12 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasComment("Teacher Last Name");
 
+                    b.Property<string>("ProfilePicturePath")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasComment("Path to the profile picture of the student");
+
                     b.Property<string>("Titles")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
@@ -596,8 +628,6 @@ namespace StudentManagementSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Teachers");
@@ -607,11 +637,11 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 1,
                             ContactDetails = "for more info visit ...",
-                            CourseId = 1,
                             Email = "stan12@gmail.com",
                             FirstName = "Stanimir",
                             IsDeleted = false,
                             LastName = "Grigorov",
+                            ProfilePicturePath = "images/profiles/default.png",
                             Titles = "prof. dr. ",
                             UserId = "1"
                         },
@@ -619,11 +649,11 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 2,
                             ContactDetails = "gsm:12345678655",
-                            CourseId = 2,
                             Email = "ivdra23@gmailcom",
                             FirstName = "Ivan",
                             IsDeleted = false,
                             LastName = "Draganov",
+                            ProfilePicturePath = "images/profiles/default.png",
                             Titles = "doc. ",
                             UserId = "2"
                         });
@@ -704,18 +734,37 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.ClassCourse", b =>
+                {
+                    b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Class", "Class")
+                        .WithMany("ClassCourses")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Course", "Course")
+                        .WithMany("CourseClasses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Class");
+
+                    b.Navigation("Course");
+                });
+
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Course", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Publisher")
                         .WithMany()
                         .HasForeignKey("PublisherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Teacher", "Teacher")
-                        .WithMany()
+                        .WithMany("Courses")
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Publisher");
@@ -728,7 +777,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Course", "Course")
                         .WithMany("Grades")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Student", "Student")
@@ -747,7 +796,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Class", "Class")
                         .WithMany("Students")
                         .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
@@ -761,66 +810,41 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.StudentCourse", b =>
-                {
-                    b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Course", "Course")
-                        .WithMany("StudentCourses")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Student", "Student")
-                        .WithMany("StudentCourses")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Teacher", b =>
                 {
-                    b.HasOne("StudentManagementSystem.Infrastructure.Data.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Course");
-
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Class", b =>
                 {
+                    b.Navigation("ClassCourses");
+
                     b.Navigation("Students");
                 });
 
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Course", b =>
                 {
-                    b.Navigation("Grades");
+                    b.Navigation("CourseClasses");
 
-                    b.Navigation("StudentCourses");
+                    b.Navigation("Grades");
                 });
 
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Student", b =>
                 {
                     b.Navigation("Grades");
-
-                    b.Navigation("StudentCourses");
                 });
 
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.Teacher", b =>
                 {
                     b.Navigation("Classes");
+
+                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }

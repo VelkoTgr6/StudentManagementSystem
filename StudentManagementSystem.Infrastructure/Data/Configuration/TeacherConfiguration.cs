@@ -14,7 +14,6 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                 LastName="Grigorov",
                 ContactDetails="for more info visit ...",
                 Email = "stan12@gmail.com",
-                CourseId = 1,
                 UserId = "1"
             },
             new Teacher(){Id = 2,
@@ -23,7 +22,6 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                 LastName="Draganov",
                 ContactDetails="gsm:12345678655",
                 Email = "ivdra23@gmailcom",
-                CourseId = 2,
                 UserId = "2"
             }
         };
