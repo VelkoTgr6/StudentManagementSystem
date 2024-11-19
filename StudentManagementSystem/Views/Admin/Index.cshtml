@@ -1,9 +1,37 @@
 ﻿@{
     ViewData["Title"] = "Admin";
 }
-<h2>User Management</h2>
 
-<a class="btn btn-secondary btn-lg" asp-action="CreateStudent">Create Student</a>
-<a class="btn btn-secondary btn-lg" asp-action="CreateTeacher">Create Teacher</a>
-<a class="btn btn-secondary btn-lg" asp-action="CreateCourse">Create Course</a>
-<a class="btn btn-secondary btn-lg" asp-action="CreateClass">Create Class</a>
+<h2 class="text-center my-4">User Management</h2>
+
+<div class="container">
+    <div class="row g-3">
+        <!-- Create Buttons -->
+        <div class="col-md-3">
+            <a class="btn btn-primary btn-lg w-100" asp-action="CreateStudent">Create Student</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-success btn-lg w-100" asp-action="CreateTeacher">Create Teacher</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-warning btn-lg w-100" asp-action="CreateCourse">Create Course</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-secondary btn-lg w-100" asp-action="CreateClass">Create Class</a>
+        </div>
+
+        <!-- Edit Buttons -->
+        <div class="col-md-3">
+            <a class="btn btn-danger btn-lg w-100" asp-action="EditStudent">Edit Student</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-danger btn-lg w-100" asp-action="EditTeacher">Edit Teacher</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-danger btn-lg w-100" asp-action="EditCourse">Edit Course</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-danger btn-lg w-100" asp-action="EditClass">Edit Class</a>
+        </div>
+    </div>
+</div>

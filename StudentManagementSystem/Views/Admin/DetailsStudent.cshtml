@@ -1,0 +1,49 @@
+﻿@model StudentDetailsViewModel
+
+<div class="container mt-5">
+    <h2>Student Details</h2>
+
+    <!-- Profile Picture -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <img src="@Model.ProfilePicturePath" alt="Profile Picture" class="img-thumbnail" style="max-width: 150px;" />
+        </div>
+        <div class="col-md-9">
+            <h3>@Model.FirstName @Model.MiddleName @Model.LastName</h3>
+            <p><strong>Personal ID:</strong> @Model.PersonalId</p>
+            <p><strong>Date of Birth:</strong> @Model.DateOfBirth.ToString("dd.MM.yyyy")</p>
+            <p><strong>Contact Details:</strong> @Model.ContactDetails</p>
+            <p><strong>Performance:</strong> @Model.Performance</p>
+        </div>
+    </div>
+
+    <!-- Grades Section -->
+    <h4>Grades</h4>
+    @if (Model.Grades.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var grade in Model.Grades)
+                {
+                    <tr>
+                        <td>@grade.Course</td>
+                        <td>@grade.GradeScore</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No grades available for this student.</p>
+    }
+
+    <!-- Back Button -->
+    <a href="@Url.Action("AllStudents", "Admin")" class="btn btn-secondary mt-3">Back to List</a>
+</div>

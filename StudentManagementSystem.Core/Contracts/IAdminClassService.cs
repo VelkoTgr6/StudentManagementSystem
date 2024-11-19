@@ -10,5 +10,6 @@ namespace StudentManagementSystem.Core.Contracts
         Task DeleteClassAsync(int id);
         Task<IEnumerable<ClassServiceModel>> GetAllClassesAsync();
         Task<CourseServiceModel> GetClassByIdAsync(int id);
+        Task<IEnumerable<string>> GetAllClassesNamesAsync();
     }
 }

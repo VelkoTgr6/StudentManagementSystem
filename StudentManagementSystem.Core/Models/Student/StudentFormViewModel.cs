@@ -62,6 +62,10 @@ namespace StudentManagementSystem.Core.Models.Student
         [Display(Name = "Contact Details")]
         public string ContactDetails { get; set; } = null!;
 
+        [Comment("Student Profile Picture Path")]
+        [Display(Name = "Profile Picture")]
+        public string ProfilePicturePath { get; set; } = null!;
+
         [Comment("Class Identifier")]
         [Display(Name = "Class")]
         public int ClassId { get; set; }

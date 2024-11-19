@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts;
 using StudentManagementSystem.Core.Models.Class;
 using StudentManagementSystem.Core.Models.Course;
@@ -32,7 +33,7 @@ namespace StudentManagementSystem.Controllers
         }
 
         public async Task<IActionResult> Index()
-        { 
+        {
             return View(await adminService.GetAllAsync<Student>());
         }
 
@@ -43,7 +44,7 @@ namespace StudentManagementSystem.Controllers
             {
                 Classes = await adminClassService.GetAllClassesAsync()
             };
-            
+
             return View(model);
         }
 
@@ -147,5 +148,69 @@ namespace StudentManagementSystem.Controllers
             var id = await adminClassService.CreateClassAsync(model);
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AllStudents([FromQuery] AllStudentsQueryModel query)
+        {
+            var students = await adminStudentService.AllAsync(
+                query.Class,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                query.StudentsPerPage);
+
+            query.Classes = await adminClassService.GetAllClassesNamesAsync();
+            query.TotalStudentsCount = students.TotalStudentsCount;
+            query.Students = students.Students;
+            query.TotalPages = (int)Math.Ceiling(students.TotalStudentsCount / (double)query.StudentsPerPage);
+
+            return View(query);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditStudent(int id)
+        {
+            if (await adminStudentService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            
+            var model = await adminStudentService.GetStudentFormModelByIdAsync(id);
+
+            if (model != null)
+            {
+                model.Classes = await adminClassService.GetAllClassesAsync();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditStudent(int id, StudentFormViewModel model)
+        {
+            if (await adminStudentService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                model.Classes = await adminClassService.GetAllClassesAsync();
+                return View(model);
+            }
+            await adminStudentService.EditStudentAsync(id, model);
+            return RedirectToAction(nameof(AllStudents));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DetailsStudent(int id)
+        {
+            if (await adminStudentService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            var student = await adminStudentService.GetStudentDetailsModelByIdAsync(id);
+            return View(student);
+        }
+
     }
 }

@@ -110,6 +110,13 @@ namespace StudentManagementSystem.Core.Services
                 }).ToListAsync();
         }
 
+        public async Task<IEnumerable<string>> GetAllClassesNamesAsync()
+        {
+            return await repository.AllAsReadOnly<Class>()
+                .Select(c => c.Name)
+                .ToListAsync();
+        }
+
         public Task<CourseServiceModel> GetClassByIdAsync(int id)
         {
             throw new NotImplementedException();
