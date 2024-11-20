@@ -40,10 +40,10 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
 
         [MaxLength(StudentRemarksMaxLength)]
         [Comment("Remarks about the student")]
-        public string? Remark { get; set; }
+        public ICollection<Remark> Remarks { get; set; } = new List<Remark>();
 
         [Comment("Shows if student is Active")]
-        public double Аbsence { get; set; }
+        public ICollection<Absence> Аbsences { get; set; } = new List<Absence>();
 
         [Required]
         [Comment("Date of birth of Student")]

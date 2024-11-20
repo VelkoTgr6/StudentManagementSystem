@@ -94,6 +94,12 @@
         public const int ProfilePictureMaxLength = 255;
 
         /// <summary>
+        /// Remark Text Minimum and Maximum Length
+        /// </summary>
+        public const int RemarkTextMinLength = 2;
+        public const int RemarkTextMaxLength = 500;
+
+        /// <summary>
         /// Date Format 
         /// </summary>
         public const string DateFormat = "MM/dd/yyyy";
