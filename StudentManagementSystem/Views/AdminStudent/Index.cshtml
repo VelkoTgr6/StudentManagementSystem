@@ -27,14 +27,14 @@
                 <label for="editOptions" class="form-label" style="font-size: 1.5rem">Select to Edit</label>
                 <select id="editOptions" class="form-control form-control-lg" name="selectedAction">
                     <option value="AllStudents">Edit Student</option>
-                    <option value="EditTeacher">Edit Teacher</option>
-                    <option value="EditCourse">Edit Course</option>
-                    <option value="EditClass">Edit Class</option>
+                    <option value="AllTeachers">Edit Teacher</option>
+                    <option value="AllCourses">Edit Course</option>
+                    <option value="AllClasses">Edit Class</option>
                 </select>
             </div>
 
             <!-- Submit Button -->
-            <form id="editForm" method="get" action="/Admin/AllStudents" class="mt-3">
+            <form id="editForm" method="get" action="/AdminStudent/AllStudents" class="mt-3">
                 <button type="submit" class="btn btn-danger btn-lg w-100" style="max-width: 150px;">Go to Edit</button>
             </form>
         </div>
@@ -46,7 +46,7 @@
             document.getElementById('editOptions').addEventListener('change', function () {
                 const form = document.getElementById('editForm');
                 const selectedValue = this.value; // Get the selected action
-                form.action = `/Admin/${selectedValue}`; // Update form action dynamically
+                form.action = `/AdminStudent/${selectedValue}`; // Update form action dynamically
             });
         </script>
 

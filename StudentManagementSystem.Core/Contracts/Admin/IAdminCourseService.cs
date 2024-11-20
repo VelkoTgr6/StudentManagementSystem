@@ -10,5 +10,6 @@ namespace StudentManagementSystem.Core.Contracts.Admin
         Task<IEnumerable<CourseServiceModel>> GetAllCoursesAsync();
         Task<CourseServiceModel> GetCourseByIdAsync(int id);
         Task<bool> CourseExistAsync(int id);
+        Task<IEnumerable<string>> GetAllCoursesNamesAsync();
     }
 }

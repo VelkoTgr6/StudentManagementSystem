@@ -1,0 +1,63 @@
+﻿@model TeacherDetailsViewModel
+
+<div class="container mt-5">
+    <h2>Teacher Details</h2>
+
+    <!-- Teacher Info Section -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <img src="@Model.ProfilePicturePath" alt="Profile Picture" class="img-thumbnail" style="max-width: 150px;" />
+        </div>
+        <div class="col-md-9">
+            <h3>@Model.Titles @Model.FirstName @Model.LastName</h3>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Contact Details:</strong> @Model.ContactDetails</p>
+        </div>
+    </div>
+
+    <!-- Courses Table and Action Buttons Section -->
+    <div class="row">
+        <!-- Left Column: Courses Table (smaller and scrollable) -->
+        <div class="col-md-8">
+            <h4>Courses</h4>
+            @if (Model.Courses.Any())
+            {
+                <!-- Scrollable Table Container -->
+                <div style="max-height: 150px; width: 75%; overflow-y: auto;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Course Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var course in Model.Courses)
+                            {
+                                <tr>
+                                    <td>@course.Name</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p>No courses assigned to this teacher.</p>
+            }
+        </div>
+
+        <!-- Right Column: Action Buttons (Edit/Delete) -->
+        <div class="col-md-4">
+            <div class="d-flex flex-column align-items-start justify-content-between">
+                <!-- Edit Button -->
+                <a href="@Url.Action("EditTeacher", "AdminStudent", new { id = Model.Id })" class="btn btn-warning btn-lg mb-2 w-100">Edit</a>
+                <!-- Delete Button -->
+                <a href="@Url.Action("DeleteTeacher", "AdminStudent", new { id = Model.Id })" class="btn btn-danger btn-lg w-100">Delete</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <a href="@Url.Action("AllTeachers", "AdminStudent")" class="btn btn-secondary mt-3">Back to List</a>
+</div>

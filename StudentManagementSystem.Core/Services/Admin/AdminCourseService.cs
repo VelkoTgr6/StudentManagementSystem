@@ -16,7 +16,9 @@ namespace StudentManagementSystem.Core.Services.Admin
         }
         public async Task<bool> CourseExistAsync(int id)
         {
-            return await repository.AllAsReadOnly<Course>().AnyAsync(c => c.Id == id);
+            return await repository.AllAsReadOnly<Course>()
+                .Where(c=>c.IsDeleted == false)
+                .AnyAsync(c => c.Id == id);
         }
 
         public async Task<int> CreateCourseAsync(CourseFormViewModel model, string publisherId)
@@ -44,7 +46,7 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             var course = await repository.GetByIdAsync<Course>(id);
 
-            if (course != null)
+            if (course != null && course.IsDeleted == false)
             {
                 course.Name = model.Name;
                 course.Description = model.Description;
@@ -58,12 +60,21 @@ namespace StudentManagementSystem.Core.Services.Admin
         public async Task<IEnumerable<CourseServiceModel>> GetAllCoursesAsync()
         {
             return await repository.AllAsReadOnly<Course>()
+                .Where(c => c.IsDeleted == false)
                .Select(c => new CourseServiceModel
                {
                    Id = c.Id,
                    Name = c.Name
                })
                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> GetAllCoursesNamesAsync()
+        {
+            return await repository.AllAsReadOnly<Course>()
+                .Where(c => c.IsDeleted == false)
+                .Select(c => c.Name)
+                .ToListAsync();
         }
 
         public Task<CourseServiceModel> GetCourseByIdAsync(int id)

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Models.Admin.Class;
 using StudentManagementSystem.Core.Models.Admin.Course;
@@ -11,7 +10,7 @@ using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
 
 namespace StudentManagementSystem.Controllers
 {
-    public class AdminController : Controller
+    public class AdminStudentController : Controller
     {
         private readonly IAdminService adminService;
         private readonly IAdminClassService adminClassService;
@@ -19,7 +18,7 @@ namespace StudentManagementSystem.Controllers
         private readonly IAdminTeacherService adminTeacherService;
         private readonly IAdminStudentService adminStudentService;
 
-        public AdminController(IAdminService adminService,
+        public AdminStudentController(IAdminService adminService,
             IAdminClassService adminClassService,
             IAdminCourseService adminCourseService,
             IAdminTeacherService adminTeacherService,
@@ -212,5 +211,80 @@ namespace StudentManagementSystem.Controllers
             return View(student);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            if (await adminStudentService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            await adminStudentService.DeleteStudentAsync(id);
+            return RedirectToAction(nameof(AllStudents));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllTeachers([FromQuery]AllTeachersQueryModel query)
+        {
+            var teachers = await adminTeacherService.AllAsync(
+                query.Course,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                query.TeachersPerPage);
+
+            query.Courses = await adminCourseService.GetAllCoursesNamesAsync();
+            query.TotalTeachersCount = teachers.TotalTeachersCount;
+            query.Teachers = teachers.Teachers;
+            query.TotalPages = (int)Math.Ceiling(teachers.TotalTeachersCount / (double)query.TeachersPerPage);
+
+            return View(query);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DetailsTeacher(int id)
+        {
+            if (await adminTeacherService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            var student = await adminTeacherService.GetTeacherDetailsModelByIdAsync(id);
+            return View(student);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditTeacher(int id)
+        {
+            if (await adminTeacherService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            var model = await adminTeacherService.GetTeacherFormModelByIdAsync(id);
+
+            if (model != null)
+            {
+                model.Courses = await adminCourseService.GetAllCoursesAsync();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditTeacher(int id, TeacherFormViewModel model)
+        {
+            if (await adminTeacherService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await adminCourseService.GetAllCoursesAsync();
+                return View(model);
+            }
+
+            await adminTeacherService.EditTeacherAsync(id, model);
+
+            return RedirectToAction(nameof(DetailsTeacher), new { id });
+        }
     }
 }

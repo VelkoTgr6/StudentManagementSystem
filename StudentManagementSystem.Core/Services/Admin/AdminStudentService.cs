@@ -18,11 +18,11 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task<StudentQueryServiceModel> AllAsync(string? studentClass = null, string? searchTerm = null, StudentSorting sorting = StudentSorting.Name, int currentPage = 1, int studentsPerPage = 10)
         {
-            var studentsQuery = repository.AllAsReadOnly<Student>();
+            var studentsQuery = repository.AllAsReadOnly<Student>().Where(s=>s.IsDeleted == false);
 
             if (!string.IsNullOrWhiteSpace(studentClass))
             {
-                studentsQuery = studentsQuery.Where(s => s.Class.Name == studentClass);
+                studentsQuery = studentsQuery.Where(s => s.Class.Name == studentClass && s.IsDeleted == false);
             }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -85,7 +85,8 @@ namespace StudentManagementSystem.Core.Services.Admin
                 PersonalId = model.PersonalId,
                 DateOfBirth = model.DateOfBirth,
                 UserId = userId,
-                ClassId = model.ClassId
+                ClassId = model.ClassId,
+                ProfilePicturePath = model.ProfilePicturePath
             };
 
             await repository.AddAsync(entity);
@@ -94,16 +95,23 @@ namespace StudentManagementSystem.Core.Services.Admin
             return entity.Id;
         }
 
-        public Task DeleteStudentAsync(int id)
+        public async Task DeleteStudentAsync(int id)
         {
-            throw new NotImplementedException();
+            var student =await repository.GetByIdAsync<Student>(id);
+
+            if (student != null && student.IsDeleted == false) 
+            {
+                student.IsDeleted = true;
+            }
+
+            await repository.SaveChangesAsync();
         }
 
         public async Task EditStudentAsync(int id, StudentFormViewModel model)
         {
             var entity = await repository.GetByIdAsync<Student>(id);
 
-            if (entity != null)
+            if (entity != null && entity.IsDeleted == false)
             {
                 entity.FirstName = model.FirstName;
                 entity.MiddleName = model.MiddleName;
@@ -121,7 +129,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task<bool> ExistAsync(int id)
         {
-            return await repository.AllAsReadOnly<Student>().AnyAsync(s => s.Id == id);
+            return await repository.AllAsReadOnly<Student>().AnyAsync(s => s.Id == id && s.IsDeleted == false);
         }
 
         public async Task<IEnumerable<StudentServiceModel>> GetAllStudentsAsync()
@@ -137,7 +145,7 @@ namespace StudentManagementSystem.Core.Services.Admin
         public async Task<StudentDetailsViewModel> GetStudentDetailsModelByIdAsync(int id)
         {
             return await repository.AllAsReadOnly<Student>()
-                .Where(s => s.Id == id)
+                .Where(s => s.Id == id && s.IsDeleted == false)
                 .Select(s => new StudentDetailsViewModel()
                 {
                     Id = s.Id,
@@ -146,6 +154,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                     FirstName = s.FirstName,
                     MiddleName = s.MiddleName,
                     LastName = s.LastName,
+                    Email = s.Email,
                     DateOfBirth = s.DateOfBirth,
                     ContactDetails = s.ContactDetails,
                     Performance = s.Performance.ToString(),
@@ -154,10 +163,10 @@ namespace StudentManagementSystem.Core.Services.Admin
                 .FirstAsync();
         }
 
-        public Task<StudentFormViewModel?> GetStudentFormModelByIdAsync(int id)
+        public async Task<StudentFormViewModel?> GetStudentFormModelByIdAsync(int id)
         {
-            var student = repository.AllAsReadOnly<Student>()
-                .Where(s => s.Id == id)
+            var student = await repository.AllAsReadOnly<Student>()
+                .Where(s => s.Id == id && s.IsDeleted == false)
                 .Select(s => new StudentFormViewModel
                 {
                     FirstName = s.FirstName,
@@ -167,7 +176,8 @@ namespace StudentManagementSystem.Core.Services.Admin
                     Email = s.Email,
                     PersonalId = s.PersonalId,
                     DateOfBirth = s.DateOfBirth,
-                    ClassId = s.ClassId
+                    ClassId = s.ClassId,
+                    ProfilePicturePath = s.ProfilePicturePath
                 })
                 .FirstOrDefaultAsync();
 

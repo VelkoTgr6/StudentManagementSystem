@@ -45,7 +45,7 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             var entity = await repository.GetByIdAsync<Class>(id);
 
-            if (entity != null)
+            if (entity != null && entity.IsDeleted== false)
             {
                 entity.Name = model.Name;
                 entity.TeacherId = model.TeacherId;
@@ -103,6 +103,7 @@ namespace StudentManagementSystem.Core.Services.Admin
         public async Task<IEnumerable<ClassServiceModel>> GetAllClassesAsync()
         {
             return await repository.AllAsReadOnly<Class>()
+                .Where(c => c.IsDeleted == false)
                 .Select(c => new ClassServiceModel
                 {
                     Id = c.Id,
@@ -113,6 +114,7 @@ namespace StudentManagementSystem.Core.Services.Admin
         public async Task<IEnumerable<string>> GetAllClassesNamesAsync()
         {
             return await repository.AllAsReadOnly<Class>()
+                .Where(c => c.IsDeleted == false)
                 .Select(c => c.Name)
                 .ToListAsync();
         }

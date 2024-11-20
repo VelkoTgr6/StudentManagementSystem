@@ -90,5 +90,7 @@ namespace StudentManagementSystem.Infrastructure
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Class> Classes { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Absence> Absences { get; set; }
+        public DbSet<Remark> Remarks { get; set; }
     }
 }

@@ -1,0 +1,71 @@
+﻿@model TeacherFormViewModel
+
+@{
+    ViewData["Title"] = "Add Teacher";
+}
+
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form method="post">
+            <div class="form-group">
+                <label for="ProfilePicture">Profile Picture</label>
+                <input type="file" class="form-control" name="ProfilePicture" id="ProfilePicture" />
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Titles"></label>
+                    <input asp-for="Titles" class="form-control" placeholder="Titles...">
+                    <span asp-validation-for="Titles" class="small text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" class="form-control" placeholder="First Name...">
+                    <span asp-validation-for="FirstName" class="small text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" class="form-control" placeholder="Last Name...">
+                    <span asp-validation-for="LastName" class="small text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" placeholder="Email...">
+                <span asp-validation-for="Email" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactDetails"></label>
+                <textarea asp-for="ContactDetails" rows="4" class="form-control" placeholder="Gsm, Address..."></textarea>
+                <span asp-validation-for="ContactDetails" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Available Courses</label>
+                <div class="row">
+                    @foreach (var course in Model.AvailableCourses.OrderBy(c => c.Name))
+                    {
+                        <div class="col-md-4 mb-2">
+                            <div class="form-check">
+                                <input type="checkbox" name="SelectedCourseIds" value="@course.Id" class="form-check-input"
+                                       id="course_@course.Id"
+                                @if (Model.SelectedCourseIds != null && Model.SelectedCourseIds.Contains(course.Id))
+                                {
+                                    <text>checked</text>
+                                }
+                                />
+                                <label class="form-check-label" for="course_@course.Id">@course.Name</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="text-center">
+                <input class="btn btn-primary mt-3" type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</div>

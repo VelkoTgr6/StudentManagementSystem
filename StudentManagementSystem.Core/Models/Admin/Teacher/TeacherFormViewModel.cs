@@ -50,6 +50,10 @@ namespace StudentManagementSystem.Core.Models.Admin.Teacher
             ErrorMessage = InvalidLengthMessage)]
         public string Email { get; set; } = null!;
 
+        [Comment("Teacher Profile Picture Path")]
+        [Display(Name = "Profile Picture")]
+        public string ProfilePicturePath { get; set; } = "images/profiles/default.png";
+
         /// <summary>
         /// Teacher course id
         /// </summary>

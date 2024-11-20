@@ -12,10 +12,16 @@
             <h3>@Model.FirstName @Model.MiddleName @Model.LastName</h3>
             <p><strong>Personal ID:</strong> @Model.PersonalId</p>
             <p><strong>Date of Birth:</strong> @Model.DateOfBirth.ToString("dd.MM.yyyy")</p>
+            <p><strong>Email</strong> @Model.Email</p>
             <p><strong>Contact Details:</strong> @Model.ContactDetails</p>
             <p><strong>Performance:</strong> @Model.Performance</p>
         </div>
     </div>
+
+    <!-- Edit Button -->
+    <a href="@Url.Action("EditStudent", "AdminStudent", new { id = Model.Id })" class="btn btn-warning btn-sm">Edit</a>
+    <!-- Delete Button -->
+    <a href="@Url.Action("DeleteStudent", "AdminStudent", new { id = Model.Id })" class="btn btn-danger btn-sm">Delete</a>
 
     <!-- Grades Section -->
     <h4>Grades</h4>

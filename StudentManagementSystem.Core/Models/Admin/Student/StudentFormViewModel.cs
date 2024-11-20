@@ -64,7 +64,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Student
 
         [Comment("Student Profile Picture Path")]
         [Display(Name = "Profile Picture")]
-        public string ProfilePicturePath { get; set; } = null!;
+        public string ProfilePicturePath { get; set; } = "images/profiles/default.png";
 
         [Comment("Class Identifier")]
         [Display(Name = "Class")]
