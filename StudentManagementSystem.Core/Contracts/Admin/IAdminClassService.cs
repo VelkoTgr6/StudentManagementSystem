@@ -1,7 +1,7 @@
 ﻿using StudentManagementSystem.Core.Models.Admin.Class;
 using StudentManagementSystem.Core.Models.Admin.Course;
 
-namespace StudentManagementSystem.Core.Contracts
+namespace StudentManagementSystem.Core.Contracts.Admin
 {
     public interface IAdminClassService
     {

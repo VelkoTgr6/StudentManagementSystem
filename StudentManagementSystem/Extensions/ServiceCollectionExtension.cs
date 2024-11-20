@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using StudentManagementSystem.Core.Contracts;
+using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Services;
+using StudentManagementSystem.Core.Services.Admin;
 using StudentManagementSystem.Infrastructure;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;

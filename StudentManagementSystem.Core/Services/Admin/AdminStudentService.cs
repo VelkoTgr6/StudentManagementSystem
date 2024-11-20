@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StudentManagementSystem.Core.Contracts;
+using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Student;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
 
-namespace StudentManagementSystem.Core.Services
+namespace StudentManagementSystem.Core.Services.Admin
 {
     public class AdminStudentService : IAdminStudentService
     {

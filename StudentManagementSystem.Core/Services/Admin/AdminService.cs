@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StudentManagementSystem.Core.Contracts;
+using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Models.Admin.Class;
 using StudentManagementSystem.Core.Models.Admin.Course;
 using StudentManagementSystem.Core.Models.Admin.Student;
@@ -7,7 +7,7 @@ using StudentManagementSystem.Core.Models.Admin.Teacher;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
 
-namespace StudentManagementSystem.Core.Services
+namespace StudentManagementSystem.Core.Services.Admin
 {
     public class AdminService : IAdminService
     {
@@ -17,7 +17,7 @@ namespace StudentManagementSystem.Core.Services
         {
             repository = _repository;
         }
-     
+
 
         public async Task DeleteAsync<T>()
         {
@@ -37,7 +37,7 @@ namespace StudentManagementSystem.Core.Services
             }
 
             await repository.SaveChangesAsync();
-            
+
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>() where T : class

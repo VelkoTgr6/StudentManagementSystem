@@ -1,7 +1,7 @@
 ﻿using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Student;
 
-namespace StudentManagementSystem.Core.Contracts
+namespace StudentManagementSystem.Core.Contracts.Admin
 {
     public interface IAdminStudentService
     {
@@ -16,7 +16,7 @@ namespace StudentManagementSystem.Core.Contracts
             StudentSorting sorting = StudentSorting.Name,
             int currentPage = 1,
             int studentsPerPage = 10);
-        Task<bool>ExistAsync(int id);
+        Task<bool> ExistAsync(int id);
         Task<StudentFormViewModel?> GetStudentFormModelByIdAsync(int id);
         Task<StudentDetailsViewModel> GetStudentDetailsModelByIdAsync(int id);
     }

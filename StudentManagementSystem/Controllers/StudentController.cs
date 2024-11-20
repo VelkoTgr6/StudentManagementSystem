@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StudentManagementSystem.Core.Contracts;
+using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Models.Admin.Student;
 
 namespace StudentManagementSystem.Controllers

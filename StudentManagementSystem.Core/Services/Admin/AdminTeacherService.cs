@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StudentManagementSystem.Core.Contracts;
+using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Models.Admin.Teacher;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
 
-namespace StudentManagementSystem.Core.Services
+namespace StudentManagementSystem.Core.Services.Admin
 {
     public class AdminTeacherService : IAdminTeacherService
     {
@@ -17,7 +17,7 @@ namespace StudentManagementSystem.Core.Services
         public async Task<int> CreateTeacherAsync(TeacherFormViewModel model)
         {
             var userId = await repository.GetIdByEmailAsync(model.Email);
-            
+
             var entity = new Teacher
             {
                 FirstName = model.FirstName,

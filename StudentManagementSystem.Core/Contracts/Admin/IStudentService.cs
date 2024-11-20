@@ -1,4 +1,4 @@
-﻿namespace StudentManagementSystem.Core.Contracts
+﻿namespace StudentManagementSystem.Core.Contracts.Admin
 {
     public interface IStudentService
     {

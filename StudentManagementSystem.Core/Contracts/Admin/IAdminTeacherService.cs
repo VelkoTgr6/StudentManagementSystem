@@ -1,6 +1,6 @@
 ﻿using StudentManagementSystem.Core.Models.Admin.Teacher;
 
-namespace StudentManagementSystem.Core.Contracts
+namespace StudentManagementSystem.Core.Contracts.Admin
 {
     public interface IAdminTeacherService
     {
