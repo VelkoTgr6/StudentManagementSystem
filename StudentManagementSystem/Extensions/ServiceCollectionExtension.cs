@@ -4,6 +4,7 @@ using StudentManagementSystem.Core.Contracts;
 using StudentManagementSystem.Core.Services;
 using StudentManagementSystem.Infrastructure;
 using StudentManagementSystem.Infrastructure.Data.Common;
+using StudentManagementSystem.Infrastructure.Data.Models;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -12,6 +13,11 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IAdminClassService, AdminClassService>();
+            services.AddScoped<IAdminCourseService, AdminCourseService>();
+            services.AddScoped<IAdminTeacherService, AdminTeacherService>();
+            services.AddScoped<IAdminStudentService, AdminStudentService>();
 
             return services;
         }
@@ -33,7 +39,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services,IConfiguration config)
         {
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddDefaultIdentity<IdentityUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            })
                 .AddEntityFrameworkStores<StudentManagementDbContext>();
 
             return services;

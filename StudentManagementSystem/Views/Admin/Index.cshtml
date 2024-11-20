@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Admin";
+}
+
+<h2 class="text-center my-4">User Management</h2>
+
+<div class="container">
+    <div class="row g-3">
+        <!-- Create Buttons -->
+        <div class="col-md-3">
+            <a class="btn btn-primary btn-lg w-100" asp-action="CreateStudent">Create Student</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-success btn-lg w-100" asp-action="CreateTeacher">Create Teacher</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-warning btn-lg w-100" asp-action="CreateCourse">Create Course</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-secondary btn-lg w-100" asp-action="CreateClass">Create Class</a>
+        </div>
+
+        <hr/>
+
+        <div class="d-flex flex-column align-items-center vh-100">
+            <div class="form-group text-center w-100" style="max-width: 400px;">
+                <label for="editOptions" class="form-label" style="font-size: 1.5rem">Select to Edit</label>
+                <select id="editOptions" class="form-control form-control-lg" name="selectedAction">
+                    <option value="AllStudents">Edit Student</option>
+                    <option value="EditTeacher">Edit Teacher</option>
+                    <option value="EditCourse">Edit Course</option>
+                    <option value="EditClass">Edit Class</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <form id="editForm" method="get" action="/Admin/AllStudents" class="mt-3">
+                <button type="submit" class="btn btn-danger btn-lg w-100" style="max-width: 150px;">Go to Edit</button>
+            </form>
+        </div>
+
+
+
+        <script>
+            // JavaScript to dynamically set form action based on dropdown selection
+            document.getElementById('editOptions').addEventListener('change', function () {
+                const form = document.getElementById('editForm');
+                const selectedValue = this.value; // Get the selected action
+                form.action = `/Admin/${selectedValue}`; // Update form action dynamically
+            });
+        </script>
+
+    </div>
+</div>

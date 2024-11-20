@@ -2,9 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static StudentManageApp.Infrastructure.Constants.ModelConstants;
-
-
+using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
 namespace StudentManagementSystem.Infrastructure.Data.Models
 {
@@ -24,11 +22,24 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [Comment("Course Description")]
         public string Description { get; set; } = null!;
 
+        [Comment("Shows if course is Deleted")]
+        public bool IsDeleted { get; set; } = false;
+
+        [Comment("Course Start Date")]
+        public DateTime StartDate { get; set; }
+
+        [Comment("Course End Date")]
+        public DateTime EndDate { get; set; }
+
+        [Comment("Maximum number of students allowed")]
+        public int EnrollmentCap { get; set; }
+
         [Required]
         [Comment("Teacher of the Course")]
         public int TeacherId {  get; set; }
 
         [ForeignKey(nameof(TeacherId))]
+        [Comment("Teacher of the Course")]
         public Teacher Teacher { get; set; } = null!;
 
         [Required]
@@ -38,7 +49,10 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [ForeignKey(nameof(PublisherId))]
         public IdentityUser Publisher { get; set; } = null!;
 
-        public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
+        public ICollection<ClassCourse> CourseClasses { get; set; } = new List<ClassCourse>();
+
+        [Comment("Grades assigned to the course")]
+        public ICollection<Grade> Grades { get; set; } = new List<Grade>();
 
     }
 }

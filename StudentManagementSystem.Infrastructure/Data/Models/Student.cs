@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static StudentManageApp.Infrastructure.Constants.ModelConstants;
+using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
 
 namespace StudentManagementSystem.Infrastructure.Data.Models
@@ -34,9 +34,16 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public string LastName { get; set; }= null!;
 
         [Required]
-        [MaxLength(StudentEmailMaxValue)]
+        [MaxLength(EmailMaxValue)]
         [Comment("Student Email Address")]
         public string Email { get; set; } = null!;
+
+        [MaxLength(StudentRemarksMaxLength)]
+        [Comment("Remarks about the student")]
+        public string? Remark { get; set; }
+
+        [Comment("Shows if student is Active")]
+        public double Аbsence { get; set; }
 
         [Required]
         [Comment("Date of birth of Student")]
@@ -47,6 +54,9 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [Comment("Student Contact Details")]
         public string ContactDetails {  get; set; }= null!;
 
+        [Comment("Shows if student is Deleted")]
+        public bool IsDeleted { get; set; } = false;
+
         [Required]
         [Comment("User Identifier")]
         public string UserId { get; set; } = null!;
@@ -54,8 +64,16 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [ForeignKey(nameof(UserId))]
         public IdentityUser User { get; set; } = null!;
 
-        [Comment("Courses that student enrolled")]
-        public ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
+        [Required]
+        [Comment("Class Identifier")]
+        public int ClassId { get; set; }
+
+        [ForeignKey(nameof(ClassId))]
+        public Class Class { get; set; } = null!;
+
+        [MaxLength(ProfilePictureMaxLength)]
+        [Comment("Path to the profile picture of the student")]
+        public string ProfilePicturePath { get; set; } = "images/profiles/default.png";
 
         [Comment("Student Performance")]
         public double Performance {  get; set; }

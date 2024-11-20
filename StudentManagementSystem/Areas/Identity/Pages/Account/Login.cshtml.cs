@@ -2,15 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using StudentManagementSystem.Infrastructure.Data.Models;
-using System.ComponentModel.DataAnnotations;
-using System.Net.Mail;
-using System.Net;
-using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace StudentManagementSystem.Areas.Identity.Pages.Account
 {
@@ -18,13 +21,11 @@ namespace StudentManagementSystem.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger,UserManager<IdentityUser> userManagaer)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
-            _userManager = userManagaer;
         }
 
         /// <summary>
@@ -100,79 +101,40 @@ namespace StudentManagementSystem.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string email, string password)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            if (string.IsNullOrEmpty(email))
+            returnUrl ??= Url.Content("~/");
+
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Please enter your email.");
-                return Page();
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User logged in.");
+                    return LocalRedirect(returnUrl);
+                }
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                }
+                if (result.IsLockedOut)
+                {
+                    _logger.LogWarning("User account locked out.");
+                    return RedirectToPage("./Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
+                }
             }
 
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return Page();
-            }
-
-            // Proceed with password sign-in
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, password, false, lockoutOnFailure: false);
-            if (result.Succeeded)
-            {
-                // Redirect to a password reset page if this is their first login
-                return RedirectToAction("ChangePassword", "Account");
-            }
-
-            ModelState.AddModelError(string.Empty, "Invalid password.");
+            // If we got this far, something failed, redisplay form
             return Page();
-        }
-        public async Task<IActionResult> CreateUserAsync(string email)
-        {
-            var user = new IdentityUser()
-            {
-                UserName = email,
-                Email = email
-            };
-
-            // Generate a temporary password
-            string tempPassword = GeneratePassword();
-
-            var result = await _userManager.CreateAsync(user, tempPassword);
-            if (result.Succeeded)
-            {
-                // Send temporary password via email
-                await SendPasswordEmailAsync(email, tempPassword);
-                return RedirectToAction("UserList");
-            }
-            // Handle errors if user creation fails
-            ModelState.AddModelError(string.Empty, "User creation failed.");
-            return Page();
-        }
-        private string GeneratePassword()
-        {
-            int length = 10;
-            const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            StringBuilder res = new StringBuilder();
-            Random rnd = new Random();
-            while (0 < length--)
-            {
-                res.Append(valid[rnd.Next(valid.Length)]);
-            }
-            return res.ToString();
-        }
-        public async Task SendPasswordEmailAsync(string userEmail, string password)
-        {
-            var client = new SmtpClient("smtp.yourserver.com")
-            {
-                Credentials = new NetworkCredential("yourEmail@example.com", "yourEmailPassword"),
-                EnableSsl = true
-            };
-
-            await client.SendMailAsync(new MailMessage("yourEmail@example.com", userEmail)
-            {
-                Subject = "Your Account Password",
-                Body = $"Your temporary password is: {password}. Please change it after your first login."
-            });
         }
     }
 }

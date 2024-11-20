@@ -1,4 +1,4 @@
-﻿namespace StudentManageApp.Infrastructure.Constants
+﻿namespace StudentManagementSystem.Infrastructure.Constants
 {
     /// <summary>
     /// Constant used for model Validation
@@ -8,8 +8,7 @@
         /// <summary>
         /// Teacher Name Minimal Length
         /// </summary>
-        public const int TeacherNameMinLength = 5;
-
+        public const int TeacherNameMinLength = 2;
         /// <summary>
         /// Teacher Name Maximum Length
         /// </summary>
@@ -24,17 +23,15 @@
         /// Teacher Contact Details Minimal Length
         /// </summary>
         public const int TeacherContactMinLength = 2;
-
         /// <summary>
         /// Teacher Contact Details Maximum Length
         /// </summary>
-        public const int TeacherContactMaxLength = 30;
+        public const int TeacherContactMaxLength = 200;
 
         /// <summary>
         /// Course Name Minimum Length
         /// </summary>
         public const int CourseNameMinLength = 3;
-
         /// <summary>
         /// Course Name Maximum Length
         /// </summary>
@@ -44,7 +41,6 @@
         /// Course Description Minimum Length
         /// </summary>
         public const int CourseDescriptionMinLength = 2;
-
         /// <summary>
         /// Course Description Minimum Length
         /// </summary>
@@ -56,10 +52,14 @@
         public const int StudentPersonalIdMinMaxLength = 10;
 
         /// <summary>
+        /// Student Remarks Maximum Length
+        /// </summary>
+        public const int StudentRemarksMaxLength = 200;
+
+        /// <summary>
         /// Student Name Minimum Length
         /// </summary>
-        public const int StudentNameMinLength = 5;
-
+        public const int StudentNameMinLength = 2;
         /// <summary>
         /// Student Name Maximum Length
         /// </summary>
@@ -68,21 +68,40 @@
         /// <summary>
         /// Student Email Minimum Length
         /// </summary>
-        public const int StudentEmailMinValue = 10;
-
+        public const int EmailMinValue = 10;
         /// <summary>
         /// Student Email Maximum Length
         /// </summary>
-        public const int StudentEmailMaxValue = 50;
+        public const int EmailMaxValue = 50;
 
         /// <summary>
         /// Student Contact Details Minimum Length
         /// </summary>
         public const int StudentContactMinLength = 2;
-
         /// <summary>
         /// Student Contact Details Maximum Length
         /// </summary>
-        public const int StudentContactMaxLength = 30;
+        public const int StudentContactMaxLength = 200;
+
+
+        /// <summary>
+        /// Profile Picture Minimum Length
+        /// </summary>
+        public const int ProfilePictureMinLength = 20;
+        /// <summary>
+        /// Profile Picture Maximum Length
+        /// </summary>
+        public const int ProfilePictureMaxLength = 255;
+
+        /// <summary>
+        /// Date Format 
+        /// </summary>
+        public const string DateFormat = "MM/dd/yyyy";
+
+        /// <summary>
+        /// Regular Expression for Date Format
+        /// </summary>
+        public const string RegexDateFormat = @"^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$";
+
     }
 }
