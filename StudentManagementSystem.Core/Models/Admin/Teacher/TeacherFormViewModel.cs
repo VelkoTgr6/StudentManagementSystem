@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StudentManagementSystem.Core.Models.Course;
+using StudentManagementSystem.Core.Models.Admin.Course;
 using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
-namespace StudentManagementSystem.Core.Models.Teacher
+namespace StudentManagementSystem.Core.Models.Admin.Teacher
 {
     public class TeacherFormViewModel
     {

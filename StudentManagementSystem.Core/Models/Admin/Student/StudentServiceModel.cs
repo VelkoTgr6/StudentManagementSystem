@@ -1,6 +1,6 @@
-﻿using StudentManagementSystem.Core.Models.Class;
+﻿using StudentManagementSystem.Core.Models.Admin.Class;
 
-namespace StudentManagementSystem.Core.Models.Student
+namespace StudentManagementSystem.Core.Models.Admin.Student
 {
     public class StudentServiceModel
     {

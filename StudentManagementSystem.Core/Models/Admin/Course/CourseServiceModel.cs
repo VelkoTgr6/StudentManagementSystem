@@ -1,4 +1,4 @@
-﻿namespace StudentManagementSystem.Core.Models.Course
+﻿namespace StudentManagementSystem.Core.Models.Admin.Course
 {
     public class CourseServiceModel
     {

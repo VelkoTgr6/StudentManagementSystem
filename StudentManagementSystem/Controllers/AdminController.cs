@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts;
-using StudentManagementSystem.Core.Models.Class;
-using StudentManagementSystem.Core.Models.Course;
-using StudentManagementSystem.Core.Models.Student;
-using StudentManagementSystem.Core.Models.Teacher;
+using StudentManagementSystem.Core.Models.Admin.Class;
+using StudentManagementSystem.Core.Models.Admin.Course;
+using StudentManagementSystem.Core.Models.Admin.Student;
+using StudentManagementSystem.Core.Models.Admin.Teacher;
 using StudentManagementSystem.Infrastructure.Data.Models;
 using System.Security.Claims;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;

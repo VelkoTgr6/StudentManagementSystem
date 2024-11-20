@@ -1,4 +1,4 @@
-﻿namespace StudentManagementSystem.Core.Models.Student
+﻿namespace StudentManagementSystem.Core.Models.Admin.Student
 {
     public class StudentQueryServiceModel
     {

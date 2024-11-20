@@ -1,4 +1,4 @@
-﻿using StudentManagementSystem.Core.Models.Course;
+﻿using StudentManagementSystem.Core.Models.Admin.Course;
 
 namespace StudentManagementSystem.Core.Contracts
 {

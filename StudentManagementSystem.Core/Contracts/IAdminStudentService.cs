@@ -1,5 +1,5 @@
 ﻿using StudentManagementSystem.Core.Enumerations;
-using StudentManagementSystem.Core.Models.Student;
+using StudentManagementSystem.Core.Models.Admin.Student;
 
 namespace StudentManagementSystem.Core.Contracts
 {

@@ -1,6 +1,6 @@
 ﻿using StudentManagementSystem.Infrastructure.Data.Models;
 
-namespace StudentManagementSystem.Core.Models.Student
+namespace StudentManagementSystem.Core.Models.Admin.Student
 {
     public class StudentDetailsViewModel
     {

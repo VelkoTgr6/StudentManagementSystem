@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts;
 using StudentManagementSystem.Core.Enumerations;
-using StudentManagementSystem.Core.Models.Student;
+using StudentManagementSystem.Core.Models.Admin.Student;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
 

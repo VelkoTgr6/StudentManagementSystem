@@ -1,6 +1,6 @@
-﻿namespace StudentManagementSystem.Core.Models.Class
+﻿namespace StudentManagementSystem.Core.Models.Admin.Teacher
 {
-    public class ClassServiceModel
+    public class TeacherServiceModel
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

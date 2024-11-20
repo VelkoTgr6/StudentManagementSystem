@@ -1,7 +1,7 @@
 ﻿using StudentManagementSystem.Core.Enumerations;
 using System.ComponentModel.DataAnnotations;
 
-namespace StudentManagementSystem.Core.Models.Student
+namespace StudentManagementSystem.Core.Models.Admin.Student
 {
     public class AllStudentsQueryModel
     {

@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
-using StudentManagementSystem.Core.Models.Teacher;
+using StudentManagementSystem.Core.Models.Admin.Teacher;
 
-namespace StudentManagementSystem.Core.Models.Course
+namespace StudentManagementSystem.Core.Models.Admin.Course
 {
     public class CourseFormViewModel
     {
@@ -13,7 +13,7 @@ namespace StudentManagementSystem.Core.Models.Course
         [Comment("Course Name")]
         public string Name { get; set; } = null!;
 
-        [Required(ErrorMessage=RequiredMessage)]
+        [Required(ErrorMessage = RequiredMessage)]
         [MaxLength(CourseDescriptionMaxLength)]
         [Comment("Course Description")]
         public string Description { get; set; } = null!;

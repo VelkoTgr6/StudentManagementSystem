@@ -3,10 +3,10 @@ using StudentManagementSystem.Infrastructure.Data.Models;
 using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
-using StudentManagementSystem.Core.Models.Course;
-using StudentManagementSystem.Core.Models.Teacher;
+using StudentManagementSystem.Core.Models.Admin.Teacher;
+using StudentManagementSystem.Core.Models.Admin.Course;
 
-namespace StudentManagementSystem.Core.Models.Class
+namespace StudentManagementSystem.Core.Models.Admin.Class
 {
     public class ClassFormViewModel
     {

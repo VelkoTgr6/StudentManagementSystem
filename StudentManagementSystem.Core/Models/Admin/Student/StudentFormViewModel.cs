@@ -2,10 +2,10 @@
 using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
-using StudentManagementSystem.Core.Models.Class;
-using StudentManagementSystem.Core.Models.Course;
+using StudentManagementSystem.Core.Models.Admin.Course;
+using StudentManagementSystem.Core.Models.Admin.Class;
 
-namespace StudentManagementSystem.Core.Models.Student
+namespace StudentManagementSystem.Core.Models.Admin.Student
 {
     public class StudentFormViewModel
     {
@@ -50,7 +50,7 @@ namespace StudentManagementSystem.Core.Models.Student
 
         [Required]
         [Comment("Date of birth of Student")]
-       // [RegularExpression(RegexDateFormat, ErrorMessage = "Date format should be MM/dd/yyyy")]
+        // [RegularExpression(RegexDateFormat, ErrorMessage = "Date format should be MM/dd/yyyy")]
         [Display(Name = "Date Of Birth")]
         public DateTime DateOfBirth { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts;
-using StudentManagementSystem.Core.Models.Teacher;
+using StudentManagementSystem.Core.Models.Admin.Teacher;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
 

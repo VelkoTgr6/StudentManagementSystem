@@ -1,5 +1,5 @@
-﻿using StudentManagementSystem.Core.Models.Class;
-using StudentManagementSystem.Core.Models.Course;
+﻿using StudentManagementSystem.Core.Models.Admin.Class;
+using StudentManagementSystem.Core.Models.Admin.Course;
 
 namespace StudentManagementSystem.Core.Contracts
 {
