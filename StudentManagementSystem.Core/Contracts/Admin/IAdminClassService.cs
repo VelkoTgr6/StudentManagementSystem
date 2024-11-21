@@ -11,5 +11,6 @@ namespace StudentManagementSystem.Core.Contracts.Admin
         Task<IEnumerable<ClassServiceModel>> GetAllClassesAsync();
         Task<CourseServiceModel> GetClassByIdAsync(int id);
         Task<IEnumerable<string>> GetAllClassesNamesAsync();
+        public IEnumerable<string> SortClassNames(IEnumerable<string> classNames);
     }
 }

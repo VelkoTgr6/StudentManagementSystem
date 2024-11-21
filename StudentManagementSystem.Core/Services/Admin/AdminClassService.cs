@@ -45,7 +45,7 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             var entity = await repository.GetByIdAsync<Class>(id);
 
-            if (entity != null && entity.IsDeleted== false)
+            if (entity != null && entity.IsDeleted == false)
             {
                 entity.Name = model.Name;
                 entity.TeacherId = model.TeacherId;
@@ -102,26 +102,49 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task<IEnumerable<ClassServiceModel>> GetAllClassesAsync()
         {
-            return await repository.AllAsReadOnly<Class>()
+            var classes = await repository.AllAsReadOnly<Class>()
                 .Where(c => c.IsDeleted == false)
                 .Select(c => new ClassServiceModel
                 {
                     Id = c.Id,
                     Name = c.Name
-                }).ToListAsync();
+                })
+                .ToListAsync();
+
+            return classes;
         }
 
         public async Task<IEnumerable<string>> GetAllClassesNamesAsync()
         {
-            return await repository.AllAsReadOnly<Class>()
-                .Where(c => c.IsDeleted == false)
+            var classes = await repository
+                .AllAsReadOnly<Class>()
+                .Where(c => !c.IsDeleted)
                 .Select(c => c.Name)
                 .ToListAsync();
+
+            classes = SortClassNames(classes).ToList();
+
+            return classes;
         }
 
         public Task<CourseServiceModel> GetClassByIdAsync(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<string> SortClassNames(IEnumerable<string> classNames)
+        {
+            return classNames
+                .Select(name => new
+                {
+                    Original = name,
+                    NumberPart = int.Parse(new string(name.TakeWhile(char.IsDigit).ToArray())),
+                    TextPart = new string(name.SkipWhile(char.IsDigit).ToArray())
+                })
+                .OrderBy(x => x.NumberPart)
+                .ThenBy(x => x.TextPart)
+                .Select(x => x.Original)
+                .ToList();
         }
     }
 }

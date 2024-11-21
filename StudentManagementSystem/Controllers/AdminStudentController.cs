@@ -197,7 +197,7 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
             await adminStudentService.EditStudentAsync(id, model);
-            return RedirectToAction(nameof(AllStudents));
+            return RedirectToAction(nameof(DetailsStudent), new { id});
         }
 
         [HttpGet]
@@ -285,6 +285,97 @@ namespace StudentManagementSystem.Controllers
             await adminTeacherService.EditTeacherAsync(id, model);
 
             return RedirectToAction(nameof(DetailsTeacher), new { id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteTeacher(int id)
+        {
+            if (await adminTeacherService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            await adminTeacherService.DeleteTeacherAsync(id);
+            return RedirectToAction(nameof(AllTeachers));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllCourses([FromQuery] AllCoursesQueryModel query)
+        {
+            var courses= await adminCourseService.AllAsync(
+                query.Teacher,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                query.CoursesPerPage);
+
+            query.Teachers = await adminTeacherService.GetAllTeachersNamesAsync();
+            query.TotalCoursesCount = courses.TotalCoursesCount;
+            query.Courses = courses.Courses;
+            query.TotalPages = (int)Math.Ceiling(courses.TotalCoursesCount / (double)query.CoursesPerPage);
+            return View(query);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DetailsCourse(int id)
+        {
+            if (await adminCourseService.CourseExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            var course = await adminCourseService.GetCourseDetailsModelByIdAsync(id);
+            return View(course);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> EditCourse(int id)
+        {
+            if (await adminCourseService.CourseExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            var model = await adminCourseService.GetCourseFormModelByIdAsync(id);
+
+            if (model != null)
+            {
+                model.Teachers = await adminTeacherService.GetAllTeachersAsync();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCourse(int id, CourseFormViewModel model)
+        {
+            if (await adminCourseService.CourseExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                model.Teachers = await adminTeacherService.GetAllTeachersAsync();
+                return View(model);
+            }
+
+            var publisherId = User.GetId();
+
+            await adminCourseService.EditCourseAsync(id, model, publisherId);
+
+            return RedirectToAction(nameof(DetailsCourse), new { id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteCourse(int id)
+        {
+            if (await adminCourseService.CourseExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            await adminCourseService.DeleteCourseAsync(id);
+
+            return RedirectToAction(nameof(AllCourses));
         }
     }
 }

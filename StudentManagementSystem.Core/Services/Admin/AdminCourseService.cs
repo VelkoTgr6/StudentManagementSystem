@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts.Admin;
+using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Course;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
@@ -14,10 +15,63 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             repository = _repository;
         }
+
+        public async Task<CourseQueryServiceModel> AllAsync(string? teacher = null, string? searchTerm = null, CourseSorting sorting = CourseSorting.Name, int currentPage = 1, int coursesPerPage = 10)
+        {
+            var courseQuery = repository.AllAsReadOnly<Course>().Where(s => s.IsDeleted == false);
+
+            
+
+            if (!string.IsNullOrWhiteSpace(teacher))
+            {
+                string[] teacherNameArr = teacher.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                courseQuery = courseQuery
+                    .Where(s => s.Teacher.Titles == teacherNameArr[0] &&
+                    s.Teacher.FirstName == teacherNameArr[1] &&
+                    s.Teacher.LastName == teacherNameArr[2] &&
+                    s.IsDeleted == false
+                );
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                courseQuery = courseQuery
+                    .Where(t => t.Name.ToLower().Contains(searchTerm.ToLower()) ||
+                                t.Teacher.FirstName.ToLower().Contains(searchTerm.ToLower()) ||
+                                t.Teacher.LastName.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            courseQuery = sorting switch
+            {
+                CourseSorting.Name => courseQuery.OrderBy(t => t.Name),
+                CourseSorting.Teacher => courseQuery.OrderBy(t => t.Teacher.FirstName).ThenBy(t => t.Teacher.LastName),
+                _ => courseQuery.OrderBy(s => s.Name)
+            };
+
+            var courses = await courseQuery
+                .Skip((currentPage - 1) * coursesPerPage)
+                .Take(coursesPerPage)
+                .Select(s => new CourseServiceModel
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Teacher = s.Teacher.Titles + " " + s.Teacher.FirstName + " " + s.Teacher.LastName
+                })
+                .ToListAsync();
+
+            var totalCoursesCount = await courseQuery.CountAsync();
+
+            return new CourseQueryServiceModel
+            {
+                TotalCoursesCount = totalCoursesCount,
+                Courses = courses
+            };
+        }
+
         public async Task<bool> CourseExistAsync(int id)
         {
             return await repository.AllAsReadOnly<Course>()
-                .Where(c=>c.IsDeleted == false)
+                .Where(c => c.IsDeleted == false)
                 .AnyAsync(c => c.Id == id);
         }
 
@@ -37,9 +91,16 @@ namespace StudentManagementSystem.Core.Services.Admin
             return entity.Id;
         }
 
-        public Task DeleteCourseAsync(int id)
+        public async Task DeleteCourseAsync(int id)
         {
-            throw new NotImplementedException();
+            var course = await repository.GetByIdAsync<Course>(id);
+
+            if (course != null && course.IsDeleted == false)
+            {
+                course.IsDeleted = true;
+            }
+
+            await repository.SaveChangesAsync();
         }
 
         public async Task EditCourseAsync(int id, CourseFormViewModel model, string publisherId)
@@ -73,13 +134,55 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             return await repository.AllAsReadOnly<Course>()
                 .Where(c => c.IsDeleted == false)
+                .OrderBy(c => c.Name)
                 .Select(c => c.Name)
                 .ToListAsync();
         }
 
         public Task<CourseServiceModel> GetCourseByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return repository.GetByIdAsync<CourseServiceModel>(id);
+        }
+
+        public async Task<CourseDetailsViewModel> GetCourseDetailsModelByIdAsync(int id)
+        {
+            var course = await repository.AllAsReadOnly<Course>()
+                 .Where(s => s.Id == id && s.IsDeleted == false)
+                 .Select(s => new CourseDetailsViewModel()
+                 {
+                     Id = s.Id,
+                     Teacher = s.Teacher.Titles + " " + s.Teacher.FirstName + " " + s.Teacher.LastName,
+                     Name = s.Name,
+                     Description = s.Description
+                 })
+                 .FirstOrDefaultAsync();
+
+            if (course == null)
+            {
+                throw new ArgumentException($"Course with ID {id} not found.");
+            }
+
+            return course;
+        }
+
+        public async Task<CourseFormViewModel> GetCourseFormModelByIdAsync(int id)
+        {
+            var course = await repository.AllAsReadOnly<Course>()
+                .Where(s => s.Id == id && s.IsDeleted == false)
+                .Select(s => new CourseFormViewModel
+                {
+                    Name = s.Name,
+                    Description = s.Description,
+                    TeacherId = s.TeacherId
+                })
+                .FirstOrDefaultAsync();
+
+            if (course == null)
+            {
+                throw new ArgumentException($"Course with ID {id} not found.");
+            }
+
+            return course;
         }
     }
 }

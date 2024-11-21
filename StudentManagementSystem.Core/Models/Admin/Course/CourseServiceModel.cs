@@ -11,5 +11,10 @@
         /// Course Name
         /// </summary>
         public string Name { get; set; } = null!;
+
+        /// <summary>
+        /// Course Teacher
+        /// </summary>
+        public string Teacher { get; set; } = null!;
     }
 }

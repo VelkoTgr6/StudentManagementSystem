@@ -23,7 +23,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (!string.IsNullOrWhiteSpace(course))
             {
-                teacherQuery = teacherQuery.Where(t => t.Courses.Any(c=>c.Name == course && t.IsDeleted == false));
+                teacherQuery = teacherQuery.Where(t => t.Courses.Any(c => c.Name == course && t.IsDeleted == false));
             }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -33,7 +33,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                             t.LastName.ToLower().Contains(searchTerm) ||
                             t.ContactDetails.Contains(searchTerm) ||
                             t.Email.ToLower().Contains(searchTerm) ||
-                            t.Courses.Select(c=>c.Name.ToLower()).Contains(searchTerm));
+                            t.Courses.Select(c => c.Name.ToLower()).Contains(searchTerm));
             }
 
             teacherQuery = sorting switch
@@ -101,9 +101,16 @@ namespace StudentManagementSystem.Core.Services.Admin
             return entity.Id;
         }
 
-        public Task DeleteTeacherAsync(int id)
+        public async Task DeleteTeacherAsync(int id)
         {
-            throw new NotImplementedException();
+            var teacher = await repository.GetByIdAsync<Teacher>(id);
+
+            if (teacher != null && teacher.IsDeleted == false)
+            {
+                teacher.IsDeleted = true;
+            }
+
+            await repository.SaveChangesAsync();
         }
 
         public async Task EditTeacherAsync(int id, TeacherFormViewModel model)
@@ -194,6 +201,15 @@ namespace StudentManagementSystem.Core.Services.Admin
                 .FirstAsync();
 
             return teacher;
+        }
+
+        public async Task<IEnumerable<string>> GetAllTeachersNamesAsync()
+        {
+            return await repository.AllAsReadOnly<Teacher>()
+                .Where(t => t.IsDeleted == false)
+                .OrderBy(t => t.FirstName)
+                .Select(t => $"{t.Titles} {t.FirstName} {t.LastName}")
+                .ToListAsync();
         }
     }
 }
