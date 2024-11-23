@@ -6,16 +6,21 @@
     <!-- Profile Picture -->
     <div class="row mb-4">
         <div class="col-md-3">
-            <img src="@Model.ProfilePicturePath" alt="@Model.FirstName @Model.LastName" class="img-thumbnail" style="max-width: 150px;" />
+            <img src="@(Url.Content(Model.ProfilePicturePath.StartsWith("/") ? Model.ProfilePicturePath : "/" + Model.ProfilePicturePath))"
+                 alt="@Model.FirstName @Model.LastName"
+                 class="img-thumbnail"
+                 style="width: 200px; height: 250px; object-fit: cover;" />
         </div>
-        <div class="col-md-9">
-            <h3>@Model.FirstName @Model.MiddleName @Model.LastName</h3>
-            <p><strong>Personal ID:</strong> @Model.PersonalId</p>
-            <p><strong>Class:</strong> @Model.Class </p>
-            <p><strong>Date of Birth:</strong> @Model.DateOfBirth.ToString("dd.MM.yyyy")</p>
-            <p><strong>Email</strong> @Model.Email</p>
-            <p><strong>Contact Details:</strong> @Model.ContactDetails</p>
-            <p><strong>Performance:</strong> @Model.Performance</p>
+        <div class="col-md-9 d-flex align-items-center">
+            <div>
+                <h3>@Model.FirstName @Model.MiddleName @Model.LastName</h3>
+                <p><strong>Personal ID:</strong> @Model.PersonalId</p>
+                <p><strong>Class:</strong> @Model.Class </p>
+                <p><strong>Date of Birth:</strong> @Model.DateOfBirth.ToString("dd.MM.yyyy")</p>
+                <p><strong>Email</strong> @Model.Email</p>
+                <p><strong>Contact Details:</strong> @Model.ContactDetails</p>
+                <p><strong>Performance:</strong> @Model.Performance</p>
+            </div>
         </div>
     </div>
 
@@ -58,6 +63,6 @@
             </a>
         </div>
 
-    <!-- Back Button -->
-    <a href="@Url.Action("AllStudents", "AdminStudent")" class="btn btn-secondary mt-3">Back to List</a>
-</div>
+        <!-- Back Button -->
+        <a href="@Url.Action("AllStudents", "AdminStudent")" class="btn btn-secondary mt-3">Back to List</a>
+    </div>

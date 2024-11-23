@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Models.Admin.Class;
 using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
@@ -63,7 +64,11 @@ namespace StudentManagementSystem.Core.Models.Admin.Student
 
         [Comment("Student Profile Picture Path")]
         [Display(Name = "Profile Picture")]
-        public string ProfilePicturePath { get; set; } = null!;
+        public string? ProfilePicturePath { get; set; } = null!;
+
+        [Comment("Student Profile Picture File")]
+        [Display(Name = "Profile Picture File")]
+        public IFormFile? ProfilePictureFile { get; set; }
 
         [Comment("Class Identifier")]
         [Display(Name = "Class")]

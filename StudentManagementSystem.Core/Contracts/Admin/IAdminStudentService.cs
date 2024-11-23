@@ -1,12 +1,13 @@
-﻿using StudentManagementSystem.Core.Enumerations;
+﻿using Microsoft.AspNetCore.Http;
+using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Student;
 
 namespace StudentManagementSystem.Core.Contracts.Admin
 {
     public interface IAdminStudentService
     {
-        Task<int> CreateStudentAsync(StudentFormViewModel model);
-        Task EditStudentAsync(int id, StudentFormViewModel model);
+        Task<int> CreateStudentAsync(StudentFormViewModel model, IFormFile? profilePictureFile);
+        Task EditStudentAsync(int id, StudentFormViewModel model, IFormFile? profilePictureFile);
         Task DeleteStudentAsync(int id);
         Task<IEnumerable<StudentServiceModel>> GetAllStudentsAsync();
         Task<StudentServiceModel> GetStudentByIdAsync(int id);

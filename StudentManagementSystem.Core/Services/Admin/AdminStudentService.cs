@@ -72,9 +72,16 @@ namespace StudentManagementSystem.Core.Services.Admin
             };
         }
 
-        public async Task<int> CreateStudentAsync(StudentFormViewModel model)
+        public async Task<int> CreateStudentAsync(StudentFormViewModel model, IFormFile? profilePictureFile)
         {
             var userId = await repository.GetIdByEmailAsync(model.Email);
+
+            // Handle profile picture upload
+            string profilePicturePath = "/images/profiles/default.jpg"; // Default profile picture
+            if (profilePictureFile != null)
+            {
+                profilePicturePath = await SaveProfilePictureAsync(profilePictureFile);
+            }
 
             var entity = new Student
             {
@@ -87,7 +94,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                 DateOfBirth = model.DateOfBirth,
                 UserId = userId,
                 ClassId = model.ClassId,
-                ProfilePicturePath = model.ProfilePicturePath
+                ProfilePicturePath = profilePicturePath
             };
 
             await repository.AddAsync(entity);
@@ -95,6 +102,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             return entity.Id;
         }
+
 
         public async Task DeleteStudentAsync(int id)
         {
@@ -108,7 +116,7 @@ namespace StudentManagementSystem.Core.Services.Admin
             await repository.SaveChangesAsync();
         }
 
-        public async Task EditStudentAsync(int id, StudentFormViewModel model)
+        public async Task EditStudentAsync(int id, StudentFormViewModel model, IFormFile? profilePictureFile)
         {
             var entity = await repository.GetByIdAsync<Student>(id);
 
@@ -123,11 +131,41 @@ namespace StudentManagementSystem.Core.Services.Admin
                 entity.DateOfBirth = model.DateOfBirth;
                 entity.ClassId = model.ClassId;
 
+                // Handle profile picture upload if provided
+                if (profilePictureFile != null)
+                {
+                    entity.ProfilePicturePath = await SaveProfilePictureAsync(profilePictureFile);
+                }
+                else if (string.IsNullOrWhiteSpace(entity.ProfilePicturePath))
+                {
+                    entity.ProfilePicturePath = "/images/profiles/default.jpg"; // Default profile picture
+                }
             }
 
             await repository.SaveChangesAsync();
-
         }
+        private async Task<string> SaveProfilePictureAsync(IFormFile profilePictureFile)
+        {
+            // Define the directory to save the images
+            string uploadsFolder = Path.Combine("wwwroot", "images", "profiles");
+            Directory.CreateDirectory(uploadsFolder); // Ensure the directory exists
+
+            // Generate a unique file name
+            string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(profilePictureFile.FileName);
+
+            // Combine the folder and file name
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            // Save the file
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await profilePictureFile.CopyToAsync(fileStream);
+            }
+
+            // Return the relative path
+            return $"/images/profiles/{uniqueFileName}";
+        }
+
 
         public async Task<bool> ExistAsync(int id)
         {

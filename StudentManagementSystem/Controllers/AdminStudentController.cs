@@ -47,25 +47,6 @@ namespace StudentManagementSystem.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateStudent(StudentFormViewModel model)
-        {
-            if (await adminService.EmailExistAsync(model.Email) == false)
-            {
-                ModelState.AddModelError(nameof(model.Email), InvalidEmailMessage);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                model.Classes = await adminClassService.GetAllClassesAsync();
-                return View(model);
-            }
-
-            var id = await adminStudentService.CreateStudentAsync(model);
-
-            return RedirectToAction(nameof(Index));
-        }
-
         [HttpGet]
         public async Task<IActionResult> CreateCourse()
         {
@@ -147,6 +128,26 @@ namespace StudentManagementSystem.Controllers
             var id = await adminClassService.CreateClassAsync(model);
             return RedirectToAction(nameof(Index));
         }
+        [HttpPost]
+        public async Task<IActionResult> CreateStudent(StudentFormViewModel model, IFormFile? ProfilePictureFile)
+        {
+            if (await adminService.EmailExistAsync(model.Email) == false)
+            {
+                ModelState.AddModelError(nameof(model.Email), InvalidEmailMessage);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Classes = await adminClassService.GetAllClassesAsync();
+                return View(model);
+            }
+
+            // Pass the uploaded file to the service
+            var id = await adminStudentService.CreateStudentAsync(model, ProfilePictureFile);
+
+            return RedirectToAction(nameof(DetailsStudent), new { id });
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> AllStudents([FromQuery] AllStudentsQueryModel query)
@@ -185,19 +186,23 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditStudent(int id, StudentFormViewModel model)
+        public async Task<IActionResult> EditStudent(int id, StudentFormViewModel model, IFormFile? ProfilePictureFile)
         {
             if (await adminStudentService.ExistAsync(id) == false)
             {
                 return BadRequest();
             }
+
             if (!ModelState.IsValid)
             {
                 model.Classes = await adminClassService.GetAllClassesAsync();
                 return View(model);
             }
-            await adminStudentService.EditStudentAsync(id, model);
-            return RedirectToAction(nameof(DetailsStudent), new { id});
+
+            // Pass the uploaded file to the service
+            await adminStudentService.EditStudentAsync(id, model, ProfilePictureFile);
+
+            return RedirectToAction(nameof(DetailsStudent), new { id });
         }
 
         [HttpGet]

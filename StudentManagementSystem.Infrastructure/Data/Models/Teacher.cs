@@ -36,7 +36,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
 
         [MaxLength(ProfilePictureMaxLength)]
         [Comment("Path to the profile picture of the student")]
-        public string ProfilePicturePath { get; set; } = "images/profiles/default.png";
+        public string ProfilePicturePath { get; set; } = "images/profiles/default.jpg";
 
         [Required]
         [Comment("User Identifier")]

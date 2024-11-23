@@ -9,51 +9,55 @@
 
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-        <form method="post">
+        <!-- enctype attribute required for file uploads -->
+        <form method="post" enctype="multipart/form-data">
+            <!-- Profile Picture Upload -->
             <div class="form-group">
-                <label for="ProfilePicture">Profile Picture</label>
-                <input type="file" class="form-control" name="ProfilePicture" id="ProfilePicture" />
+                <label for="ProfilePictureFile">Upload New Profile Picture (Optional)</label>
+                <input type="file" class="form-control" name="ProfilePictureFile" id="ProfilePictureFile" />
             </div>
+
+            <!-- Personal Details -->
             <div class="row">
                 <div class="col">
                     <label asp-for="FirstName"></label>
-                    <input asp-for="FirstName" class="form-control" placeholder="First Name...">
+                    <input asp-for="FirstName" class="form-control" placeholder="First Name..." />
                     <span asp-validation-for="FirstName" class="small text-danger"></span>
                 </div>
                 <div class="col">
                     <label asp-for="MiddleName"></label>
-                    <input asp-for="MiddleName" class="form-control" placeholder="Middle Name...">
+                    <input asp-for="MiddleName" class="form-control" placeholder="Middle Name..." />
                     <span asp-validation-for="MiddleName" class="small text-danger"></span>
                 </div>
                 <div class="col">
                     <label asp-for="LastName"></label>
-                    <input asp-for="LastName" class="form-control" placeholder="Last Name...">
+                    <input asp-for="LastName" class="form-control" placeholder="Last Name..." />
                     <span asp-validation-for="LastName" class="small text-danger"></span>
                 </div>
             </div>
 
+            <!-- Other Details -->
             <div class="row">
                 <div class="col">
                     <label asp-for="PersonalId"></label>
-                    <input asp-for="PersonalId" class="form-control" placeholder="Personal Identification Number...">
+                    <input asp-for="PersonalId" class="form-control" placeholder="Personal Identification Number..." />
                     <span asp-validation-for="PersonalId" class="small text-danger"></span>
                 </div>
                 <div class="col">
                     <label asp-for="Email"></label>
-                    <input asp-for="Email" class="form-control" placeholder="Email...">
+                    <input asp-for="Email" class="form-control" placeholder="Email..." />
                     <span asp-validation-for="Email" class="small text-danger"></span>
                 </div>
             </div>
 
-
             <div class="form-group">
                 <label asp-for="ContactDetails"></label>
-                <textarea asp-for="ContactDetails" rows="4" class="form-control" placeholder="Gsm,Address..."></textarea>
+                <textarea asp-for="ContactDetails" rows="4" class="form-control" placeholder="Gsm, Address..."></textarea>
                 <span asp-validation-for="ContactDetails" class="small text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateOfBirth"></label>
-                <input asp-for="DateOfBirth" type="date" class="form-control">
+                <input asp-for="DateOfBirth" type="date" class="form-control" />
                 <span asp-validation-for="DateOfBirth" class="small text-danger"></span>
             </div>
             <div class="form-group">
@@ -66,6 +70,8 @@
                 </select>
                 <span asp-validation-for="ClassId" class="small text-danger"></span>
             </div>
+
+            <!-- Submit Button -->
             <div class="text-center">
                 <input class="btn btn-primary mt-3" type="submit" value="Save" />
             </div>
