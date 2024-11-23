@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts.Admin;
+using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Class;
 using StudentManagementSystem.Core.Models.Admin.Course;
 using StudentManagementSystem.Infrastructure.Data.Common;
@@ -15,6 +16,64 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             repository = _repository;
         }
+
+        public async Task<ClassQueryServiceModel> AllAsync(string? teacher = null, string? searchTerm = null, ClassSorting sorting = ClassSorting.Name, int currentPage = 1, int classesPerPage = 10)
+        {
+            var classQuery = repository.AllAsReadOnly<Class>().Where(s => s.IsDeleted == false);
+
+            if (!string.IsNullOrWhiteSpace(teacher))
+            {
+                string[] teacherNameArr = teacher.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                classQuery = classQuery
+                    .Where(s => s.Teacher.Titles == teacherNameArr[0] &&
+                    s.Teacher.FirstName == teacherNameArr[1] &&
+                    s.Teacher.LastName == teacherNameArr[2] &&
+                    s.IsDeleted == false
+                );
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                classQuery = classQuery
+                    .Where(t => t.Name.ToLower().Contains(searchTerm.ToLower()) ||
+                                t.Teacher.FirstName.ToLower().Contains(searchTerm.ToLower()) ||
+                                t.Teacher.LastName.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            classQuery = sorting switch
+            {
+                ClassSorting.Name => classQuery.OrderBy(t => t.Name),
+                ClassSorting.Teacher => classQuery.OrderBy(t => t.Teacher.FirstName).ThenBy(t => t.Teacher.LastName),
+                ClassSorting.StudentsCount => classQuery.OrderByDescending(t => t.Students.Count),
+                _ => classQuery.OrderBy(s => s.Name)
+            };
+
+            var classes = await classQuery
+                .Skip((currentPage - 1) * classesPerPage)
+                .Take(classesPerPage)
+                .Select(s => new ClassServiceModel
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Teacher = s.Teacher.Titles + " " + s.Teacher.FirstName + " " + s.Teacher.LastName,
+                    StudentsCount = s.Students.Count(st => st.IsDeleted == false)
+                })
+                .ToListAsync();
+
+            var totalClassesCount = await classQuery.CountAsync();
+
+            return new ClassQueryServiceModel
+            {
+                TotalClassesCount = totalClassesCount,
+                Classes = classes
+            };
+        }
+
+        public Task<bool> ClassExistAsync(int id)
+        {
+            return repository.AllAsReadOnly<Class>().AnyAsync(c => c.Id == id && c.IsDeleted == false);
+        }
+
         public async Task<int> CreateClassAsync(ClassFormViewModel model)
         {
             var entity = new Class
@@ -36,9 +95,16 @@ namespace StudentManagementSystem.Core.Services.Admin
             return entity.Id;
         }
 
-        public Task DeleteClassAsync(int id)
+        public async Task DeleteClassAsync(int id)
         {
-            throw new NotImplementedException();
+            var selectedClass = await repository.GetByIdAsync<Class>(id);
+
+            if (selectedClass != null && selectedClass.IsDeleted == false)
+            {
+                selectedClass.IsDeleted = true;
+            }
+
+            await repository.SaveChangesAsync();
         }
 
         public async Task EditClassAsync(int id, ClassFormViewModel model)
@@ -74,29 +140,6 @@ namespace StudentManagementSystem.Core.Services.Admin
                 }
 
                 await repository.SaveChangesAsync();
-
-                //var existingCourseIds = entity.StudentCourses.Select(sc => sc.CourseId).ToList();
-                //var newCourseIds = model.SelectedCourseIds.Except(existingCourseIds).ToList();
-                //var removedCourseIds = existingCourseIds.Except(model.SelectedCourseIds).ToList();
-
-                //foreach (var courseId in newCourseIds)
-                //{
-                //    entity.StudentCourses.Add(new ClassCourse
-                //    {
-                //        CourseId = courseId,
-                //        EnrollmentDate = DateTime.UtcNow
-                //    });
-                //}
-
-                //// Remove courses no longer selected
-                //var coursesToRemove = entity.StudentCourses
-                //    .Where(sc => removedCourseIds.Contains(sc.CourseId))
-                //    .ToList();
-
-                //foreach (var course in coursesToRemove)
-                //{
-                //    entity.StudentCourses.Remove(course);
-                //}
             }
         }
 
@@ -134,6 +177,50 @@ namespace StudentManagementSystem.Core.Services.Admin
         public Task<CourseServiceModel> GetClassByIdAsync(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ClassDetailsViewModel> GetClassDetailsModelByIdAsync(int id)
+        {
+            var classDetails = await repository.AllAsReadOnly<Class>()
+                .Where(c => c.Id == id && c.IsDeleted == false)
+                .Select(c => new ClassDetailsViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Teacher = c.Teacher.Titles + " " + c.Teacher.FirstName + " " + c.Teacher.LastName,
+                    Students = c.Students
+                        .Where(s => s.IsDeleted == false)
+                        .Select(s => s.FirstName + " " + s.LastName)
+                        .ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            if (classDetails == null)
+            {
+                throw new InvalidOperationException("Class not found.");
+            }
+
+            return classDetails;
+        }
+
+        public async Task<ClassFormViewModel> GetClassFormModelByIdAsync(int id)
+        {
+            var selectedClass = await repository.AllAsReadOnly<Class>()
+                .Where(s => s.Id == id && s.IsDeleted == false)
+                .Select(s => new ClassFormViewModel
+                {
+                    Name = s.Name,
+                    TeacherId = s.TeacherId,
+                    SelectedCourseIds = s.ClassCourses.Select(cc => cc.CourseId).ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            if (selectedClass == null)
+            {
+                throw new ArgumentException($"Class not found.");
+            }
+
+            return selectedClass;
         }
 
         public IEnumerable<string> SortClassNames(IEnumerable<string> classNames)
