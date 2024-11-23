@@ -170,7 +170,9 @@ namespace StudentManagementSystem.Core.Services.Admin
                     ContactDetails = s.ContactDetails,
                     Email = s.Email,
                     CourseId = s.Courses.Select(c => c.Id).FirstOrDefault(),
-                    Courses = s.Courses.Select(c => new CourseServiceModel
+                    Courses = s.Courses
+                    .Where(c => c.IsDeleted == false)
+                    .Select(c => new CourseServiceModel
                     {
                         Id = c.Id,
                         Name = c.Name

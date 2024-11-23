@@ -32,6 +32,12 @@ namespace StudentManagementSystem.Infrastructure
                 .HasForeignKey(cc => cc.CourseId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Course>()
+            .HasOne(c => c.Teacher)
+            .WithMany(t => t.Courses)
+            .HasForeignKey(c => c.TeacherId)
+            .OnDelete(DeleteBehavior.Cascade);
+
             // Configure relationships for Grade
             builder.Entity<Grade>()
                 .HasOne(g => g.Course)
