@@ -154,6 +154,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                     FirstName = s.FirstName,
                     MiddleName = s.MiddleName,
                     LastName = s.LastName,
+                    Class = s.Class.Name,
                     Email = s.Email,
                     DateOfBirth = s.DateOfBirth,
                     ContactDetails = s.ContactDetails,

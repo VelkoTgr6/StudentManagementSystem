@@ -111,6 +111,10 @@ namespace StudentManagementSystem.Core.Services.Admin
                 })
                 .ToListAsync();
 
+            classes = SortClassNames(classes.Select(c => c.Name))
+                .Select(name => classes.First(c => c.Name == name))
+                .ToList();
+
             return classes;
         }
 
