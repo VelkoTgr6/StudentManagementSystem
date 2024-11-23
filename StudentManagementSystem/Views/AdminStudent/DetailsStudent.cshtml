@@ -11,6 +11,7 @@
         <div class="col-md-9">
             <h3>@Model.FirstName @Model.MiddleName @Model.LastName</h3>
             <p><strong>Personal ID:</strong> @Model.PersonalId</p>
+            <p><strong>Class:</strong> @Model.Class </p>
             <p><strong>Date of Birth:</strong> @Model.DateOfBirth.ToString("dd.MM.yyyy")</p>
             <p><strong>Email</strong> @Model.Email</p>
             <p><strong>Contact Details:</strong> @Model.ContactDetails</p>
@@ -52,7 +53,7 @@
             <!-- Delete Button -->
             <a href="@Url.Action("DeleteStudent", "AdminStudent", new { id = Model.Id })"
                class="btn btn-danger btn-lg w-100"
-               onclick="return confirm('Are you sure you want to delete this student?');">
+               onclick="return confirm('Are you sure you want to delete this Student @Model.FirstName @Model.LastName?');">
                 Delete
             </a>
         </div>

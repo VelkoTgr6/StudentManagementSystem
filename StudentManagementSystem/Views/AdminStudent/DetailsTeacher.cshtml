@@ -55,7 +55,7 @@
                 <!-- Delete Button -->
                 <a href="@Url.Action("DeleteTeacher", "AdminStudent", new { id = Model.Id })"
                    class="btn btn-danger btn-lg w-100"
-                   onclick="return confirm('Are you sure you want to delete this teacher?');">
+                   onclick="return confirm('Are you sure you want to delete this Teacher @Model.Titles @Model.FirstName @Model.LastName?');">
                     Delete</a>
             </div>
         </div>
