@@ -71,7 +71,7 @@ namespace StudentManagementSystem.Controllers
 
             var id = await adminCourseService.CreateCourseAsync(model, publisherId);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(DetailsCourse), new {id});
         }
         [HttpGet]
         public async Task<IActionResult> CreateTeacher()
@@ -100,7 +100,7 @@ namespace StudentManagementSystem.Controllers
 
             var id = await adminTeacherService.CreateTeacherAsync(model,profilePictureFile);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(DetailsTeacher), new { id });
         }
 
         [HttpGet]
@@ -126,7 +126,7 @@ namespace StudentManagementSystem.Controllers
             }
 
             var id = await adminClassService.CreateClassAsync(model);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(DetailsClass), new { id });
         }
         [HttpPost]
         public async Task<IActionResult> CreateStudent(StudentFormViewModel model, IFormFile? profilePictureFile)
