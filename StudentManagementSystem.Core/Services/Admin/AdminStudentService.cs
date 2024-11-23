@@ -76,8 +76,7 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             var userId = await repository.GetIdByEmailAsync(model.Email);
 
-            // Handle profile picture upload
-            string profilePicturePath = "/images/profiles/default.jpg"; // Default profile picture
+            string profilePicturePath = "/images/profiles/default.jpg";
             if (profilePictureFile != null)
             {
                 profilePicturePath = await SaveProfilePictureAsync(profilePictureFile);
@@ -131,41 +130,40 @@ namespace StudentManagementSystem.Core.Services.Admin
                 entity.DateOfBirth = model.DateOfBirth;
                 entity.ClassId = model.ClassId;
 
-                // Handle profile picture upload if provided
+                
                 if (profilePictureFile != null)
                 {
                     entity.ProfilePicturePath = await SaveProfilePictureAsync(profilePictureFile);
                 }
                 else if (string.IsNullOrWhiteSpace(entity.ProfilePicturePath))
                 {
-                    entity.ProfilePicturePath = "/images/profiles/default.jpg"; // Default profile picture
+                    entity.ProfilePicturePath = "/images/profiles/default.jpg"; 
                 }
             }
 
             await repository.SaveChangesAsync();
         }
-        private async Task<string> SaveProfilePictureAsync(IFormFile profilePictureFile)
+        private async Task<string> SaveProfilePictureAsync(IFormFile file)
         {
-            // Define the directory to save the images
-            string uploadsFolder = Path.Combine("wwwroot", "images", "profiles");
-            Directory.CreateDirectory(uploadsFolder); // Ensure the directory exists
+            // Set the path where the file will be saved
+            var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profiles");
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); // Unique file name
+            var filePath = Path.Combine(uploads, fileName);
 
-            // Generate a unique file name
-            string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(profilePictureFile.FileName);
-
-            // Combine the folder and file name
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            // Ensure the directory exists
+            if (!Directory.Exists(uploads))
+            {
+                Directory.CreateDirectory(uploads);
+            }
 
             // Save the file
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                await profilePictureFile.CopyToAsync(fileStream);
+                await file.CopyToAsync(fileStream);
             }
 
-            // Return the relative path
-            return $"/images/profiles/{uniqueFileName}";
+            return "/images/profiles/" + fileName; // Return the relative path
         }
-
 
         public async Task<bool> ExistAsync(int id)
         {

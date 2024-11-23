@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Course;
@@ -72,9 +73,16 @@ namespace StudentManagementSystem.Core.Services.Admin
             };
         }
 
-        public async Task<int> CreateTeacherAsync(TeacherFormViewModel model)
+        public async Task<int> CreateTeacherAsync(TeacherFormViewModel model, IFormFile? profilePictureFile)
         {
             var userId = await repository.GetIdByEmailAsync(model.Email);
+
+            string profilePicturePath = "/images/profiles/default.jpg";
+
+            if (profilePictureFile != null)
+            {
+                profilePicturePath = await SaveProfilePictureAsync(profilePictureFile);
+            }
 
             var entity = new Teacher
             {
@@ -112,8 +120,29 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             await repository.SaveChangesAsync();
         }
+        private async Task<string> SaveProfilePictureAsync(IFormFile file)
+        {
+            // Set the path where the file will be saved
+            var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profiles");
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); // Unique file name
+            var filePath = Path.Combine(uploads, fileName);
 
-        public async Task EditTeacherAsync(int id, TeacherFormViewModel model)
+            // Ensure the directory exists
+            if (!Directory.Exists(uploads))
+            {
+                Directory.CreateDirectory(uploads);
+            }
+
+            // Save the file
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            return "/images/profiles/" + fileName; // Return the relative path
+        }
+
+        public async Task EditTeacherAsync(int id, TeacherFormViewModel model, IFormFile? profilePictureFile)
         {
             var teacher = await repository.GetByIdAsync<Teacher>(id);
 
@@ -135,6 +164,15 @@ namespace StudentManagementSystem.Core.Services.Admin
                         teacher.Courses.Add(course);
                     }
                 }
+
+                if (profilePictureFile != null)
+                {
+                    teacher.ProfilePicturePath = await SaveProfilePictureAsync(profilePictureFile);
+                }
+                //else if (string.IsNullOrWhiteSpace(teacher.ProfilePicturePath))
+                //{
+                //    teacher.ProfilePicturePath = "/images/profiles/default.jpg"; 
+                //}
             }
 
             await repository.SaveChangesAsync();

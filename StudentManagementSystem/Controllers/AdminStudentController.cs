@@ -85,7 +85,7 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTeacher(TeacherFormViewModel model)
+        public async Task<IActionResult> CreateTeacher(TeacherFormViewModel model, IFormFile? profilePictureFile)
         {
             if (await adminService.EmailExistAsync(model.Email) == false)
             {
@@ -98,7 +98,7 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
 
-            var id = await adminTeacherService.CreateTeacherAsync(model);
+            var id = await adminTeacherService.CreateTeacherAsync(model,profilePictureFile);
 
             return RedirectToAction(nameof(Index));
         }
@@ -129,7 +129,7 @@ namespace StudentManagementSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
-        public async Task<IActionResult> CreateStudent(StudentFormViewModel model, IFormFile? ProfilePictureFile)
+        public async Task<IActionResult> CreateStudent(StudentFormViewModel model, IFormFile? profilePictureFile)
         {
             if (await adminService.EmailExistAsync(model.Email) == false)
             {
@@ -142,8 +142,7 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
 
-            // Pass the uploaded file to the service
-            var id = await adminStudentService.CreateStudentAsync(model, ProfilePictureFile);
+            var id = await adminStudentService.CreateStudentAsync(model, profilePictureFile);
 
             return RedirectToAction(nameof(DetailsStudent), new { id });
         }
@@ -186,7 +185,7 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditStudent(int id, StudentFormViewModel model, IFormFile? ProfilePictureFile)
+        public async Task<IActionResult> EditStudent(int id, StudentFormViewModel model, IFormFile? profilePictureFile)
         {
             if (await adminStudentService.ExistAsync(id) == false)
             {
@@ -199,8 +198,7 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
 
-            // Pass the uploaded file to the service
-            await adminStudentService.EditStudentAsync(id, model, ProfilePictureFile);
+            await adminStudentService.EditStudentAsync(id, model, profilePictureFile);
 
             return RedirectToAction(nameof(DetailsStudent), new { id });
         }
@@ -275,7 +273,7 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditTeacher(int id, TeacherFormViewModel model)
+        public async Task<IActionResult> EditTeacher(int id, TeacherFormViewModel model, IFormFile? profilePictureFile)
         {
             if (await adminTeacherService.ExistAsync(id) == false)
             {
@@ -287,7 +285,7 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
 
-            await adminTeacherService.EditTeacherAsync(id, model);
+            await adminTeacherService.EditTeacherAsync(id, model,profilePictureFile);
 
             return RedirectToAction(nameof(DetailsTeacher), new { id });
         }

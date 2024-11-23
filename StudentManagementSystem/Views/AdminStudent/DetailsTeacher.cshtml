@@ -6,7 +6,10 @@
     <!-- Teacher Info Section -->
     <div class="row mb-4">
         <div class="col-md-3">
-            <img src="@Model.ProfilePicturePath" alt="Profile Picture" class="img-thumbnail" style="max-width: 150px;" />
+            <img src="@(Url.Content(Model.ProfilePicturePath.StartsWith("/") ? Model.ProfilePicturePath : "/" + Model.ProfilePicturePath))"
+                 alt="@Model.FirstName @Model.LastName"
+                 class="img-thumbnail"
+                 style="width: 150px; height: 200px; object-fit: cover;" />
         </div>
         <div class="col-md-9">
             <h3>@Model.Titles @Model.FirstName @Model.LastName</h3>
