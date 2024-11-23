@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
-using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
-using StudentManagementSystem.Core.Models.Admin.Course;
 using StudentManagementSystem.Core.Models.Admin.Class;
+using System.ComponentModel.DataAnnotations;
+using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
+using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
 
 namespace StudentManagementSystem.Core.Models.Admin.Student
 {
@@ -52,7 +51,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Student
         [Comment("Date of birth of Student")]
         // [RegularExpression(RegexDateFormat, ErrorMessage = "Date format should be MM/dd/yyyy")]
         [Display(Name = "Date Of Birth")]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; } = DateTime.Now;
 
         [Required]
         [StringLength(StudentContactMaxLength,
@@ -64,7 +63,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Student
 
         [Comment("Student Profile Picture Path")]
         [Display(Name = "Profile Picture")]
-        public string ProfilePicturePath { get; set; } = "images/profiles/default.png";
+        public string ProfilePicturePath { get; set; } = null!;
 
         [Comment("Class Identifier")]
         [Display(Name = "Class")]

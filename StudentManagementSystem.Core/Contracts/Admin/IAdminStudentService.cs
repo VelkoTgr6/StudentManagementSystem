@@ -19,5 +19,6 @@ namespace StudentManagementSystem.Core.Contracts.Admin
         Task<bool> ExistAsync(int id);
         Task<StudentFormViewModel?> GetStudentFormModelByIdAsync(int id);
         Task<StudentDetailsViewModel> GetStudentDetailsModelByIdAsync(int id);
+        Task<IEnumerable<string>> GetAllStudentsNamesAsync();
     }
-}
+} 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Student;
@@ -18,7 +19,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task<StudentQueryServiceModel> AllAsync(string? studentClass = null, string? searchTerm = null, StudentSorting sorting = StudentSorting.Name, int currentPage = 1, int studentsPerPage = 10)
         {
-            var studentsQuery = repository.AllAsReadOnly<Student>().Where(s=>s.IsDeleted == false);
+            var studentsQuery = repository.AllAsReadOnly<Student>().Where(s => s.IsDeleted == false);
 
             if (!string.IsNullOrWhiteSpace(studentClass))
             {
@@ -97,9 +98,9 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task DeleteStudentAsync(int id)
         {
-            var student =await repository.GetByIdAsync<Student>(id);
+            var student = await repository.GetByIdAsync<Student>(id);
 
-            if (student != null && student.IsDeleted == false) 
+            if (student != null && student.IsDeleted == false)
             {
                 student.IsDeleted = true;
             }
@@ -121,10 +122,11 @@ namespace StudentManagementSystem.Core.Services.Admin
                 entity.PersonalId = model.PersonalId;
                 entity.DateOfBirth = model.DateOfBirth;
                 entity.ClassId = model.ClassId;
-                entity.ProfilePicturePath = model.ProfilePicturePath;
+
             }
 
             await repository.SaveChangesAsync();
+
         }
 
         public async Task<bool> ExistAsync(int id)
@@ -137,14 +139,44 @@ namespace StudentManagementSystem.Core.Services.Admin
             return await repository.AllAsReadOnly<StudentServiceModel>().ToListAsync();
         }
 
-        public Task<StudentServiceModel> GetStudentByIdAsync(int id)
+        public async Task<IEnumerable<string>> GetAllStudentsNamesAsync()
         {
-            throw new NotImplementedException();
+            return await repository
+                .AllAsReadOnly<Student>()
+                .Select(s => s.FirstName + " " + s.LastName)
+                .ToListAsync();
+        }
+
+        public async Task<StudentServiceModel> GetStudentByIdAsync(int id)
+        {
+            var student = await repository.AllAsReadOnly<Student>()
+                .Where(s => s.Id == id && s.IsDeleted == false)
+                .Select(s => new StudentServiceModel
+                {
+                    Id = s.Id,
+                    FirstName = s.FirstName,
+                    MiddleName = s.MiddleName,
+                    LastName = s.LastName,
+                    ContactDetails = s.ContactDetails,
+                    Email = s.Email,
+                    PersonalId = s.PersonalId,
+                    DateOfBirth = s.DateOfBirth,
+                    Class = s.Class.Name,
+                    Performance = s.Performance
+                })
+                .FirstOrDefaultAsync();
+
+            if (student == null)
+            {
+                throw new ArgumentException($"Student not found.");
+            }
+
+            return student;
         }
 
         public async Task<StudentDetailsViewModel> GetStudentDetailsModelByIdAsync(int id)
         {
-            return await repository.AllAsReadOnly<Student>()
+            var student = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.Id == id && s.IsDeleted == false)
                 .Select(s => new StudentDetailsViewModel()
                 {
@@ -161,7 +193,14 @@ namespace StudentManagementSystem.Core.Services.Admin
                     Performance = s.Performance.ToString(),
                     Grades = s.Grades
                 })
-                .FirstAsync();
+                .FirstOrDefaultAsync();
+
+            if (student == null)
+            {
+                throw new ArgumentException($"Student not found.");
+            }
+
+            return student;
         }
 
         public async Task<StudentFormViewModel?> GetStudentFormModelByIdAsync(int id)
@@ -181,6 +220,11 @@ namespace StudentManagementSystem.Core.Services.Admin
                     ProfilePicturePath = s.ProfilePicturePath
                 })
                 .FirstOrDefaultAsync();
+
+            if (student == null)
+            {
+                throw new ArgumentException($"Student not found.");
+            }
 
             return student;
         }

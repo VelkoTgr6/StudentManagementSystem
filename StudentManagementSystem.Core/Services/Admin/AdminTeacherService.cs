@@ -159,7 +159,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task<TeacherDetailsViewModel> GetTeacherDetailsModelByIdAsync(int id)
         {
-            return await repository.AllAsReadOnly<Teacher>()
+            var teacher = await repository.AllAsReadOnly<Teacher>()
                 .Where(s => s.Id == id && s.IsDeleted == false)
                 .Select(s => new TeacherDetailsViewModel()
                 {
@@ -178,7 +178,14 @@ namespace StudentManagementSystem.Core.Services.Admin
                         Name = c.Name
                     }).ToList(),
                 })
-                .FirstAsync();
+                .FirstOrDefaultAsync();
+
+            if (teacher == null)
+            {
+                throw new ArgumentException($"Teacher not found.");
+            }
+
+            return teacher;
         }
 
         public Task<TeacherServiceModel> GetTeacherByIdAsync(int id)
@@ -200,7 +207,12 @@ namespace StudentManagementSystem.Core.Services.Admin
                     ProfilePicturePath = s.ProfilePicturePath,
                     SelectedCourseIds = s.Courses.Select(c => c.Id).ToList()
                 })
-                .FirstAsync();
+                .FirstOrDefaultAsync();
+
+            if (teacher == null)
+            {
+                throw new ArgumentException($"Teacher not found.");
+            }
 
             return teacher;
         }

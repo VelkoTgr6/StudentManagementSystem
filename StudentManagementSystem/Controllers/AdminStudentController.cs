@@ -450,5 +450,6 @@ namespace StudentManagementSystem.Controllers
             await adminClassService.DeleteClassAsync(id);
             return RedirectToAction(nameof(AllClasses));
         }
+        
     }
 }
