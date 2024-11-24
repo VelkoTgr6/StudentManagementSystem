@@ -51,6 +51,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<StudentManagementDbContext>();
 
             return services;

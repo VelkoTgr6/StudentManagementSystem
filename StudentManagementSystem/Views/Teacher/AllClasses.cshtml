@@ -1,0 +1,75 @@
+﻿@model TeacherClassesViewModel
+
+<div class="container mt-5">
+    <h2 class="text-center">Classes Taught by @Model.TeacherName</h2>
+    <hr />
+
+    <!-- Search Field -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search by class name" onkeyup="searchClasses()" />
+        </div>
+    </div>
+
+    @if (!Model.Classes.Any())
+    {
+        <p class="text-center text-muted">No classes found for this teacher.</p>
+    }
+    else
+    {
+        <div class="table-responsive mt-4">
+            <!-- Apply custom width and centering -->
+            <table class="table table-bordered table-sm table-striped mx-auto" id="classesTable" style="max-width: 60%;">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th class="text-center">Class Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.Classes.Count(); i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td class="text-center">@Model.Classes.ElementAt(i)</td>
+                            <td class="text-end">
+                                <!-- Select Button -->
+                                <button class="btn btn-primary btn-sm" onclick="selectClass('@Model.Classes.ElementAt(i)')">Select</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<script>
+    // Search function to filter classes by name
+    function searchClasses() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("classesTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those that don't match the search
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1]; // Search in the Class Name column
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    // Function to handle class selection
+    function selectClass(className) {
+        alert("You selected the class: " + className);
+        // Add additional logic here for selecting a class (e.g., saving the selected class, sending a request, etc.)
+    }
+</script>

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Models.Admin.Student;
 
 namespace StudentManagementSystem.Controllers
 {
+    [Authorize(Roles = "Student,Administrator")]
     public class StudentController : Controller
     {
         private readonly IStudentService studentService;
