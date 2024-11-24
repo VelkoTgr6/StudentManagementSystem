@@ -1,0 +1,54 @@
+﻿@model UserRoleFormViewModel
+
+@{
+    ViewData["Title"] = "Remove User from Role";
+}
+<a href="@Url.Action("Index", "AdminStudent")" class="btn btn-secondary btn">Back</a>
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-sm" style="width: 50%;">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="card-title text-center">@ViewData["Title"]</h2>
+            </div>
+            <hr />
+            <form method="post">
+                <!-- Select User -->
+                <div class="form-group">
+                    <label for="UserName" class="font-weight-bold">Select User</label>
+                    <select asp-for="UserName" class="form-control">
+                        <option value="" disabled selected>Select a user</option>
+                        @foreach (var user in Model.Users)
+                        {
+                            <option value="@user">@user</option>
+                        }
+                    </select>
+                    <span asp-validation-for="UserName" class="text-danger small"></span>
+                </div>
+
+                <!-- Manual User Entry -->
+                <div class="form-group mt-3">
+                    <label for="ManualUser" class="font-weight-bold">Or Enter User Name Manually</label>
+                    <input type="text" id="ManualUser" name="ManualUser" class="form-control" placeholder="Type user name..." />
+                </div>
+
+                <!-- Select Role -->
+                <div class="form-group mt-3">
+                    <label for="RoleName" class="font-weight-bold">Select Role</label>
+                    <select asp-for="RoleName" class="form-control">
+                        <option value="" disabled selected>Select a role</option>
+                        @foreach (var role in Model.Roles)
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    </select>
+                    <span asp-validation-for="RoleName" class="text-danger small"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-danger btn-lg w-100">Remove User from Role</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

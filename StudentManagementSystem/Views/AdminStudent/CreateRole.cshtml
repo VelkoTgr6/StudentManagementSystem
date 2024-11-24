@@ -1,0 +1,29 @@
+﻿@model RoleFormViewModel
+
+@{
+    ViewData["Title"] = "Create Role";
+}
+<a href="@Url.Action("Index", "AdminStudent")" class="btn btn-secondary btn">Back</a>
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-sm" style="width: 40%;">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="card-title text-center">@ViewData["Title"]</h2>
+            </div>
+            <hr />
+            <form method="post">
+                <!-- Role Name Input -->
+                <div class="form-group">
+                    <label asp-for="RoleName" class="font-weight-bold">Role Name</label>
+                    <input asp-for="RoleName" class="form-control" placeholder="Enter role name..." />
+                    <span asp-validation-for="RoleName" class="text-danger small"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Create Role</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

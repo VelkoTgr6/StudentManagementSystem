@@ -1,15 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Models.Admin.Class;
 using StudentManagementSystem.Core.Models.Admin.Course;
 using StudentManagementSystem.Core.Models.Admin.Student;
 using StudentManagementSystem.Core.Models.Admin.Teacher;
 using StudentManagementSystem.Infrastructure.Data.Models;
+using StudentManagementSystem.Models;
 using System.Security.Claims;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
 
 namespace StudentManagementSystem.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class AdminStudentController : Controller
     {
         private readonly IAdminService adminService;
@@ -17,18 +21,24 @@ namespace StudentManagementSystem.Controllers
         private readonly IAdminCourseService adminCourseService;
         private readonly IAdminTeacherService adminTeacherService;
         private readonly IAdminStudentService adminStudentService;
+        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public AdminStudentController(IAdminService adminService,
-            IAdminClassService adminClassService,
-            IAdminCourseService adminCourseService,
-            IAdminTeacherService adminTeacherService,
-            IAdminStudentService adminStudentService)
+        public AdminStudentController(IAdminService _adminService,
+            IAdminClassService _adminClassService,
+            IAdminCourseService _adminCourseService,
+            IAdminTeacherService _adminTeacherService,
+            IAdminStudentService _adminStudentService,
+            UserManager<IdentityUser> _userManager,
+            RoleManager<IdentityRole> _roleManager)
         {
-            this.adminService = adminService;
-            this.adminClassService = adminClassService;
-            this.adminCourseService = adminCourseService;
-            this.adminTeacherService = adminTeacherService;
-            this.adminStudentService = adminStudentService;
+            adminService = _adminService;
+            adminClassService = _adminClassService;
+            adminCourseService = _adminCourseService;
+            adminTeacherService = _adminTeacherService;
+            adminStudentService = _adminStudentService;
+            userManager = _userManager;
+            roleManager = _roleManager;
         }
 
         public async Task<IActionResult> Index()
@@ -453,6 +463,228 @@ namespace StudentManagementSystem.Controllers
             await adminClassService.DeleteClassAsync(id);
             return RedirectToAction(nameof(AllClasses));
         }
-        
+
+        [HttpGet]
+        public async Task<IActionResult> CreateRole()
+        {
+            var model = new RoleFormViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateRole(RoleFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (await roleManager.RoleExistsAsync(model.RoleName))
+            {
+                ModelState.AddModelError(string.Empty, "Role already exists.");
+                return View(model);
+            }
+
+            var role = new IdentityRole(model.RoleName);
+            var result = await roleManager.CreateAsync(role);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> DeleteRole(string roleName)
+        {
+            var role = await roleManager.FindByNameAsync(roleName);
+            if (role != null)
+            {
+                await roleManager.DeleteAsync(role);
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddUserToRole()
+        {
+            var model = new UserRoleFormViewModel();
+
+            var users = model.Users = userManager.Users.
+                    Select(u => u.UserName)
+                    .OrderBy(u => u)
+                    .ToList();
+
+            var roles = model.Roles = roleManager.Roles
+                 .Select(r => r.Name)
+                 .OrderBy(r => r)
+                 .ToList();
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddUserToRole(UserRoleFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+               var users = model.Users = userManager.Users.
+                    Select(u=>u.UserName)
+                    .OrderBy(u => u)
+                    .ToList();
+
+               var roles = model.Roles = roleManager.Roles
+                    .Select(r=>r.Name)
+                    .OrderBy(r => r)
+                    .ToList();
+
+                return View(model);
+            }
+
+            if (await roleManager.RoleExistsAsync(model.RoleName))
+            {
+                var user = await userManager.FindByNameAsync(model.UserName);
+
+                if (user != null)
+                {
+                    if (await userManager.IsInRoleAsync(user, model.RoleName))
+                    {
+                        return BadRequest();
+                    }
+
+                    await userManager.AddToRoleAsync(user, model.RoleName);
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            return BadRequest();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditRole()
+        {
+            var model = new EditRoleViewModel
+            {
+                Roles = roleManager.Roles
+                    .Select(r => r.Name)
+                    .OrderBy(r => r)
+                    .ToList()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRole(EditRoleViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Roles = roleManager.Roles
+                    .Select(r => r.Name)
+                    .OrderBy(r => r)
+                    .ToList();
+
+                return View(model);
+            }
+
+            // Find the role using its original name
+            var selectedRole = await roleManager.FindByNameAsync(model.SelectedRoleName);
+
+            if (selectedRole == null)
+            {
+                ModelState.AddModelError("", "The selected role does not exist.");
+
+                model.Roles = roleManager.Roles
+                    .Select(r => r.Name)
+                    .OrderBy(r => r)
+                    .ToList();
+
+                return View(model);
+            }
+
+            // Update the role's name
+            selectedRole.Name = model.NewRoleName;
+            selectedRole.NormalizedName = model.NewRoleName.ToUpperInvariant();
+
+            var result = await roleManager.UpdateAsync(selectedRole);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                model.Roles = roleManager.Roles
+                    .Select(r => r.Name)
+                    .OrderBy(r => r)
+                    .ToList();
+
+                return View(model);
+            }
+
+            // Redirect to index or a confirmation page
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> RemoveUserFromRole()
+        {
+            var model = new UserRoleFormViewModel();
+
+            var users = model.Users = userManager.Users.
+                    Select(u => u.UserName)
+                    .OrderBy(u => u)
+                    .ToList();
+
+            var roles = model.Roles = roleManager.Roles
+                 .Select(r => r.Name)
+                 .OrderBy(r => r)
+                 .ToList();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveUserFromRole(UserRoleFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var users = model.Users = userManager.Users.
+                    Select(u => u.UserName)
+                    .OrderBy(u => u)
+                    .ToList();
+                var roles = model.Roles = roleManager.Roles
+                     .Select(r => r.Name)
+                     .OrderBy(r => r)
+                     .ToList();
+
+                return View(model);
+            }
+            if (await roleManager.RoleExistsAsync(model.RoleName))
+            {
+                var user = await userManager.FindByNameAsync(model.UserName);
+                if (user != null)
+                {
+                    if (!await userManager.IsInRoleAsync(user, model.RoleName))
+                    {
+                        return BadRequest();
+                    }
+                    await userManager.RemoveFromRoleAsync(user, model.RoleName);
+
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            return BadRequest();
+        }
     }
 }

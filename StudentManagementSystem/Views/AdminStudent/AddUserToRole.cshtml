@@ -1,0 +1,53 @@
+﻿@model UserRoleFormViewModel
+
+@{
+    ViewData["Title"] = "Add User to Role";
+}
+<a href="@Url.Action("Index", "AdminStudent")" class="btn btn-secondary mb-3">Back</a>
+<div class="container mt-5">
+    <h2 class="text-center">@ViewData["Title"]</h2>
+    <hr style="width: 50%;" class="mx-auto" />
+
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <form method="post">
+                <!-- User Dropdown -->
+                <div class="form-group">
+                    <label for="UserName" class="font-weight-bold">Select User</label>
+                    <select asp-for="UserName" class="form-control">
+                        <option value="">-- Select a User --</option>
+                        @foreach (var user in Model.Users)
+                        {
+                            <option value="@user">@user</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Manual User Name Input -->
+                <div class="form-group mt-3">
+                    <label for="ManualUserName" class="font-weight-bold">Or Type User Name Manually</label>
+                    <input type="text" asp-for="UserName" class="form-control" placeholder="Enter User Name..." />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+
+                <!-- Role Dropdown -->
+                <div class="form-group mt-3">
+                    <label for="RoleName" class="font-weight-bold">Select Role</label>
+                    <select asp-for="RoleName" class="form-control">
+                        <option value="">-- Select a Role --</option>
+                        @foreach (var role in Model.Roles)
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    </select>
+                    <span asp-validation-for="RoleName" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">Add User to Role</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

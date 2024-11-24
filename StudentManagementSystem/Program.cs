@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using StudentManagementSystem.Services;
+using StudentManagementSystem.Infrastructure.Services.EmailSender;
 
 var builder = WebApplication.CreateBuilder(args);
 

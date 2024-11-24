@@ -1,0 +1,41 @@
+﻿@model EditRoleViewModel
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Edit Role</h2>
+            <hr />
+            <form method="post" class="p-4 border rounded shadow-sm bg-light">
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label for="SelectedRoleName" class="font-weight-bold">Select Role</label>
+                    <select asp-for="SelectedRoleName" class="form-control">
+                        <option value="">-- Select a Role --</option>
+                        @foreach (var role in Model.Roles)
+                        {
+                            <option value="@role" selected=@(Model.SelectedRoleName == role ? "selected" : "")>
+                                @role
+                            </option>
+                        }
+                    </select>
+                    <small class="form-text text-muted">Choose the role you want to edit.</small>
+                    <span asp-validation-for="SelectedRoleName" class="text-danger"></span>
+                </div>
+
+                <!-- New Role Name Input -->
+                <div class="form-group mt-3">
+                    <label for="NewRoleName" class="font-weight-bold">New Role Name</label>
+                    <input asp-for="NewRoleName" class="form-control" placeholder="Enter new role name" />
+                    <small class="form-text text-muted">Provide a new name for the selected role.</small>
+                    <span asp-validation-for="NewRoleName" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+                    <a href="@Url.Action("Index", "AdminStudent")" class="btn btn-secondary btn-block">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
