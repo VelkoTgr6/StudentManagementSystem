@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StudentManagementSystem.Core.Contracts;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Services;
 using StudentManagementSystem.Core.Services.Admin;
 using StudentManagementSystem.Infrastructure;
 using StudentManagementSystem.Infrastructure.Data.Common;
-using StudentManagementSystem.Infrastructure.Data.Models;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -14,11 +14,15 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<ITeacherService, TeacherService>();
+
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IAdminClassService, AdminClassService>();
             services.AddScoped<IAdminCourseService, AdminCourseService>();
             services.AddScoped<IAdminTeacherService, AdminTeacherService>();
             services.AddScoped<IAdminStudentService, AdminStudentService>();
+
+            
 
             return services;
         }

@@ -2,7 +2,7 @@
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity;
 
-namespace StudentManagementSystem.Core.Services
+namespace StudentManagementSystem.Infrastructure.Services.EmailSender
 {
     public class EmailService
     {

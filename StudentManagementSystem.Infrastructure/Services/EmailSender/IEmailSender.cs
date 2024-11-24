@@ -1,4 +1,4 @@
-﻿namespace StudentManagementSystem.Services
+﻿namespace StudentManagementSystem.Infrastructure.Services.EmailSender
 {
     public interface IEmailSender
     {

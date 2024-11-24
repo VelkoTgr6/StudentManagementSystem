@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Teacher\" />
     <Folder Include="Views\Student\" />
   </ItemGroup>
 
