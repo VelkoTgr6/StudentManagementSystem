@@ -11,5 +11,13 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [MaxLength(StudentPersonalIdMinMaxLength)]
         [Comment("Personal ID is a unique identifier for each person.")]
         public string PersonalId { get; set; } = null!;
+
+        [MaxLength(StudentNameMaxLength)]
+        [Comment("First name of the user.")]
+        public string? FirstName { get; set; }
+
+        [MaxLength(StudentNameMaxLength)]
+        [Comment("Last name of the user.")]
+        public string? LastName { get; set; }
     }
 }

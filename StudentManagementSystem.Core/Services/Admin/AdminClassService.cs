@@ -109,25 +109,32 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task EditClassAsync(int id, ClassFormViewModel model)
         {
-            var entity = await repository.GetByIdAsync<Class>(id);
+            var entity = await repository.All<Class>()
+                                         .Include(c => c.ClassCourses)
+                                         .FirstOrDefaultAsync(c => c.Id == id);
 
-            if (entity != null && entity.IsDeleted == false)
+            if (entity != null && !entity.IsDeleted)
             {
                 entity.Name = model.Name;
                 entity.TeacherId = model.TeacherId;
 
-                var selectedCourseIds = model.SelectedCourseIds.ToHashSet();
-                var existingCourseIds = entity.ClassCourses.Select(cc => cc.CourseId).ToHashSet();
+                var selectedCourseIds = model.SelectedCourseIds.ToHashSet(); 
+                var existingCourseIds = entity.ClassCourses.Select(cc => cc.CourseId).ToHashSet(); 
+
                 var coursesToAdd = selectedCourseIds.Except(existingCourseIds);
+
                 var coursesToRemove = existingCourseIds.Except(selectedCourseIds);
 
                 foreach (var courseId in coursesToAdd)
                 {
-                    entity.ClassCourses.Add(new ClassCourse
+                    if (!entity.ClassCourses.Any(cc => cc.CourseId == courseId))
                     {
-                        CourseId = courseId,
-                        EnrollmentDate = DateTime.UtcNow
-                    });
+                        entity.ClassCourses.Add(new ClassCourse
+                        {
+                            CourseId = courseId,
+                            EnrollmentDate = DateTime.UtcNow
+                        });
+                    }
                 }
 
                 foreach (var courseId in coursesToRemove)
@@ -142,6 +149,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                 await repository.SaveChangesAsync();
             }
         }
+
 
         public async Task<IEnumerable<ClassServiceModel>> GetAllClassesAsync()
         {

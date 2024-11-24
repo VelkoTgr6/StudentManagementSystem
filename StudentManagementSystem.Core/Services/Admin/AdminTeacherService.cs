@@ -122,29 +122,28 @@ namespace StudentManagementSystem.Core.Services.Admin
         }
         private async Task<string> SaveProfilePictureAsync(IFormFile file)
         {
-            // Set the path where the file will be saved
             var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profiles");
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); // Unique file name
             var filePath = Path.Combine(uploads, fileName);
 
-            // Ensure the directory exists
             if (!Directory.Exists(uploads))
             {
                 Directory.CreateDirectory(uploads);
             }
 
-            // Save the file
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(fileStream);
             }
 
-            return "/images/profiles/" + fileName; // Return the relative path
+            return "/images/profiles/" + fileName; 
         }
 
         public async Task EditTeacherAsync(int id, TeacherFormViewModel model, IFormFile? profilePictureFile)
         {
-            var teacher = await repository.GetByIdAsync<Teacher>(id);
+            var teacher = await repository.All<Teacher>()
+                                          .Include(t => t.Courses) 
+                                          .FirstOrDefaultAsync(t => t.Id == id);
 
             if (teacher != null && teacher.IsDeleted == false)
             {
@@ -154,9 +153,15 @@ namespace StudentManagementSystem.Core.Services.Admin
                 teacher.Titles = model.Titles;
                 teacher.Email = model.Email;
                 teacher.ProfilePicturePath = model.ProfilePicturePath;
-                teacher.Courses.Clear();
 
-                foreach (var courseId in model.SelectedCourseIds)
+                var selectedCourseIds = model.SelectedCourseIds.ToHashSet();
+                var existingCourseIds = teacher.Courses.Select(c => c.Id).ToHashSet();
+
+                var coursesToAdd = selectedCourseIds.Except(existingCourseIds);
+
+                var coursesToRemove = existingCourseIds.Except(selectedCourseIds);
+
+                foreach (var courseId in coursesToAdd)
                 {
                     var course = await repository.GetByIdAsync<Course>(courseId);
                     if (course != null)
@@ -165,18 +170,24 @@ namespace StudentManagementSystem.Core.Services.Admin
                     }
                 }
 
+                foreach (var courseId in coursesToRemove)
+                {
+                    var courseToRemove = teacher.Courses.FirstOrDefault(c => c.Id == courseId);
+                    if (courseToRemove != null)
+                    {
+                        teacher.Courses.Remove(courseToRemove);
+                    }
+                }
+
                 if (profilePictureFile != null)
                 {
                     teacher.ProfilePicturePath = await SaveProfilePictureAsync(profilePictureFile);
                 }
-                //else if (string.IsNullOrWhiteSpace(teacher.ProfilePicturePath))
-                //{
-                //    teacher.ProfilePicturePath = "/images/profiles/default.jpg"; 
-                //}
-            }
 
-            await repository.SaveChangesAsync();
+                await repository.SaveChangesAsync();
+            }
         }
+
 
         public Task<bool> ExistAsync(int id)
         {

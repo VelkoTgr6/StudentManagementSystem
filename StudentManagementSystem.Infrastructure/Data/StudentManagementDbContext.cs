@@ -16,21 +16,21 @@ namespace StudentManagementSystem.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            // Configure composite key for ClassCourse
             builder.Entity<ClassCourse>()
                 .HasKey(cc => new { cc.ClassId, cc.CourseId });
+
 
             builder.Entity<ClassCourse>()
                 .HasOne(cc => cc.Class)
                 .WithMany(c => c.ClassCourses)
                 .HasForeignKey(cc => cc.ClassId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<ClassCourse>()
                 .HasOne(cc => cc.Course)
                 .WithMany(c => c.CourseClasses)
                 .HasForeignKey(cc => cc.CourseId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Course>()
             .HasOne(c => c.Teacher)
@@ -38,7 +38,12 @@ namespace StudentManagementSystem.Infrastructure
             .HasForeignKey(c => c.TeacherId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            // Configure relationships for Grade
+            builder.Entity<Course>()
+            .HasOne(c => c.Teacher)
+            .WithMany(t => t.Courses)
+            .HasForeignKey(c => c.TeacherId)
+            .OnDelete(DeleteBehavior.SetNull); 
+
             builder.Entity<Grade>()
                 .HasOne(g => g.Course)
                 .WithMany(c => c.Grades)
@@ -51,20 +56,12 @@ namespace StudentManagementSystem.Infrastructure
                 .HasForeignKey(g => g.StudentId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configure relationships for Course
-            builder.Entity<Course>()
-                .HasOne(c => c.Teacher)
-                .WithMany(t => t.Courses)
-                .HasForeignKey(c => c.TeacherId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<Course>()
                 .HasOne(c => c.Publisher)
                 .WithMany()
                 .HasForeignKey(c => c.PublisherId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Configure relationships for Student
             builder.Entity<Student>()
                 .HasOne(s => s.Class)
                 .WithMany(c => c.Students)

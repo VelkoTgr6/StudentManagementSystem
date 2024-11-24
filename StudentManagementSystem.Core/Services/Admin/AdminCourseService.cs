@@ -173,7 +173,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                 {
                     Name = s.Name,
                     Description = s.Description,
-                    TeacherId = s.TeacherId
+                    TeacherId = s.TeacherId ?? 0 
                 })
                 .FirstOrDefaultAsync();
 

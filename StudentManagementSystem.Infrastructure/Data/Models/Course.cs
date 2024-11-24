@@ -34,9 +34,8 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [Comment("Maximum number of students allowed")]
         public int EnrollmentCap { get; set; }
 
-        [Required]
         [Comment("Teacher of the Course")]
-        public int TeacherId {  get; set; }
+        public int? TeacherId {  get; set; }
 
         [ForeignKey(nameof(TeacherId))]
         [Comment("Teacher of the Course")]
