@@ -18,12 +18,12 @@
     else
     {
         <div class="table-responsive mt-4">
-            <!-- Apply custom width and centering -->
             <table class="table table-bordered table-sm table-striped mx-auto" id="classesTable" style="max-width: 60%;">
                 <thead class="thead-dark">
                     <tr>
                         <th>#</th>
                         <th class="text-center">Class Name</th>
+                        <th class="text-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,10 +31,13 @@
                     {
                         <tr>
                             <td>@(i + 1)</td>
-                            <td class="text-center">@Model.Classes.ElementAt(i)</td>
+                            <td class="text-center">@Model.Classes[i].ClassName</td>
                             <td class="text-end">
-                                <!-- Select Button -->
-                                <button class="btn btn-primary btn-sm" onclick="selectClass('@Model.Classes.ElementAt(i)')">Select</button>
+                                <!-- Select Button with ClassId -->
+                                <button class="btn btn-primary btn-sm"
+                                        onclick="location.href='@Url.Action("StudentsByClass", "Teacher", new { classId = @Model.Classes[i].Id })'">
+                                    Select
+                                </button>
                             </td>
                         </tr>
                     }
@@ -65,11 +68,5 @@
                 }
             }
         }
-    }
-
-    // Function to handle class selection
-    function selectClass(className) {
-        alert("You selected the class: " + className);
-        // Add additional logic here for selecting a class (e.g., saving the selected class, sending a request, etc.)
     }
 </script>

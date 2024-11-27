@@ -1,0 +1,81 @@
+﻿@model IEnumerable<StudentManagementSystem.Core.Models.Teacher.StudentsViewModel>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Back button aligned to the left -->
+        <a href="@Url.Action("AllClasses", "Teacher")" class="btn btn-secondary">Back to List</a>
+
+        <!-- Centered Heading with auto margin -->
+        <h2 class="mx-auto mb-3 text-center">Student List</h2>
+    </div>
+
+
+    <hr />
+
+    <!-- Search Field -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search by name or class" onkeyup="filterStudents()" />
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p class="text-center text-muted">No students found.</p>
+    }
+    else
+    {
+        <div class="table-responsive mt-4">
+            <!-- Compact and centered table -->
+            <table class="table table-bordered table-sm table-striped mx-auto" style="max-width: 70%;" id="studentsTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Class Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.Count(); i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@Model.ElementAt(i).Name</td>
+                            <td>@Model.ElementAt(i).ClassName</td>
+                            <td>
+                                <!-- Link to the StudentDetails Action -->
+                                <a class="btn btn-primary btn-sm"
+                                   href="@Url.Action("StudentDetails", "Teacher", new { studentId = Model.ElementAt(i).Id })">
+                                    Select
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<script>
+    // JavaScript function to filter students by name or class
+    function filterStudents() {
+        var input, filter, table, tr, tdName, tdClass, i, nameValue, classValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("studentsTable");
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 1; i < tr.length; i++) {
+            tdName = tr[i].getElementsByTagName("td")[1];
+            tdClass = tr[i].getElementsByTagName("td")[2];
+            if (tdName || tdClass) {
+                nameValue = tdName.textContent || tdName.innerText;
+                classValue = tdClass.textContent || tdClass.innerText;
+                if (
+                    nameValue.toLowerCase().indexOf(filter) > -1 ||
+                    classValue.toLowerCase().indexOf(filter) > -1
+                ) {
+                    tr[i].style.display = "";
+                } else {
+                    t

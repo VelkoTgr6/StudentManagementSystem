@@ -6,5 +6,8 @@ namespace StudentManagementSystem.Core.Contracts
     {
         Task<IEnumerable<StudentsViewModel>> GetStudentsByTeacherAndClassAsync(int classId, string userId);
         Task<TeacherClassesViewModel> GetAllClassesByTeacher(string userId);
+        Task<TeacherStudentDetailsViewModel> GetStudentDetailsAsync(int studentId);
+        Task<int> AddGradeToStudent(GradeFormModel model,int studentId);
+        Task<IEnumerable<TeacherCourseServiceModel>> GetTeacherCourses(string teacherId);
     }
 }
