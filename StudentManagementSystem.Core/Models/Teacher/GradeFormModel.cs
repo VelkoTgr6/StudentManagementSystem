@@ -7,6 +7,7 @@ namespace StudentManagementSystem.Core.Models.Teacher
         public int CourseId { get; set; }
         public int StudentId { get; set; }
         public double GradeScore { get; set; }
+        public string ?CustomGradeType { get; set; }
 
         [MaxLength(100)]
         public string GradeType { get; set; } = "Assignment";

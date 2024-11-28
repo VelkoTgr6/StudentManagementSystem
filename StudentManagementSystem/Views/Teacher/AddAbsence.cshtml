@@ -1,0 +1,35 @@
+﻿@model AbsenceFormViewModel
+
+<div class="container mt-5">
+    <h2 class="text-center">Add Absence</h2>
+    <hr />
+
+    <form method="post" asp-action="AddAbsenceToStudent" asp-controller="Teacher">
+        <!-- Hidden field for StudentId -->
+        <input type="hidden" name="StudentId" value="@Model.StudentId" />
+
+        <!-- Course Selection -->
+        <div class="form-group mt-3">
+            <label for="CourseId">Select Course</label>
+            <select id="CourseId" name="CourseId" class="form-control" required>
+                <option value="">-- Select Course --</option>
+                @foreach (var course in Model.Courses)
+                {
+                    <option value="@course.Id">@course.Name</option>
+                }
+            </select>
+        </div>
+
+        <!-- Absence Date -->
+        <div class="form-group mt-3">
+            <label for="AbsenceDate">Absence Date</label>
+            <input type="date" id="AbsenceDate" name="AbsenceDate" class="form-control" value="@Model.AbsenceDate.ToString("yyyy-MM-dd")" required />
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" asp-action="AddAbsence" class="btn btn-primary">Add Absence</button>
+            <a href="@Url.Action("StudentDetails", "Teacher", new { studentId = Model.StudentId })" class="btn btn-secondary">Back to Student</a>
+        </div>
+    </form>
+</div>

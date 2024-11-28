@@ -1,7 +1,6 @@
 ﻿@model TeacherStudentDetailsViewModel
 
 <div class="container mt-5">
-
     <div class="d-flex justify-content-between align-items-center">
         <!-- Back button aligned to the left -->
         <a href="@Url.Action("StudentsByClass", "Teacher", new { classId = @Model.ClassId })" class="btn btn-secondary mb-3">Back to List</a>
@@ -9,8 +8,6 @@
         <!-- Centered Heading -->
         <h2 class="mx-auto mb-3 text-center">Student Details</h2>
     </div>
-
-
 
     <hr />
 
@@ -29,8 +26,9 @@
         }
         else
         {
-            <div class="table-responsive">
-                <table class="table table-bordered table-sm table-striped mx-auto" style="max-width: 60%;">
+            <div class="table-responsive mx-auto" style="max-height: 400px; max-width: 60%; overflow-y: auto;">
+                <!-- Approx. height for 10 rows -->
+                <table class="table table-bordered table-sm table-striped mx-auto">
                     <thead class="thead-dark">
                         <tr>
                             <th>#</th>
@@ -46,7 +44,7 @@
                                 <td>@(i + 1)</td>
                                 <td>@Model.Grades[i].CourseName</td>
                                 <td>@Model.Grades[i].GradeScore</td>
-                                <td>@Model.Grades[i].GradeType<td>
+                                <td>@Model.Grades[i].GradeType</td>
                             </tr>
                         }
                     </tbody>
@@ -57,5 +55,79 @@
 
     <div class="text-center mt-4">
         <a class="btn btn-secondary" asp-action="AddGrade" asp-route-studentId="@Model.StudentId">Add Grade</a>
+    </div>
+
+    <div class="mt-4">
+        <h4 class="text-center">Absences</h4>
+        @if (!Model.Absences.Any())
+        {
+            <p class="text-center text-muted">No absences available for this student.</p>
+        }
+        else
+        {
+            <div class="table-responsive mx-auto" style="max-height: 200px;max-width: 60%; overflow-y: auto;">
+                <!-- Approx. height for 5 rows -->
+                <table class="table table-bordered table-sm table-striped mx-auto">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Course Name</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.Absences.Count(); i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@Model.Absences[i].CourseName</td>
+                                <td>@Model.Absences[i].Date</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div class="text-center mt-4">
+        <a class="btn btn-secondary" asp-action="AddAbsence" asp-route-studentId="@Model.StudentId">Add Absence</a>
+    </div>
+
+    <div class="mt-4">
+        <h4 class="text-center">Remarks</h4>
+        @if (!Model.Remarks.Any())
+        {
+            <p class="text-center text-muted">No remarks available for this student.</p>
+        }
+        else
+        {
+            <div class="table-responsive mx-auto" style="max-height: 200px;max-width: 60%; overflow-y: auto;">
+                <!-- Approx. height for 5 rows -->
+                <table class="table table-bordered table-sm table-striped mx-auto">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Course Name</th>
+                            <th>Remark Text</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.Remarks.Count(); i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@Model.Remarks[i].CourseName</td>
+                                <td>@Model.Remarks[i].RemarkText</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div class="text-center mt-4">
+        <a class="btn btn-secondary" asp-action="AddRemark" asp-route-studentId="@Model.StudentId">Add Remark</a>
     </div>
 </div>

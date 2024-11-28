@@ -67,5 +67,64 @@ namespace StudentManagementSystem.Controllers
             await teacherService.AddGradeToStudent(model, model.StudentId);
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AddAbsence(int studentId)
+        {
+            var model = new AbsenceFormViewModel
+            {
+                StudentId = studentId,
+                Courses = await teacherService.GetTeacherCourses(User.GetId()),
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAbsence(AbsenceFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+                return View(model);
+            }
+            await teacherService.AddAbsenceToStudentAsync(model, model.StudentId);
+            return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddRemark(int studentId)
+        {
+            var model = new RemarkFormViewModel
+            {
+                StudentId = studentId,
+                TeacherId = await teacherService.GetTeacherEntityIdByUserIdAsync(User.GetId()),
+                Courses = await teacherService.GetTeacherCourses(User.GetId()),  
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddRemark(RemarkFormViewModel model)
+        {
+            if (await teacherService.RemarkOfStudentExists(model.StudentId,model.RemarkText,model.CourseId))
+            {
+                ModelState.AddModelError(nameof(model.RemarkText),
+                    $"This '{model.RemarkText}' remark already exists for the current student int this course ,please try again!");
+                model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+                return View(model);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+                return View(model);
+            }
+            
+            await teacherService.AddRemarkToStudentAsync(model, model.StudentId);
+            model.CourseName = await teacherService.GetCourseNameById(model.CourseId);
+
+            return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
+        }
     }
 }

@@ -1,0 +1,37 @@
+﻿@model RemarkFormViewModel
+
+<div class="container mt-5">
+    <h2 class="text-center">Add Remark</h2>
+    <hr />
+
+    <form method="post" asp-action="AddRemarkToStudent" asp-controller="Teacher">
+        <!-- Hidden field for StudentId -->
+        <input type="hidden" name="StudentId" value="@Model.StudentId" />
+        <input type="hidden" asp-for="TeacherId" />
+
+        <!-- Course Selection -->
+        <div class="form-group mt-3">
+            <label for="CourseId">Select Course</label>
+            <select id="CourseId" name="CourseId" class="form-control" required>
+                <option value="">-- Select Course --</option>
+                @foreach (var course in Model.Courses)
+                {
+                    <option value="@course.Id">@course.Name</option>
+                }
+            </select>
+        </div>
+
+        <!-- Remark Text -->
+        <div class="form-group mt-3">
+            <label for="RemarkText">Remark</label>
+            <textarea id="RemarkText" name="RemarkText" class="form-control" rows="4" placeholder="Enter your remark here..." required>@Model.RemarkText</textarea>
+            <span asp-validation-for="RemarkText" class="text-danger"></span>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-primary" asp-action="AddRemark">Add Remark</button>
+            <a href="@Url.Action("StudentDetails", "Teacher", new { studentId = Model.StudentId })" class="btn btn-secondary">Back to Student</a>
+        </div>
+    </form>
+</div>

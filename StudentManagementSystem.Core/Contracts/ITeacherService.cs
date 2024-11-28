@@ -9,5 +9,10 @@ namespace StudentManagementSystem.Core.Contracts
         Task<TeacherStudentDetailsViewModel> GetStudentDetailsAsync(int studentId);
         Task<int> AddGradeToStudent(GradeFormModel model,int studentId);
         Task<IEnumerable<TeacherCourseServiceModel>> GetTeacherCourses(string teacherId);
+        Task<int> AddAbsenceToStudentAsync(AbsenceFormViewModel model, int studentId);
+        Task<int> AddRemarkToStudentAsync(RemarkFormViewModel model, int studentId);
+        Task<int> GetTeacherEntityIdByUserIdAsync(string userId);
+        Task<bool> RemarkOfStudentExists(int studentId,string remarkText,int courseId);
+        Task<string> GetCourseNameById(int courseId);
     }
 }
