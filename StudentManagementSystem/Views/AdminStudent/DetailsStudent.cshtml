@@ -24,43 +24,18 @@
         </div>
     </div>
 
-    <!-- Grades Section -->
-    <h4>Grades</h4>
-    @if (Model.Grades.Any())
-    {
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Subject</th>
-                    <th>Grade</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var grade in Model.Grades)
-                {
-                    <tr>
-                        <td>@grade.Course</td>
-                        <td>@grade.GradeScore</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No grades available for this student.</p>
-    }
-
     <div class="col-md-4">
-        <div class="d-flex flex-column align-items-start justify-content-between">
-            <!-- Edit Button -->
-            <a href="@Url.Action("EditStudent", "AdminStudent", new { id = Model.Id })" class="btn btn-warning btn-lg mb-2 w-100">Edit</a>
+        <div class="d-flex flex-row align-items-start justify-content-between flex-wrap">
+            
+            <a href="@Url.Action("EditStudent", "AdminStudent", new { id = Model.Id })" class="btn btn-warning btn-sm mb-2 me-1">Edit Details</a>
+            <a href="@Url.Action("StudentGrades", "AdminStudent", new { id = Model.Id })" class="btn btn-warning btn-sm mb-2 me-1">Edit Grade</a>
+            <a href="@Url.Action("StudentRemarks", "AdminStudent", new { id = Model.Id })" class="btn btn-warning btn-sm mb-2 me-1">Edit Remark</a>
+            <a href="@Url.Action("StudentAbsences", "AdminStudent", new { id = Model.Id })" class="btn btn-warning btn-sm mb-2 me-1">Edit Absence</a>
             <!-- Delete Button -->
             <a href="@Url.Action("DeleteStudent", "AdminStudent", new { id = Model.Id })"
-               class="btn btn-danger btn-lg w-100"
+               class="btn btn-danger btn-lg w-100 mt-2"
                onclick="return confirm('Are you sure you want to delete this Student @Model.FirstName @Model.LastName?');">
-                Delete
-            </a>
+                Delete Student</a>
         </div>
 
         <!-- Back Button -->

@@ -58,6 +58,8 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
                 .FirstOrDefault();
         }
 
+
+
         public async Task<T?> GetByIdAsync<T>(object id) where T : class
         {
             return await DbSet<T>().FindAsync(id);
@@ -78,6 +80,30 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
             }
 
             return user.Id;
+        }
+
+        public async Task UpdateStudentsPerformanceAllAsync()
+        {
+            var students = await DbSet<Student>()
+                .Include(s => s.Grades)
+                .Where(s => s.IsDeleted == false)
+                .ToListAsync();
+
+            foreach (var student in students)
+            {
+                double grades = 0;
+
+                if (student.Grades.Any())
+                {
+                    foreach (var grade in student.Grades.Where(g=>g.IsDeleted == false))
+                    {
+                        grades += grade.GradeScore;
+                    }
+                    student.Performance = grades / student.Grades.Where(g => g.IsDeleted == false).Count();
+                }
+            }
+
+            await context.SaveChangesAsync();
         }
     }
 }

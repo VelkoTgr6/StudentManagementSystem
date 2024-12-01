@@ -21,5 +21,8 @@ namespace StudentManagementSystem.Core.Contracts.Admin
         Task<StudentFormViewModel?> GetStudentFormModelByIdAsync(int id);
         Task<StudentDetailsViewModel> GetStudentDetailsModelByIdAsync(int id);
         Task<IEnumerable<string>> GetAllStudentsNamesAsync();
+        Task<IEnumerable<StudentGradeServiceViewModel>> GetStudentGradesAsync(int studentId);
+        Task EditGradeAsync(int gradeId, StudentGradeFormViewModel model);
+        Task<StudentGradeFormViewModel> GetGradeFormModelByIdAsync(int gradeId);
     }
 } 

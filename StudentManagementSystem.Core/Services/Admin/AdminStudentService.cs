@@ -59,7 +59,8 @@ namespace StudentManagementSystem.Core.Services.Admin
                     Email = s.Email,
                     PersonalId = s.PersonalId,
                     DateOfBirth = s.DateOfBirth,
-                    Class = s.Class.Name
+                    Class = s.Class.Name,
+                    Performance = s.Performance.ToString("f2"),
                 })
                 .ToListAsync();
 
@@ -130,7 +131,6 @@ namespace StudentManagementSystem.Core.Services.Admin
                 entity.DateOfBirth = model.DateOfBirth;
                 entity.ClassId = model.ClassId;
 
-                
                 if (profilePictureFile != null)
                 {
                     entity.ProfilePicturePath = await SaveProfilePictureAsync(profilePictureFile);
@@ -198,7 +198,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                     PersonalId = s.PersonalId,
                     DateOfBirth = s.DateOfBirth,
                     Class = s.Class.Name,
-                    Performance = s.Performance
+                    Performance = s.Performance.ToString("f2"),
                 })
                 .FirstOrDefaultAsync();
 
@@ -226,7 +226,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                     Email = s.Email,
                     DateOfBirth = s.DateOfBirth,
                     ContactDetails = s.ContactDetails,
-                    Performance = s.Performance.ToString(),
+                    Performance = s.Performance.ToString("f2"),
                     Grades = s.Grades
                 })
                 .FirstOrDefaultAsync();
@@ -263,6 +263,67 @@ namespace StudentManagementSystem.Core.Services.Admin
             }
 
             return student;
+        }
+
+        public async Task<IEnumerable<StudentGradeServiceViewModel>> GetStudentGradesAsync(int studentId)
+        {
+            var studentGrades = await repository.AllAsReadOnly<Grade>()
+                .Where(g => g.StudentId == studentId && g.IsDeleted == false)
+                .Select(g => new StudentGradeServiceViewModel
+                {
+                    Id = g.Id,
+                    DateAdded = g.GradeAssignedDate,
+                    ClassName = g.Student.Class.Name,
+                    Grade = g.GradeScore.ToString(),
+                    GradeType = g.GradeType.ToString(),
+                    Name = g.Course.Name
+                })
+                .OrderByDescending(g => g.Name)
+                .ToListAsync();
+
+            return studentGrades;
+        }
+
+        public async Task EditGradeAsync(int gradeId, StudentGradeFormViewModel model)
+        {
+            var grade = await repository.All<Grade>()
+                .FirstOrDefaultAsync(g => g.Id == gradeId && !g.IsDeleted);
+
+            if (grade == null)
+            {
+                throw new ArgumentException("Grade not found.");
+            }
+
+            grade.GradeScore = model.GradeScore;
+            grade.GradeType = model.GradeType;
+            grade.CourseId = model.CourseId;
+
+
+            await repository.UpdateStudentsPerformanceAllAsync();
+
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<StudentGradeFormViewModel> GetGradeFormModelByIdAsync(int gradeId)
+        {
+            var grade =await repository.AllAsReadOnly<Grade>()
+                .Where(g => g.Id == gradeId && g.IsDeleted == false)
+                .Select(g => new StudentGradeFormViewModel
+                {
+                    GradeId = g.Id,
+                    StudentId = g.StudentId,
+                    GradeScore = g.GradeScore,
+                    GradeType = g.GradeType,
+                    CourseId = g.CourseId
+                })
+                .FirstOrDefaultAsync();
+
+            if (grade == null)
+            {
+                throw new ArgumentException($"Grade not found.");
+            }
+
+            return grade;
         }
     }
 }

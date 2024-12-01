@@ -14,5 +14,6 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
         Task<T?> GetByIdAsync<T>(object id) where T : class;
         Task<bool> EmailExistAsync(string email);
         Task<string> GetIdByEmailAsync(string email);
+        Task UpdateStudentsPerformanceAllAsync();
     }
 }

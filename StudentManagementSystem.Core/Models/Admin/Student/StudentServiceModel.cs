@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using StudentManagementSystem.Core.Models.Admin.Class;
+﻿using StudentManagementSystem.Core.Models.Admin.Class;
 
 namespace StudentManagementSystem.Core.Models.Admin.Student
 {
@@ -14,7 +13,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Student
         public string PersonalId { get; set; } = null!;
         public DateTime DateOfBirth { get; set; }
         public string Class { get; set; } = null!;
-        public double Performance { get; set; }
+        public string Performance { get; set; } = null!;
         public string ProfilePicturePath { get; set; } = null!;
         public IEnumerable<ClassServiceModel> Classes { get; set; } = new List<ClassServiceModel>();
     }

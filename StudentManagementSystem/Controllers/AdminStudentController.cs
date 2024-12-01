@@ -6,6 +6,7 @@ using StudentManagementSystem.Core.Models.Admin.Class;
 using StudentManagementSystem.Core.Models.Admin.Course;
 using StudentManagementSystem.Core.Models.Admin.Student;
 using StudentManagementSystem.Core.Models.Admin.Teacher;
+using StudentManagementSystem.Core.Models.Teacher;
 using StudentManagementSystem.Infrastructure.Data.Models;
 using StudentManagementSystem.Models;
 using System.Security.Claims;
@@ -222,6 +223,44 @@ namespace StudentManagementSystem.Controllers
             }
             var student = await adminStudentService.GetStudentDetailsModelByIdAsync(id);
             return View(student);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> StudentGrades(int id)
+        {
+            if (await adminStudentService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            var grades = await adminStudentService.GetStudentGradesAsync(id);
+            ViewBag.StudentId = id;
+            return View(grades);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditGrade(int id)
+        {
+
+            var model = await adminStudentService.GetGradeFormModelByIdAsync(id);
+
+            if (model != null)
+            {
+                model.Courses = await adminCourseService.GetAllCoursesAsync();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditGrade(int id, StudentGradeFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await adminCourseService.GetAllCoursesAsync();
+                return View(model);
+            }
+            await adminStudentService.EditGradeAsync(id, model);
+            return RedirectToAction(nameof(StudentGrades), new { id = model.StudentId });
         }
 
         [HttpGet]

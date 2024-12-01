@@ -49,6 +49,8 @@ namespace StudentManagementSystem.Core.Services
 
                 student.Grades.Add(grade);
 
+                await repository.UpdateStudentsPerformanceAllAsync();
+
                 await repository.SaveChangesAsync();
 
                 return grade.Id;
@@ -65,6 +67,8 @@ namespace StudentManagementSystem.Core.Services
 
 
             student.Grades.Add(customGrade);
+
+            await repository.UpdateStudentsPerformanceAllAsync();
 
             await repository.SaveChangesAsync();
 
