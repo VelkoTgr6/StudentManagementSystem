@@ -263,6 +263,18 @@ namespace StudentManagementSystem.Controllers
             return RedirectToAction(nameof(StudentGrades), new { id = model.StudentId });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteGrade(int id)
+        {
+            var grade = await adminStudentService.GetGradeFormModelByIdAsync(id);
+            if (grade == null)
+            {
+                return BadRequest();
+            }
+            await adminStudentService.DeleteGradeAsync(id);
+            return RedirectToAction(nameof(StudentGrades), new { id = grade.StudentId });
+        }
+
         [HttpGet]
         public async Task<IActionResult> DeleteStudent(int id)
         {

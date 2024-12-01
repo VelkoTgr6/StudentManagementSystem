@@ -325,5 +325,22 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             return grade;
         }
+
+        public async Task DeleteGradeAsync(int id)
+        {
+            var grade =await repository.All<Grade>()
+                .FirstOrDefaultAsync(g => g.Id == id && !g.IsDeleted);
+
+            if (grade == null)
+            {
+                throw new ArgumentException("Grade not found.");
+            }
+
+            grade.IsDeleted = true;
+
+            await repository.UpdateStudentsPerformanceAllAsync();
+
+            await repository.SaveChangesAsync();
+        }
     }
 }
