@@ -1,0 +1,54 @@
+﻿@model IEnumerable<StudentRemarksServiceModel>
+
+<div class="container mt-5">
+    <h2 class="text-center">Student Remarks</h2>
+    <hr />
+
+    <!-- Remarks Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Course Name</th>
+                    <th>Remark</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">No remarks found.</td>
+                    </tr>
+                }
+                else
+                {
+                    @for (var i = 0; i < Model.Count(); i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@Model.ElementAt(i).CourseName</td>
+                            <td>@Model.ElementAt(i).RemarkText</td>
+                            <td class="text-center">
+                                <!-- Edit Button -->
+                                <a class="btn btn-warning btn-sm" asp-action="EditRemark" asp-route-id="@Model.ElementAt(i).RemarkId">
+                                    Edit
+                                </a>
+                                <!-- Delete Button -->
+                                <form method="post" asp-action="DeleteRemark" asp-route-id="@Model.ElementAt(i).RemarkId" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this remark?');">
+
+                                    <script>
+                                        function showDeleteConfirmation() {
+                                        return confirm('Are you sure you want to delete this remark?');
+                                        }
+                                    </script>
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

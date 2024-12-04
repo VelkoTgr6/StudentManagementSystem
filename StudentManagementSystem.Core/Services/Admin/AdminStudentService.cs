@@ -342,5 +342,60 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             await repository.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<StudentRemarksServiceModel>> GetStudentRemarksAsync(int studentId)
+        {
+            var remarks = await repository.AllAsReadOnly<Student>()
+                .Include(s => s.Remarks)
+                .Include(s => s.Class.ClassCourses)
+                .ThenInclude(cc => cc.Course)
+                .Where(r => r.Id == studentId)
+                .SelectMany(r => r.Remarks.Select(rem => new StudentRemarksServiceModel
+                {
+                    RemarkId = rem.Id,
+                    CourseId = rem.CourseId,
+                    CourseName = r.Remarks
+                    .Where(r=>r.CourseId == rem.CourseId)
+                    .Select(r=>r.Course.Name)
+                    .FirstOrDefault(),
+                    RemarkText = rem.RemarkText
+                }))
+                .OrderBy(r => r.CourseName)
+                .ToListAsync();
+
+            return remarks;
+        }
+
+        public async Task EditRemarkAsync(int studentId, StudentRemarkFormViewModel model)
+        {
+            var remark =await repository.All<Remark>()
+                .FirstOrDefaultAsync(r => r.StudentId == studentId);
+
+            remark.RemarkText = model.RemarkText;
+            remark.CourseId = model.CourseId;
+
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<StudentRemarkFormViewModel> GetRemarkFormModelByIdAsync(int id)
+        {
+            var remark = await repository.AllAsReadOnly<Remark>()
+                .Where(r => r.Id == id)
+                .Select(r => new StudentRemarkFormViewModel
+                {
+                    Id = r.Id,
+                    StudentId = r.StudentId,
+                    CourseId = r.CourseId,
+                    RemarkText = r.RemarkText
+                })
+                .FirstOrDefaultAsync();
+
+            if (remark == null)
+            {
+                throw new ArgumentException($"Remark not found.");
+            }
+
+            return remark;
+        }
     }
 }

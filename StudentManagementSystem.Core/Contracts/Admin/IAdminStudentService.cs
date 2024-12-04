@@ -25,5 +25,8 @@ namespace StudentManagementSystem.Core.Contracts.Admin
         Task EditGradeAsync(int gradeId, StudentGradeFormViewModel model);
         Task<StudentGradeFormViewModel> GetGradeFormModelByIdAsync(int gradeId);
         Task DeleteGradeAsync(int id);
+        Task<IEnumerable<StudentRemarksServiceModel>> GetStudentRemarksAsync(int studentId);
+        Task EditRemarkAsync(int studentId, StudentRemarkFormViewModel model);
+        Task<StudentRemarkFormViewModel> GetRemarkFormModelByIdAsync(int id);
     }
 } 

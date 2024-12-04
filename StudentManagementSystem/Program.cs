@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationDbContext(builder.Configuration);
 builder.Services.AddApplicationIdentity(builder.Configuration);
 
-//Configure EmailSettings with values from the configuration
+// Configure EmailSettings with values from the configuration
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 // Register EmailService as a singleton service
@@ -27,7 +27,6 @@ builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
-
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -45,6 +44,20 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Custom middleware to redirect based on role
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity.IsAuthenticated && context.Request.Path == "/")
+    {
+        if (context.User.IsInRole("Administrator"))
+        {
+            context.Response.Redirect("/AdminHome/Index");
+            return;
+        }
+    }
+    await next();
+});
 
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
