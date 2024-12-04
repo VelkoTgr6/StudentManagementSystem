@@ -24,6 +24,9 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [ForeignKey(nameof(CourseId))]
         public Course Course { get; set; } = null!;
 
+        [Comment("Shows if absence is Deleted")]
+        public bool IsDeleted { get; set; } = false;
+
         [Required]
         [Comment("Date of Absence")]
         public DateTime Date { get; set; }

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Infrastructure.Data.Configuration;
 using StudentManagementSystem.Infrastructure.Data.Models;
-using System.Reflection.Emit;
 
 namespace StudentManagementSystem.Infrastructure
 {
@@ -77,11 +76,12 @@ namespace StudentManagementSystem.Infrastructure
 
 
             builder.ApplyConfiguration(new IdentityUserConfiguration());
+            builder.ApplyConfiguration(new SchoolConfiguration());
             builder.ApplyConfiguration(new TeacherConfiguration());
             builder.ApplyConfiguration(new CourseConfiguration());
             builder.ApplyConfiguration(new ClassConfiguration());
             builder.ApplyConfiguration(new StudentConfiguration());
-
+            
 
             base.OnModelCreating(builder);
         }
@@ -95,5 +95,7 @@ namespace StudentManagementSystem.Infrastructure
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Absence> Absences { get; set; }
         public DbSet<Remark> Remarks { get; set; }
+        public DbSet<News> News { get; set; }
+        public DbSet<School> Schools { get; set; }
     }
 }

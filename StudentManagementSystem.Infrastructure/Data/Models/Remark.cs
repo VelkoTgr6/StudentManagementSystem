@@ -15,6 +15,9 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [MaxLength(500)]
         public string RemarkText { get; set; } = null!;
 
+        [Comment("Shows if remark is Deleted")]
+        public bool IsDeleted { get; set; } = false;
+
         [Required]
         [Comment("Student Identifier")]
         public int StudentId { get; set; }

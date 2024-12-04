@@ -83,6 +83,33 @@
         /// </summary>
         public const int StudentContactMaxLength = 200;
 
+        /// <summary>
+        /// News Title Minimum and Minimum Length
+        /// </summary>
+        public const int NewsTitleMinLength = 2;
+
+        /// <summary>
+        /// News Title Maximum Length
+        /// </summary>
+        public const int NewsTitleMaxLength = 50;
+
+        /// <summary>
+        /// News Content Minimum and Maximum Length
+        /// </summary>
+        public const int NewsContentMinLength = 2;
+        public const int NewsContentMaxLength = 1000;
+
+
+        /// <summary>
+        /// School Name Minimum Length
+        /// </summary>
+        public const int SchoolNameMinLength = 2;
+
+        /// <summary>
+        /// School Name Maximum Length
+        /// </summary>
+        public const int SchoolNameMaxLength = 200;
+
 
         /// <summary>
         /// Profile Picture Minimum Length

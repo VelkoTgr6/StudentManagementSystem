@@ -12,6 +12,13 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [Comment("Teacher Identifier")]
         public int Id { get; set; }
 
+        [Required]
+        [Comment("School Identifier")]
+        public int SchoolId { get; set; }
+
+        [ForeignKey(nameof(SchoolId))]
+        public School School { get; set; } = null!;
+
         [MaxLength(TeacherTitlesMaxLength)]
         [Comment("Teacher Titles")]
         public string? Titles { get; set; }

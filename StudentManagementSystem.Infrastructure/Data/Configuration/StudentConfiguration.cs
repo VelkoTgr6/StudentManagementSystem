@@ -10,6 +10,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
         {
             new Student(){
                   Id = 1,
+                  SchoolId = 1,
                   PersonalId = "9564039305",
                   FirstName = "Ivan",
                   MiddleName = "Grigorov",
@@ -21,6 +22,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 3
     },    new         Student() {
                   Id = 2,
+                  SchoolId = 1,
                   PersonalId = "6934567210",
                   FirstName = "Maria",
                   MiddleName = "Georgiev",
@@ -32,6 +34,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 5
     },    new         Student() {
                   Id = 3,
+                  SchoolId = 1,
                   PersonalId = "3699302616",
                   FirstName = "Elena",
                   MiddleName = "Grigorov",
@@ -43,6 +46,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 5
     },    new         Student() {
                   Id = 4,
+                  SchoolId = 1,
                   PersonalId = "2940063663",
                   FirstName = "Viktor",
                   MiddleName = "Todorov",
@@ -54,6 +58,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 4
     },    new         Student() {
                   Id = 5,
+                  SchoolId = 1,
                   PersonalId = "4204190914",
                   FirstName = "Pesho",
                   MiddleName = "Nikolov",
@@ -65,6 +70,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 2
     },    new         Student() {
                   Id = 6,
+                  SchoolId = 1,
                   PersonalId = "5392831842",
                   FirstName = "Nina",
                   MiddleName = "Borisova",
@@ -76,6 +82,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 1
     },    new         Student() {
                   Id = 7,
+                  SchoolId = 1,
                   PersonalId = "6758374932",
                   FirstName = "Ivo",
                   MiddleName = "Petrov",
@@ -87,6 +94,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 1
     },    new         Student() {
                   Id = 8,
+                  SchoolId = 1,
                   PersonalId = "8293840598",
                   FirstName = "Katerina",
                   MiddleName = "Alexandrova",
@@ -98,6 +106,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 3
     },    new         Student() {
                   Id = 9,
+                  SchoolId = 1,
                   PersonalId = "9382843621",
                   FirstName = "Dimitar",
                   MiddleName = "Georgiev",
@@ -109,6 +118,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 4
     },    new         Student() {
                   Id = 10,
+                  SchoolId = 1,
                   PersonalId = "4902385726",
                   FirstName = "Stefan",
                   MiddleName = "Ivanov",
@@ -120,6 +130,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 5
     },    new         Student() {
                   Id = 11,
+                  SchoolId = 1,
                   PersonalId = "2945641207",
                   FirstName = "Diana",
                   MiddleName = "Stoyanova",
@@ -131,6 +142,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 2
     },    new         Student() {
                   Id = 12,
+                  SchoolId = 1,
                   PersonalId = "1298345761",
                   FirstName = "Petar",
                   MiddleName = "Zahariev",
@@ -142,6 +154,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 3
     },    new         Student() {
                   Id = 13,
+                  SchoolId = 1,
                   PersonalId = "8471629304",
                   FirstName = "Tanya",
                   MiddleName = "Vasileva",
@@ -153,6 +166,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 4
     },    new         Student() {
                   Id = 14,
+                  SchoolId = 1,
                   PersonalId = "6503849201",
                   FirstName = "Aleksandar",
                   MiddleName = "Dimitrov",
@@ -164,6 +178,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 2
     },    new         Student() {
                   Id = 15,
+                  SchoolId = 1,
                   PersonalId = "8473926140",
                   FirstName = "Julia",
                   MiddleName = "Borisova",
@@ -175,6 +190,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 5
     },    new         Student() {
                   Id = 16,
+                  SchoolId = 1,
                   PersonalId = "5392837362",
                   FirstName = "Kiril",
                   MiddleName = "Vasilev",
@@ -186,6 +202,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 1
     },    new         Student() {
                   Id = 17,
+                  SchoolId = 1,
                   PersonalId = "8282020193",
                   FirstName = "Daniela",
                   MiddleName = "Dimitrova",
@@ -197,6 +214,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 3
     },    new         Student() {
                   Id = 18,
+                  SchoolId = 1,
                   PersonalId = "9273628105",
                   FirstName = "Lazar",
                   MiddleName = "Nikolov",
@@ -208,6 +226,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 4
     },    new         Student() {
                   Id = 19,
+                  SchoolId = 1,
                   PersonalId = "3846204951",
                   FirstName = "Ivanka",
                   MiddleName = "Georgieva",
@@ -219,6 +238,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
                   ClassId = 2
     },    new         Student() {
                   Id = 20,
+                  SchoolId = 1,
                   PersonalId = "1294956172",
                   FirstName = "Gergana",
                   MiddleName = "Todorova",
