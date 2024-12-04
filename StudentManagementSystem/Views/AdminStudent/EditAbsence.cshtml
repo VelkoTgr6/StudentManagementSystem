@@ -1,13 +1,12 @@
-﻿@model StudentRemarkFormViewModel
+﻿@model StudentAbsenceFormViewModel
 
 <div class="container mt-5">
-    <h2 class="text-center">Add Remark</h2>
+    <h2 class="text-center">Edit Absence</h2>
     <hr />
 
-    <form method="post" asp-action="AddRemarkToStudent" asp-controller="Teacher">
+    <form method="post" asp-action="AddAbsenceToStudent" asp-controller="Teacher">
         <!-- Hidden field for StudentId -->
         <input type="hidden" name="StudentId" value="@Model.StudentId" />
-        <input type="hidden" asp-for="TeacherId" />
 
         <!-- Course Selection -->
         <div class="form-group mt-3">
@@ -21,17 +20,16 @@
             </select>
         </div>
 
-        <!-- Remark Text -->
+        <!-- Absence Date -->
         <div class="form-group mt-3">
-            <label for="RemarkText">Remark</label>
-            <textarea id="RemarkText" name="RemarkText" class="form-control" rows="4" placeholder="Enter your remark here..." required>@Model.RemarkText</textarea>
-            <span asp-validation-for="RemarkText" class="text-danger"></span>
+            <label for="AbsenceDate">Absence Date</label>
+            <input type="date" id="AbsenceDate" name="AbsenceDate" class="form-control" value="@Model.AbsenceDate.ToString("yyyy-MM-dd")" required />
         </div>
 
         <!-- Buttons -->
         <div class="d-flex justify-content-between mt-4">
-            <button type="submit" class="btn btn-primary" asp-action="EditRemark">Edit Remark</button>
-            <a href="@Url.Action("StudentRemarks", "AdminStudent", new { id = Model.StudentId })" class="btn btn-secondary mb-3">Back to Remarks</a>
+            <button type="submit" asp-action="EditAbsence" class="btn btn-primary">Edit Absence</button>
+            <a href="@Url.Action("StudentAbsences", "AdminStudent", new { id = Model.StudentId })" class="btn btn-secondary mb-3">Back to Absences</a>
         </div>
     </form>
 </div>

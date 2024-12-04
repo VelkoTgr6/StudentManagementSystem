@@ -28,5 +28,10 @@ namespace StudentManagementSystem.Core.Contracts.Admin
         Task<IEnumerable<StudentRemarksServiceModel>> GetStudentRemarksAsync(int studentId);
         Task EditRemarkAsync(int studentId, StudentRemarkFormViewModel model);
         Task<StudentRemarkFormViewModel> GetRemarkFormModelByIdAsync(int id);
+        Task DeleteRemarkAsync(int id);
+        Task<IEnumerable<StudentAbsenceServiceModel>> GetStudentAbsencesAsync(int studentId);
+        Task<StudentAbsenceFormViewModel> GetAbsenceFormModelByIdAsync(int id);
+        Task EditAbsenceAsync(int id, StudentAbsenceFormViewModel model);
+        Task DeleteAbsenceAsync(int id);
     }
 } 

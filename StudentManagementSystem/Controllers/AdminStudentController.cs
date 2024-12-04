@@ -133,6 +133,17 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            if (await adminStudentService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            await adminStudentService.DeleteStudentAsync(id);
+            return RedirectToAction(nameof(AllStudents));
+        }
+
+        [HttpGet]
         public async Task<IActionResult> StudentGrades(int id)
         {
             if (await adminStudentService.ExistAsync(id) == false)
@@ -219,16 +230,65 @@ namespace StudentManagementSystem.Controllers
             return RedirectToAction(nameof(StudentRemarks), new { id = model.StudentId });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteRemark(int id)
+        {
+            var remark = await adminStudentService.GetRemarkFormModelByIdAsync(id);
+            if (remark == null)
+            {
+                return BadRequest();
+            }
+            await adminStudentService.DeleteRemarkAsync(id);
+            return RedirectToAction(nameof(StudentRemarks), new { id = remark.StudentId });
+        }
+
         [HttpGet]
-        public async Task<IActionResult> DeleteStudent(int id)
+        public async Task<IActionResult> StudentAbsences(int id)
         {
             if (await adminStudentService.ExistAsync(id) == false)
             {
                 return BadRequest();
             }
-            await adminStudentService.DeleteStudentAsync(id);
-            return RedirectToAction(nameof(AllStudents));
+            var absences = await adminStudentService.GetStudentAbsencesAsync(id);
+            ViewBag.StudentId = id;
+            return View(absences);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditAbsence(int id)
+        {
+            var model = await adminStudentService.GetAbsenceFormModelByIdAsync(id);
+            if (model != null)
+            {
+                model.Courses = await adminCourseService.GetAllCoursesAsync();
+                return View(model);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAbsence(int id, StudentAbsenceFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await adminCourseService.GetAllCoursesAsync();
+                return View(model);
+            }
+            await adminStudentService.EditAbsenceAsync(id, model);
+            return RedirectToAction(nameof(StudentAbsences), new { id = model.StudentId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAbsence(int id)
+        {
+            var absence = await adminStudentService.GetAbsenceFormModelByIdAsync(id);
+            if (absence == null)
+            {
+                return BadRequest();
+            }
+            await adminStudentService.DeleteAbsenceAsync(id);
+            return RedirectToAction(nameof(StudentAbsences), new { id = absence.StudentId });
+
+        }
     }
 }

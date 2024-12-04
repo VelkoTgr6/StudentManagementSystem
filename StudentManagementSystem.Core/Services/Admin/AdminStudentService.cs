@@ -345,31 +345,25 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task<IEnumerable<StudentRemarksServiceModel>> GetStudentRemarksAsync(int studentId)
         {
-            var remarks = await repository.AllAsReadOnly<Student>()
-                .Include(s => s.Remarks)
-                .Include(s => s.Class.ClassCourses)
-                .ThenInclude(cc => cc.Course)
-                .Where(r => r.Id == studentId)
-                .SelectMany(r => r.Remarks.Select(rem => new StudentRemarksServiceModel
+            var remarks = await repository.AllAsReadOnly<Remark>()
+                .Where(r => r.StudentId == studentId && r.IsDeleted == false)
+                .Select(r=> new StudentRemarksServiceModel()
                 {
-                    RemarkId = rem.Id,
-                    CourseId = rem.CourseId,
-                    CourseName = r.Remarks
-                    .Where(r=>r.CourseId == rem.CourseId)
-                    .Select(r=>r.Course.Name)
-                    .FirstOrDefault(),
-                    RemarkText = rem.RemarkText
-                }))
+                    RemarkId = r.Id,
+                    CourseId = r.CourseId,
+                    CourseName = r.Course.Name,
+                    RemarkText = r.RemarkText
+                })
                 .OrderBy(r => r.CourseName)
                 .ToListAsync();
 
             return remarks;
         }
 
-        public async Task EditRemarkAsync(int studentId, StudentRemarkFormViewModel model)
+        public async Task EditRemarkAsync(int remarkId, StudentRemarkFormViewModel model)
         {
             var remark =await repository.All<Remark>()
-                .FirstOrDefaultAsync(r => r.StudentId == studentId);
+                .FirstOrDefaultAsync(r => r.Id == remarkId && r.IsDeleted == false);
 
             remark.RemarkText = model.RemarkText;
             remark.CourseId = model.CourseId;
@@ -380,7 +374,7 @@ namespace StudentManagementSystem.Core.Services.Admin
         public async Task<StudentRemarkFormViewModel> GetRemarkFormModelByIdAsync(int id)
         {
             var remark = await repository.AllAsReadOnly<Remark>()
-                .Where(r => r.Id == id)
+                .Where(r => r.Id == id && r.IsDeleted == false)
                 .Select(r => new StudentRemarkFormViewModel
                 {
                     Id = r.Id,
@@ -396,6 +390,86 @@ namespace StudentManagementSystem.Core.Services.Admin
             }
 
             return remark;
+        }
+
+        public async Task DeleteRemarkAsync(int id)
+        {
+            var remark =await repository.All<Remark>().FirstOrDefaultAsync(r => r.Id == id);
+
+            if (remark == null || remark.IsDeleted == true)
+            {
+                throw new ArgumentException("Remark not found.");
+            }
+
+            remark.IsDeleted = true;
+
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<StudentAbsenceServiceModel>> GetStudentAbsencesAsync(int studentId)
+        {
+            var absences = await repository.AllAsReadOnly<Absence>()
+                .Where(a => a.StudentId == studentId && a.IsDeleted == false)
+                .Select(a => new StudentAbsenceServiceModel
+                {
+                    Id = a.Id,
+                    CourseName = a.Course.Name,
+                    AbsenceDate = a.Date.ToString("dd.MM.yyyy"),
+                })
+                .OrderBy(a => a.CourseName)
+                .ToListAsync();
+
+            return absences;
+        }
+
+        public async Task<StudentAbsenceFormViewModel> GetAbsenceFormModelByIdAsync(int id)
+        {
+            var absence =await repository.AllAsReadOnly<Absence>()
+                .Where(a => a.Id == id && a.IsDeleted == false)
+                .Select(a => new StudentAbsenceFormViewModel
+                {
+                    Id = a.Id,
+                    StudentId = a.StudentId,
+                    CourseId = a.CourseId,
+                    AbsenceDate = a.Date
+                })
+                .FirstOrDefaultAsync();
+
+            if (absence == null)
+            {
+                throw new ArgumentException($"Absence not found.");
+            }
+
+            return absence;
+        }
+
+        public async Task EditAbsenceAsync(int id, StudentAbsenceFormViewModel model)
+        {
+            var absence =await repository.All<Absence>().FirstOrDefaultAsync(a => a.Id == id);
+
+            if (absence == null || absence.IsDeleted == true)
+            {
+                throw new ArgumentException("Absence not found.");
+            }
+
+            absence.Date = model.AbsenceDate;
+            absence.CourseId = model.CourseId;
+
+             await repository.SaveChangesAsync();
+        }
+
+        public async Task DeleteAbsenceAsync(int id)
+        {
+            var absence =await repository.All<Absence>().FirstOrDefaultAsync(a => a.Id == id);
+
+            if (absence == null || absence.IsDeleted == true)
+            {
+                throw new ArgumentException("Absence not found.");
+            }
+
+            absence.IsDeleted = true;
+
+            await repository.SaveChangesAsync();
         }
     }
 }

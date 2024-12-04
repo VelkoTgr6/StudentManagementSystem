@@ -119,7 +119,9 @@ namespace StudentManagementSystem.Core.Services
             var student = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Include(s => s.Class)
-                .Include(s => s.Grades.Where(g => !g.Course.IsDeleted))
+                .Include(s => s.Grades.Where(g => !g.Course.IsDeleted && !g.IsDeleted))
+                .Include(s => s.Аbsences.Where(a => !a.IsDeleted))
+                .Include(s => s.Remarks.Where(r => !r.IsDeleted))
                 .Select(s => new TeacherStudentDetailsViewModel
                 {
                     StudentId = s.Id,
@@ -127,7 +129,7 @@ namespace StudentManagementSystem.Core.Services
                     ClassName = s.Class.Name,
                     ClassId = s.ClassId,
                     Grades = s.Grades
-                        .Where(g=>g.IsDeleted == false)
+                        .Where(g => !g.IsDeleted)
                         .Select(g => new GradeServiceViewModel
                         {
                             Id = g.Id,
@@ -138,6 +140,7 @@ namespace StudentManagementSystem.Core.Services
                         .OrderBy(g => g.CourseName)
                         .ToList(),
                     Absences = s.Аbsences
+                        .Where(a => !a.IsDeleted)
                         .Select(a => new AbsenceServiceViewModel
                         {
                             Id = a.Id,
@@ -147,6 +150,7 @@ namespace StudentManagementSystem.Core.Services
                         .OrderBy(a => a.CourseName)
                         .ToList(),
                     Remarks = s.Remarks
+                        .Where(r => !r.IsDeleted)
                         .Select(r => new RemarkServiceViewModel
                         {
                             Id = r.Id,
@@ -216,7 +220,7 @@ namespace StudentManagementSystem.Core.Services
         {
             var student = await repository.All<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
-                .Include(s => s.Аbsences)
+                .Include(s => s.Аbsences.Where(a => !a.IsDeleted))
                 .Include(s => s.Class)
                 .Include(s => s.Class.ClassCourses)
                 .FirstOrDefaultAsync();
@@ -253,7 +257,7 @@ namespace StudentManagementSystem.Core.Services
         {
             var student = await repository.All<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
-                .Include(s => s.Remarks)
+                .Include(s => s.Remarks.Where(r => !r.IsDeleted))
                 .Include(s => s.Class)
                 .Include(s => s.Class.ClassCourses)
                 .FirstOrDefaultAsync();
@@ -319,7 +323,7 @@ namespace StudentManagementSystem.Core.Services
         {
             var student = await repository.All<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
-                .Include(s => s.Remarks)
+                .Include(s => s.Remarks.Where(r => !r.IsDeleted))
                 .Include(s => s.Class)
                 .Include(s => s.Class.ClassCourses)
                 .FirstOrDefaultAsync();
