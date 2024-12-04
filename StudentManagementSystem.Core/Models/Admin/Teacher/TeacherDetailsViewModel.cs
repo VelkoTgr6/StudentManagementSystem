@@ -5,6 +5,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Teacher
     public class TeacherDetailsViewModel
     {
         public int Id { get; set; }
+        public string SchoolName { get; set; } = null!;
         public string? Titles { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;

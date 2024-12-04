@@ -9,6 +9,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Student
         public string MiddleName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string ContactDetails { get; set; } = null!;
+        public string SchoolName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string PersonalId { get; set; } = null!;
         public DateTime DateOfBirth { get; set; }

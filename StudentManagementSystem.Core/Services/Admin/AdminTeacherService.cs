@@ -50,6 +50,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                 .Select(s => new TeacherServiceModel
                 {
                     Id = s.Id,
+                    SchoolName = s.School.Name,
                     FirstName = s.FirstName,
                     Titles = s.Titles ?? string.Empty,
                     LastName = s.LastName,
@@ -214,6 +215,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                 {
                     Id = s.Id,
                     ProfilePicturePath = s.ProfilePicturePath,
+                    SchoolName = s.School.Name,
                     FirstName = s.FirstName,
                     LastName = s.LastName,
                     ContactDetails = s.ContactDetails,

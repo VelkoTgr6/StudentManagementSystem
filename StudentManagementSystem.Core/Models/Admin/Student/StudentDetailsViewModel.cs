@@ -6,6 +6,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Student
     {
         public int Id { get; set; }
         public string ProfilePicturePath { get; set; } = null!;
+        public string SchoolName { get; set; } = null!;
         public string PersonalId { get; set; } = null!;
         public string FirstName { get; set; } = null!;
         public string MiddleName { get; set; } = null!;

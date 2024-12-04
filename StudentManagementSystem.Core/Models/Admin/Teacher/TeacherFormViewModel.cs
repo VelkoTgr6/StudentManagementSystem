@@ -15,6 +15,11 @@ namespace StudentManagementSystem.Core.Models.Admin.Teacher
         public string? Titles { get; set; }
 
         /// <summary>
+        /// School name
+        /// </summary>
+        public string SchoolName { get; set; } = null!;
+
+        /// <summary>
         /// Teacher first name
         /// </summary>
         [Required(ErrorMessage = RequiredMessage)]

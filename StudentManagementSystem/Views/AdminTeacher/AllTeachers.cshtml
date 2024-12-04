@@ -51,6 +51,7 @@
             <tr>
                 <th>Titles</th>
                 <th>Name</th>
+                <th>School Name</th>
                 <th>Course</th>
                 <th>Email</th>
             </tr>
@@ -61,6 +62,7 @@
                 <tr>
                     <td>@teacher.Titles</td>
                     <td>@teacher.FirstName @teacher.LastName</td>
+                    <td>@teacher.SchoolName</td>
                     <td>@teacher.Courses.Select(c=>c.Name).FirstOrDefault()</td>
                     <td>@teacher.Email</td>
                     <td>
