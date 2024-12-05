@@ -21,6 +21,7 @@
                             <option value="@user">@user</option>
                         }
                     </select>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
 
                 <!-- Manual User Name Input -->
@@ -48,6 +49,10 @@
                     <button type="submit" class="btn btn-primary">Add User to Role</button>
                 </div>
             </form>
+            <!-- Display Validation Summary -->
+            <div class="text-danger mt-3">
+                @Html.ValidationSummary(true)
+            </div>
         </div>
     </div>
 </div>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Models.Admin.Course;
+using StudentManagementSystem.Infrastructure.Data.Models;
 using System.ComponentModel.DataAnnotations;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
 using static StudentManagementSystem.Infrastructure.Constants.ModelConstants;
@@ -17,7 +18,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Teacher
         /// <summary>
         /// School name
         /// </summary>
-        public string SchoolName { get; set; } = null!;
+        public string SchoolName { get; set; } = "School of Mathematics";
 
         /// <summary>
         /// Teacher first name

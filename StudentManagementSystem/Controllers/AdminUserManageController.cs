@@ -92,10 +92,10 @@ namespace StudentManagementSystem.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var users = model.Users = userManager.Users.
-                     Select(u => u.UserName)
-                .OrderBy(u => u)
-                     .ToList();
+                var users = model.Users = userManager.Users
+                    .Select(u => u.UserName)
+                    .OrderBy(u => u)
+                    .ToList();
 
                 var roles = model.Roles = roleManager.Roles
                      .Select(r => r.Name)
@@ -112,11 +112,22 @@ namespace StudentManagementSystem.Controllers
                 {
                     if (await userManager.IsInRoleAsync(user, model.RoleName))
                     {
-                        return BadRequest();
+                        ModelState.AddModelError("", "The selected user already have role.");
+
+                        var users = model.Users = userManager.Users
+                            .Select(u => u.UserName)
+                            .OrderBy(u => u)
+                            .ToList();
+
+                        var roles = model.Roles = roleManager.Roles
+                             .Select(r => r.Name)
+                             .OrderBy(r => r)
+                             .ToList();
+                        return View(model);
                     }
 
                     await userManager.AddToRoleAsync(user, model.RoleName);
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index", "AdminHome");
                 }
             }
             return BadRequest();

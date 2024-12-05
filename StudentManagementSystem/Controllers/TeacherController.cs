@@ -195,7 +195,7 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditRemark(int id,RemarkFormViewModel model)
+        public async Task<IActionResult> EditRemark(int id, RemarkFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -213,6 +213,12 @@ namespace StudentManagementSystem.Controllers
             var remark = await teacherService.GetRemarkByIdAsync(remarkId);
             await teacherService.DeleteRemarkAsync(remarkId);
             return RedirectToAction(nameof(StudentDetails), new { studentId = remark.StudentId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllNews()
+        {
+            return View();
         }
     }
 }

@@ -94,6 +94,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                 Email = model.Email,
                 UserId = userId,
                 ProfilePicturePath = model.ProfilePicturePath,
+                SchoolId = 1
             };
 
             foreach (var course in model.SelectedCourseIds)

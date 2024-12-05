@@ -95,7 +95,8 @@ namespace StudentManagementSystem.Core.Services.Admin
                 DateOfBirth = model.DateOfBirth,
                 UserId = userId,
                 ClassId = model.ClassId,
-                ProfilePicturePath = profilePicturePath
+                ProfilePicturePath = profilePicturePath,
+                SchoolId = 1
             };
 
             await repository.AddAsync(entity);
