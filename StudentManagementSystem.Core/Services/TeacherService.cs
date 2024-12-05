@@ -359,5 +359,188 @@ namespace StudentManagementSystem.Core.Services
 
             return courseName;
         }
+
+        public async Task<GradeFormModel> GetGradeByIdAsync(int gradeId)
+        {
+            var grade =await repository.AllAsReadOnly<Grade>()
+                .Where(g => g.Id == gradeId && !g.IsDeleted)
+                .Select(g => new GradeFormModel
+                {
+                    GradeId = gradeId,
+                    StudentId = g.StudentId,
+                    CourseId = g.CourseId,
+                    GradeScore = g.GradeScore,
+                    CustomGradeType = g.GradeType,
+                    SelectedCourseId = g.CourseId,
+                    SelectedGrade = g.GradeScore.ToString(),
+                    SelectedGradeType = g.GradeType
+                })
+                .FirstOrDefaultAsync();
+
+            if (grade == null)
+            {
+                throw new ArgumentNullException(nameof(grade), "Grade not found");
+            }
+
+            return grade;
+        }
+
+        public async Task<int> EditGradeAsync(int gradeId, GradeFormModel model)
+        {
+            var grade =await repository.All<Grade>()
+                .FirstOrDefaultAsync(g => g.Id == gradeId && !g.IsDeleted);
+
+            if (grade == null)
+            {
+                throw new ArgumentNullException(nameof(grade), "Grade not found");
+            }
+
+            if (model.CustomGradeType == null)
+            {
+                grade.GradeScore = model.GradeScore;
+                grade.GradeType = model.GradeType;
+                grade.CourseId = model.CourseId;
+
+                await repository.UpdateStudentsPerformanceAllAsync();
+
+                await repository.SaveChangesAsync();
+
+                return grade.Id;
+            }
+
+            grade.GradeScore = model.GradeScore;
+            grade.GradeType = $"{model.GradeType} ({model.CustomGradeType})";
+            grade.CourseId = model.CourseId;
+
+            await repository.UpdateStudentsPerformanceAllAsync();
+
+            await repository.SaveChangesAsync();
+
+            return grade.Id;
+        }
+
+        public async Task DeleteGradeAsync(int gradeId)
+        {
+            var grade =await repository.All<Grade>()
+                .FirstOrDefaultAsync(g => g.Id == gradeId && !g.IsDeleted);
+
+            if (grade == null)
+            {
+                throw new ArgumentNullException(nameof(grade), "Grade not found");
+            }
+
+            grade.IsDeleted = true;
+
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<AbsenceFormViewModel> GetAbsenceByIdAsync(int absenceId)
+        {
+            var absence =await repository.All<Absence>()
+                .Where(a => a.Id == absenceId && !a.IsDeleted)
+                .Select(a=> new AbsenceFormViewModel
+                {
+                    Id = absenceId,
+                    StudentId = a.StudentId,
+                    CourseId = a.CourseId,
+                    AbsenceDate = a.Date.Date
+                })
+                .FirstOrDefaultAsync();
+
+            if (absence == null)
+            {
+                throw new ArgumentNullException(nameof(absence), "Absence not found");
+            }
+
+            return absence;
+        }
+
+        public async Task<int> EditAbsenceAsync(int absenceId, AbsenceFormViewModel model)
+        {
+            var absence =await repository.All<Absence>()
+                .FirstOrDefaultAsync(a => a.Id == absenceId && !a.IsDeleted);
+
+            if (absence == null)
+            {
+                throw new ArgumentNullException(nameof(absence), "Absence not found");
+            }
+
+            absence.Date = model.AbsenceDate;
+            absence.CourseId = model.CourseId;
+
+            await repository.SaveChangesAsync();
+
+            return absence.Id;
+        }
+
+        public async Task DeleteAbsenceAsync(int absenceId)
+        {
+            var absence =await repository.All<Absence>()
+                .FirstOrDefaultAsync(a => a.Id == absenceId && !a.IsDeleted);
+
+            if (absence == null)
+            {
+                throw new ArgumentNullException(nameof(absence), "Absence not found");
+            }
+
+            absence.IsDeleted = true;
+
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<RemarkFormViewModel> GetRemarkByIdAsync(int remarkId)
+        {
+            var remark =await repository.All<Remark>()
+                .Where(r => r.Id == remarkId && !r.IsDeleted)
+                .Select(r => new RemarkFormViewModel
+                {
+                    Id = remarkId,
+                    StudentId = r.StudentId,
+                    TeacherId = r.TeacherId,
+                    CourseId = r.CourseId,
+                    RemarkText = r.RemarkText
+                })
+                .FirstOrDefaultAsync();
+
+            if (remark == null)
+            {
+                throw new ArgumentNullException(nameof(remark), "Remark not found");
+            }
+
+            return remark;
+        }
+
+        public async Task<int> EditRemarkASync(int remarkId, RemarkFormViewModel model)
+        {
+            var remark = await repository.All<Remark>()
+                .FirstOrDefaultAsync(r => r.Id == remarkId && !r.IsDeleted);
+
+            if (remark == null)
+            {
+                throw new ArgumentNullException(nameof(remark), "Remark not found");
+            }
+
+            remark.RemarkText = model.RemarkText;
+            remark.CourseId = model.CourseId;
+
+            await repository.SaveChangesAsync();
+
+            return remark.Id;
+        }
+
+        public async Task DeleteRemarkAsync(int remarkId)
+        {
+            var remark = await repository.All<Remark>()
+                .FirstOrDefaultAsync(r => r.Id == remarkId && !r.IsDeleted);
+
+            if (remark == null)
+            {
+                throw new ArgumentNullException(nameof(remark), "Remark not found");
+            }
+
+            remark.IsDeleted = true;
+
+            await repository.SaveChangesAsync();
+        }
     }
 }

@@ -35,6 +35,7 @@
                             <th>Course Name</th>
                             <th>Grade</th>
                             <th>Grade Type</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,6 +46,10 @@
                                 <td>@Model.Grades[i].CourseName</td>
                                 <td>@Model.Grades[i].GradeScore</td>
                                 <td>@Model.Grades[i].GradeType</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" asp-action="EditGrade" asp-route-gradeId="@Model.Grades[i].Id">Edit</a>
+                                    <a class="btn btn-danger btn-sm" asp-action="DeleteGrade" asp-route-gradeId="@Model.Grades[i].Id" onclick="return confirm('Are you sure you want to delete this grade?');">Delete</a>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -73,6 +78,7 @@
                             <th>#</th>
                             <th>Course Name</th>
                             <th>Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,6 +88,10 @@
                                 <td>@(i + 1)</td>
                                 <td>@Model.Absences[i].CourseName</td>
                                 <td>@Model.Absences[i].Date</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" asp-action="EditAbsence" asp-route-id="@Model.Absences[i].Id">Edit</a>
+                                    <a class="btn btn-danger btn-sm" asp-action="DeleteAbsence" asp-route-id="@Model.Absences[i].Id" onclick="return confirm('Are you sure you want to delete this absence?');">Delete</a>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -110,6 +120,7 @@
                             <th>#</th>
                             <th>Course Name</th>
                             <th>Remark Text</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -119,6 +130,10 @@
                                 <td>@(i + 1)</td>
                                 <td>@Model.Remarks[i].CourseName</td>
                                 <td>@Model.Remarks[i].RemarkText</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" asp-action="EditRemark" asp-route-remarkId="@Model.Remarks[i].Id">Edit</a>
+                                    <a class="btn btn-danger btn-sm" asp-action="DeleteRemark" asp-route-remarkId="@Model.Remarks[i].Id" onclick="return confirm('Are you sure you want to delete this remark?');">Delete</a>
+                                </td>
                             </tr>
                         }
                     </tbody>

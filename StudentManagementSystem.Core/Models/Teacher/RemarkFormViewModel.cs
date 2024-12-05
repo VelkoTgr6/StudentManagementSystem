@@ -2,6 +2,7 @@
 {
     public class RemarkFormViewModel
     {
+        public int Id { get; set; }
         public int StudentId { get; set; }
         public string CourseName { get; set; } = string.Empty;
         public int CourseId { get; set; }
