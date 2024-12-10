@@ -13,6 +13,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Student
         [StringLength(StudentPersonalIdMinMaxLength,
             MinimumLength = StudentPersonalIdMinMaxLength,
             ErrorMessage = InvalidPersonalIdLengthMessage)]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "The field {0} must contain only digits.")]
         [Comment("Student Personal Identification Number")]
         [Display(Name = "Personal Identification Number")]
         public string PersonalId { get; set; } = null!;

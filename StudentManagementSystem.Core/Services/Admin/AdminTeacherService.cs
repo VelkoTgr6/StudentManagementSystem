@@ -118,7 +118,24 @@ namespace StudentManagementSystem.Core.Services.Admin
             if (teacher != null && teacher.IsDeleted == false)
             {
                 teacher.IsDeleted = true;
+                var identityUser = await repository.GetIdentityUserByIdAsync(teacher.UserId);
+
+                if (identityUser != null)
+                {
+                    identityUser.UserName = null;
+                    identityUser.Email = null;
+                    identityUser.PhoneNumber = null;
+                    identityUser.EmailConfirmed = false;
+                    identityUser.PhoneNumberConfirmed = false;
+                    identityUser.LockoutEnabled = true;
+                    identityUser.NormalizedEmail = null;
+                    identityUser.NormalizedUserName = null;
+                    identityUser.PasswordHash = null;
+                    //identityUser.PersonalId = null;
+                }
             }
+
+            
 
             await repository.SaveChangesAsync();
         }
@@ -275,6 +292,19 @@ namespace StudentManagementSystem.Core.Services.Admin
                 .Where(t => t.IsDeleted == false)
                 .OrderBy(t => t.FirstName)
                 .Select(t => $"{t.Titles} {t.FirstName} {t.LastName}")
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TeacherServiceModel>> GetFreeTeachersAsync()
+        {
+            return await repository.AllAsReadOnly<Teacher>()
+                .Include(t => t.Classes)
+                .Where(t => t.IsDeleted == false && !t.Classes.Any())
+                .Select(t => new TeacherServiceModel
+                {
+                    Id = t.Id,
+                    FirstName = $"{t.Titles} {t.FirstName} {t.LastName}"
+                })
                 .ToListAsync();
         }
     }

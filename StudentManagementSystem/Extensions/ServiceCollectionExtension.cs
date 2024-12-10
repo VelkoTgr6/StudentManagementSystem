@@ -6,6 +6,7 @@ using StudentManagementSystem.Core.Services;
 using StudentManagementSystem.Core.Services.Admin;
 using StudentManagementSystem.Infrastructure;
 using StudentManagementSystem.Infrastructure.Data.Common;
+using StudentManagementSystem.Infrastructure.Data.Models;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -39,20 +40,23 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            services.AddRazorPages();
+
             return services;
         }
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services,IConfiguration config)
         {
-            services.AddDefaultIdentity<IdentityUser>(options =>
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             })
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<StudentManagementDbContext>();
+                .AddEntityFrameworkStores<StudentManagementDbContext>()
+                .AddDefaultTokenProviders();
+                
 
             return services;
         }

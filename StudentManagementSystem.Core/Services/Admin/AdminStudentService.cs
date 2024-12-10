@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Student;
@@ -74,11 +75,14 @@ namespace StudentManagementSystem.Core.Services.Admin
             };
         }
 
+
+
         public async Task<int> CreateStudentAsync(StudentFormViewModel model, IFormFile? profilePictureFile)
         {
             var userId = await repository.GetIdByEmailAsync(model.Email);
 
             string profilePicturePath = "/images/profiles/default.jpg";
+
             if (profilePictureFile != null)
             {
                 profilePicturePath = await SaveProfilePictureAsync(profilePictureFile);
@@ -113,6 +117,20 @@ namespace StudentManagementSystem.Core.Services.Admin
             if (student != null && student.IsDeleted == false)
             {
                 student.IsDeleted = true;
+                var identityUser = await repository.GetIdentityUserByIdAsync(student.UserId);
+
+                if (identityUser != null)
+                {
+                    identityUser.UserName = null;
+                    identityUser.Email = null;
+                    identityUser.PhoneNumber = null;
+                    identityUser.EmailConfirmed = false;
+                    identityUser.PhoneNumberConfirmed = false;
+                    identityUser.LockoutEnabled = true;
+                    identityUser.NormalizedEmail = null;
+                    identityUser.NormalizedUserName = null;
+                    identityUser.PasswordHash = null;
+                }
             }
 
             await repository.SaveChangesAsync();

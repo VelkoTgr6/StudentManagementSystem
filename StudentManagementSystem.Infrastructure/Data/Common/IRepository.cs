@@ -1,4 +1,5 @@
-﻿using StudentManagementSystem.Infrastructure.Data.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using StudentManagementSystem.Infrastructure.Data.Models;
 
 namespace StudentManagementSystem.Infrastructure.Data.Common
 {
@@ -15,5 +16,6 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
         Task<bool> EmailExistAsync(string email);
         Task<string> GetIdByEmailAsync(string email);
         Task UpdateStudentsPerformanceAllAsync();
+        Task<IdentityUser> GetIdentityUserByIdAsync(string id);
     }
 }

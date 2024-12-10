@@ -27,7 +27,7 @@ namespace StudentManagementSystem.Controllers
         {
             var model = new ClassFormViewModel()
             {
-                Teachers = await adminTeacherService.GetAllTeachersAsync(),
+                Teachers = await adminTeacherService.GetFreeTeachersAsync(),
                 AvailableCourses = await adminCourseService.GetAllCoursesAsync()
             };
 
@@ -37,9 +37,16 @@ namespace StudentManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateClass(ClassFormViewModel model)
         {
+            var classes = await adminClassService.GetAllClassesAsync();
+
+            if (classes.Any(c => c.Name == model.Name))
+            {
+                ModelState.AddModelError(nameof(model.Name), "Class already exists.");
+            }
+
             if (!ModelState.IsValid)
             {
-                model.Teachers = await adminTeacherService.GetAllTeachersAsync();
+                model.Teachers = await adminTeacherService.GetFreeTeachersAsync();
                 model.AvailableCourses = await adminCourseService.GetAllCoursesAsync();
                 return View(model);
             }
@@ -54,8 +61,8 @@ namespace StudentManagementSystem.Controllers
             var classes = await adminClassService.AllAsync(
                 query.Teacher,
                 query.SearchTerm,
-            query.Sorting,
-            query.CurrentPage,
+                query.Sorting,
+                query.CurrentPage,
                 query.ClassesPerPage);
 
             query.Teachers = await adminTeacherService.GetAllTeachersNamesAsync();
@@ -87,7 +94,7 @@ namespace StudentManagementSystem.Controllers
 
             if (model != null)
             {
-                model.Teachers = await adminTeacherService.GetAllTeachersAsync();
+                model.Teachers = await adminTeacherService.GetFreeTeachersAsync();
                 model.AvailableCourses = await adminCourseService.GetAllCoursesAsync();
             }
             return View(model);
@@ -102,7 +109,7 @@ namespace StudentManagementSystem.Controllers
             }
             if (!ModelState.IsValid)
             {
-                model.Teachers = await adminTeacherService.GetAllTeachersAsync();
+                model.Teachers = await adminTeacherService.GetFreeTeachersAsync();
                 model.AvailableCourses = await adminCourseService.GetAllCoursesAsync();
                 return View(model);
             }

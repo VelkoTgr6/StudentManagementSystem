@@ -10,5 +10,7 @@
         public const string InvalidPersonalIdLengthMessage = "The {0} must be {1} characters long.";
 
         public const string InvalidEmailMessage = "Email does not exist.";
+
+        public const string InvalidClassName = "Invalid Class Name , ex.( 1 A , 12 B )";
     }
 }

@@ -49,9 +49,17 @@ namespace StudentManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStudent(StudentFormViewModel model, IFormFile? profilePictureFile)
         {
-            if (await adminService.EmailExistAsync(model.Email) == false)
+            var emailExists = await adminService.EmailExistAsync(model.Email);
+            if (!emailExists)
             {
                 ModelState.AddModelError(nameof(model.Email), InvalidEmailMessage);
+            }
+
+            var students = await adminService.GetAllAsync<Student>();
+
+            if (students.Any(s => s.PersonalId == model.PersonalId || s.IsDeleted == false))
+            {
+                ModelState.AddModelError(nameof(model.PersonalId), "Student with this Personal Id already exists!");
             }
 
             if (!ModelState.IsValid)

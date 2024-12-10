@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Infrastructure.Data.Models;
 
 namespace StudentManagementSystem.Infrastructure.Data.Common
@@ -67,7 +69,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
 
         public async Task<bool> EmailExistAsync(string email)
         {
-            return await DbSet<ApplicationUser>().Where(u => u.Email == email).AnyAsync();
+            return await DbSet<IdentityUser>().Where(u => u.Email == email).AnyAsync();
         }
 
         public async Task<string> GetIdByEmailAsync(string email)
@@ -104,6 +106,24 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
             }
 
             await context.SaveChangesAsync();
+        }
+
+        public async Task<IdentityUser> GetIdentityUserByIdAsync(string id)
+        {
+            string query = @"SELECT *
+                            FROM AspNetUsers 
+                            WHERE Id = @Id";
+
+            var user = await context.Set<IdentityUser>()
+                .FromSqlRaw(query,new SqlParameter("@Id",id))
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new ArgumentException("User with the provided id does not exist.");
+            }
+
+            return user;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Class
         [StringLength(CourseDescriptionMaxLength,
             MinimumLength = CourseDescriptionMinLength,
             ErrorMessage = InvalidLengthMessage)]
+        [RegularExpression(RegexClassName,ErrorMessage = InvalidClassName)]
         [Comment("The name of the class")]
         public string Name { get; set; } = null!;
 

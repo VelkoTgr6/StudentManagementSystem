@@ -135,6 +135,7 @@
         /// Regular Expression for Date Format
         /// </summary>
         public const string RegexDateFormat = @"^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$";
+        public const string RegexClassName = @"^(1[0-2]|[1-9]) [A-Z]$$";
 
     }
 }

@@ -4,6 +4,9 @@ using StudentManagementSystem.Infrastructure.Services.EmailSender;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationDbContext(builder.Configuration);
+
+builder.Services.AddApplicationServices();
+
 builder.Services.AddApplicationIdentity(builder.Configuration);
 
 // Configure EmailSettings with values from the configuration
@@ -23,7 +26,7 @@ builder.Services.AddSingleton<IEmailSender>(serviceProvider =>
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddApplicationServices();
+
 
 var app = builder.Build();
 

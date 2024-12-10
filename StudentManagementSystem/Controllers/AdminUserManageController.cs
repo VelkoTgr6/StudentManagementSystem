@@ -73,10 +73,11 @@ namespace StudentManagementSystem.Controllers
         {
             var model = new UserRoleFormViewModel();
 
-            var users = model.Users = userManager.Users.
-                    Select(u => u.UserName)
-            .OrderBy(u => u)
-                    .ToList();
+            var users = model.Users = userManager.Users
+                   .Where(u => !string.IsNullOrEmpty(u.UserName))
+                   .Select(u => u.UserName)
+                   .OrderBy(u => u)
+                   .ToList();
 
             var roles = model.Roles = roleManager.Roles
                  .Select(r => r.Name)
@@ -93,6 +94,7 @@ namespace StudentManagementSystem.Controllers
             if (!ModelState.IsValid)
             {
                 var users = model.Users = userManager.Users
+                    .Where(u => !string.IsNullOrEmpty(u.UserName))
                     .Select(u => u.UserName)
                     .OrderBy(u => u)
                     .ToList();
@@ -112,7 +114,7 @@ namespace StudentManagementSystem.Controllers
                 {
                     if (await userManager.IsInRoleAsync(user, model.RoleName))
                     {
-                        ModelState.AddModelError("", "The selected user already have role.");
+                        ModelState.AddModelError("", "The selected user already has a role.");
 
                         var users = model.Users = userManager.Users
                             .Select(u => u.UserName)
@@ -195,8 +197,7 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
 
-            // Redirect to index or a confirmation page
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "AdminHome");
         }
 
 
@@ -206,10 +207,11 @@ namespace StudentManagementSystem.Controllers
         {
             var model = new UserRoleFormViewModel();
 
-            var users = model.Users = userManager.Users.
-                    Select(u => u.UserName)
-            .OrderBy(u => u)
-                    .ToList();
+            var users = model.Users = userManager.Users
+                   .Where(u => !string.IsNullOrEmpty(u.UserName))
+                   .Select(u => u.UserName)
+                   .OrderBy(u => u)
+                   .ToList();
 
             var roles = model.Roles = roleManager.Roles
                  .Select(r => r.Name)
@@ -224,10 +226,12 @@ namespace StudentManagementSystem.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var users = model.Users = userManager.Users.
-                    Select(u => u.UserName)
-                .OrderBy(u => u)
-                    .ToList();
+                var users = model.Users = userManager.Users
+                   .Where(u => !string.IsNullOrEmpty(u.UserName))
+                   .Select(u => u.UserName)
+                   .OrderBy(u => u)
+                   .ToList();
+
                 var roles = model.Roles = roleManager.Roles
                      .Select(r => r.Name)
                      .OrderBy(r => r)
@@ -240,13 +244,14 @@ namespace StudentManagementSystem.Controllers
                 var user = await userManager.FindByNameAsync(model.UserName);
                 if (user != null)
                 {
-                    if (!await userManager.IsInRoleAsync(user, model.RoleName))
+                    var userRoles = await userManager.GetRolesAsync(user);
+                    if (!userRoles.Contains(model.RoleName))
                     {
                         return BadRequest();
                     }
                     await userManager.RemoveFromRoleAsync(user, model.RoleName);
 
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index", "AdminHome");
                 }
             }
             return BadRequest();

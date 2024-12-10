@@ -61,6 +61,12 @@ namespace StudentManagementSystem.Infrastructure
                 .HasForeignKey(c => c.PublisherId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Teacher>()
+                .HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<Student>()
                 .HasOne(s => s.Class)
                 .WithMany(c => c.Students)
@@ -76,6 +82,7 @@ namespace StudentManagementSystem.Infrastructure
 
 
             builder.ApplyConfiguration(new IdentityUserConfiguration());
+            builder.ApplyConfiguration(new IdentityUserRoleConfiguration());
             builder.ApplyConfiguration(new SchoolConfiguration());
             builder.ApplyConfiguration(new TeacherConfiguration());
             builder.ApplyConfiguration(new CourseConfiguration());
@@ -86,13 +93,13 @@ namespace StudentManagementSystem.Infrastructure
             base.OnModelCreating(builder);
         }
 
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<ClassCourse> ClassCourses { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Class> Classes { get; set; }
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Absence> Absences { get; set; }
         public DbSet<Remark> Remarks { get; set; }
         public DbSet<News> News { get; set; }

@@ -44,7 +44,7 @@ namespace StudentManagementSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                model.Courses = await adminCourseService.GetAllCoursesAsync();
+                model.AvailableCourses = await adminCourseService.GetAllCoursesAsync();
                 return View(model);
             }
 
@@ -59,8 +59,8 @@ namespace StudentManagementSystem.Controllers
             var teachers = await adminTeacherService.AllAsync(
                 query.Course,
                 query.SearchTerm,
-            query.Sorting,
-            query.CurrentPage,
+                query.Sorting,
+                query.CurrentPage,
                 query.TeachersPerPage);
 
             query.Courses = await adminCourseService.GetAllCoursesNamesAsync();
