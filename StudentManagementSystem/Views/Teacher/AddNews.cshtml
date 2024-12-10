@@ -1,0 +1,25 @@
+﻿@model TeacherNewsFormViewModel
+
+<div class="container mt-5">
+    <h2 class="mb-4">Add News</h2>
+    <form asp-action="AddNews" method="post" class="needs-validation" novalidate>
+        <input type="hidden" asp-for="TeacherId" />
+        <div class="form-group mb-3">
+            <label asp-for="Title" class="form-label">Title</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Content" class="form-label">Content</label>
+            <textarea asp-for="Content" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

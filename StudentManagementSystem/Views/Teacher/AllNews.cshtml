@@ -1,0 +1,33 @@
+﻿@model IEnumerable<TeacherNewsServiceModel>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="text-center mb-3">
+            <a href="@Url.Action("AddNews", "Teacher")" class="btn btn-primary">Add News</a>
+        </div>
+        @if (Model == null || !Model.Any())
+        {
+            <h2>No Added News</h2>
+        }
+        else
+        {
+            @foreach (var news in Model!)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">@news.Title</h5>
+                            <p class="card-text">
+                                <strong>Published On:</strong> @news.CreatedOn.ToString("dd MMM yyyy")
+                            </p>
+                        </div>
+                        <div class="card-footer text-end">
+                            <a asp-action="EditNews" asp-route-id="@news.Id" class="btn btn-warning">Edit</a>
+                            <a asp-action="DeleteNews" asp-route-id="@news.Id" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete ?');">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

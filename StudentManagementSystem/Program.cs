@@ -57,7 +57,7 @@ app.Use(async (context, next) =>
         {
             context.Response.Redirect("/AdminHome/Index");
             return;
-        } 
+        }
     }
     await next();
 });

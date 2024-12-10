@@ -542,5 +542,93 @@ namespace StudentManagementSystem.Core.Services
 
             await repository.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<TeacherNewsServiceModel>> GetAllNewsByTeacherIdAsync(string teacherId)
+        {
+            var teacherNews =await repository.AllAsReadOnly<News>()
+                .Where(tn => tn.Publisher.Id == teacherId && tn.IsDeleted == false)
+                .Select(tn => new TeacherNewsServiceModel
+                {
+                    Id = tn.Id,
+                    Title = tn.Title,
+                    CreatedOn = tn.Date,
+                    TeacherId = tn.PublisherId
+                })
+                .OrderByDescending(tn => tn.CreatedOn)
+                .ToListAsync();
+
+            return teacherNews;
+        }
+
+        public async Task<int> AddNewsToTeacherAsync(TeacherNewsFormViewModel model)
+        {
+            var news = new News
+            {
+                Title = model.Title,
+                Content = model.Content,
+                Date = DateTime.UtcNow,
+                PublisherId = model.TeacherId
+            };
+
+            await repository.AddAsync(news);
+            await repository.SaveChangesAsync();
+
+            return news.Id;
+        }
+
+        public async Task<int> EditNewsAsync(int newsId, TeacherNewsFormViewModel model)
+        {
+            var news = await repository.All<News>()
+                .FirstOrDefaultAsync(n => n.Id == newsId && !n.IsDeleted);
+
+            if (news == null)
+            {
+                throw new ArgumentNullException(nameof(news), "News not found");
+            }
+
+            news.Title = model.Title;
+            news.Content = model.Content;
+            news.Date = DateTime.UtcNow;
+
+            await repository.SaveChangesAsync();
+
+            return news.Id;
+        }
+
+        public async Task DeleteNewsAsync(int newsId)
+        {
+            var news =await repository.All<News>()
+                .FirstOrDefaultAsync(n => n.Id == newsId && !n.IsDeleted);
+
+            if (news == null)
+            {
+                throw new ArgumentNullException(nameof(news), "News not found");
+            }
+
+            news.IsDeleted = true;
+
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<TeacherNewsFormViewModel> GetNewsByIdAsync(int newsId)
+        {
+            var news =await repository.AllAsReadOnly<News>()
+                .Where(n => n.Id == newsId && !n.IsDeleted)
+                .Select(n => new TeacherNewsFormViewModel
+                {
+                    Id = newsId,
+                    Title = n.Title,
+                    Content = n.Content,
+                    TeacherId = n.PublisherId
+                })
+                .FirstOrDefaultAsync();
+
+            if (news == null)
+            {
+                throw new ArgumentNullException(nameof(news), "News not found");
+            }
+
+            return news;
+        }
     }
 }

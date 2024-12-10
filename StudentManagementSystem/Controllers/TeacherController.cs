@@ -218,7 +218,56 @@ namespace StudentManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> AllNews()
         {
-            return View();
+            var model = await teacherService.GetAllNewsByTeacherIdAsync(User.GetId());
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult AddNews()
+        {
+            var model = new TeacherNewsFormViewModel()
+            {
+                TeacherId = User.GetId()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddNews(TeacherNewsFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            await teacherService.AddNewsToTeacherAsync(model);
+            return RedirectToAction(nameof(AllNews));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditNews(int id)
+        {
+            var model = await teacherService.GetNewsByIdAsync(id);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditNews(int id, TeacherNewsFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            await teacherService.EditNewsAsync(id, model);
+            return RedirectToAction(nameof(AllNews));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteNews(int id)
+        {
+            await teacherService.DeleteNewsAsync(id);
+            return RedirectToAction(nameof(AllNews));
         }
     }
 }

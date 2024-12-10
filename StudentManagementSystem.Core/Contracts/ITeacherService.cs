@@ -23,5 +23,10 @@ namespace StudentManagementSystem.Core.Contracts
         Task<RemarkFormViewModel> GetRemarkByIdAsync(int remarkId);
         Task<int> EditRemarkASync(int remarkId,RemarkFormViewModel model);
         Task DeleteRemarkAsync(int remarkId);
+        Task<IEnumerable<TeacherNewsServiceModel>> GetAllNewsByTeacherIdAsync(string teacherId);
+        Task<int> AddNewsToTeacherAsync(TeacherNewsFormViewModel model);
+        Task<int> EditNewsAsync(int newsId, TeacherNewsFormViewModel model);
+        Task DeleteNewsAsync(int newsId);
+        Task<TeacherNewsFormViewModel> GetNewsByIdAsync(int newsId);
     }
 }
