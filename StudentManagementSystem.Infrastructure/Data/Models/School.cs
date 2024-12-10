@@ -15,7 +15,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         [MaxLength(SchoolNameMaxLength)]
         public string Name { get; set; } = null!;
 
-        public ICollection<Teacher> Teachers { get; set; } = new List<Teacher>();
-        public ICollection<Student> Students { get; set; } = new List<Student>();
+        public virtual ICollection<Teacher> Teachers { get; set; } = new List<Teacher>();
+        public virtual ICollection<Student> Students { get; set; } = new List<Student>();
     }
 }

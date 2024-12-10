@@ -14,13 +14,13 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public int CourseId { get; set; }
 
         [ForeignKey(nameof(CourseId))]
-        public Course Course { get; set; } = null!;
+        public virtual Course Course { get; set; } = null!;
 
         [Comment("Identifier of the Student")]
         public int StudentId { get; set; }
 
         [ForeignKey(nameof(StudentId))]
-        public Student Student { get; set; } = null!;
+        public virtual Student Student { get; set; } = null!;
 
         [Required]
         [Comment("Grade received by the student for a specific course assessment")]

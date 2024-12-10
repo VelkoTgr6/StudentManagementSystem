@@ -10,13 +10,13 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public int ClassId { get; set; }
 
         [ForeignKey(nameof(ClassId))]
-        public Class Class { get; set; } = null!;
+        public virtual Class Class { get; set; } = null!;
 
         [Comment("Course Identifier")]
         public int CourseId { get; set; }
 
         [ForeignKey(nameof(CourseId))]
-        public Course Course { get; set; } = null!;
+        public virtual Course Course { get; set; } = null!;
 
         [Comment("Date of enrollment")]
         public DateTime EnrollmentDate { get; set; }

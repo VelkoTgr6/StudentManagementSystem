@@ -17,7 +17,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public int SchoolId { get; set; }
 
         [ForeignKey(nameof(SchoolId))]
-        public School School { get; set; } = null!;
+        public virtual School School { get; set; } = null!;
 
         [MaxLength(TeacherTitlesMaxLength)]
         [Comment("Teacher Titles")]
@@ -50,7 +50,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public string UserId { get; set; } = null!;
 
         [ForeignKey(nameof(UserId))]
-        public IdentityUser User { get; set; } = null!;
+        public virtual IdentityUser User { get; set; } = null!;
 
         [Required]
         [MaxLength(TeacherContactMaxLength)]
@@ -58,9 +58,9 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public string ContactDetails { get; set; } = null!;
 
         [Comment("The courses taught by this teacher")]
-        public ICollection<Course> Courses { get; set; } = new List<Course>();
+        public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 
         [Comment("The classes taught by this teacher")]
-        public ICollection<Class> Classes { get; set; } = new List<Class>();
+        public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
     }
 }

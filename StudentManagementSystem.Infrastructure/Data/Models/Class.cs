@@ -16,10 +16,10 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public string Name { get; set; } = null!;
 
         [Comment("The collection of students in the class")]
-        public ICollection<Student> Students { get; set; } = new List<Student>();
+        public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 
         [Comment("The collection of courses in the class")]
-        public ICollection<ClassCourse> ClassCourses { get; set; } = new List<ClassCourse>();
+        public virtual ICollection<ClassCourse> ClassCourses { get; set; } = new List<ClassCourse>();
 
         [Required]
         [Comment("The ID of the teacher for this class")]
@@ -27,7 +27,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
 
         [ForeignKey(nameof(TeacherId))]
         [Comment("The teacher of the class")]
-        public Teacher Teacher { get; set; } = null!;
+        public virtual Teacher Teacher { get; set; } = null!;
 
         [Comment("Shows if class is Deleted")]
         public bool IsDeleted { get; set; } = false;

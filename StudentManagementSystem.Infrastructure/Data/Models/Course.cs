@@ -39,19 +39,19 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
 
         [ForeignKey(nameof(TeacherId))]
         [Comment("Teacher of the Course")]
-        public Teacher Teacher { get; set; } = null!;
+        public virtual Teacher Teacher { get; set; } = null!;
 
         [Required]
         [Comment("Publisher Identification")]
         public string PublisherId { get; set; } = null!;
 
         [ForeignKey(nameof(PublisherId))]
-        public IdentityUser Publisher { get; set; } = null!;
+        public virtual IdentityUser Publisher { get; set; } = null!;
 
-        public ICollection<ClassCourse> CourseClasses { get; set; } = new List<ClassCourse>();
+        public virtual ICollection<ClassCourse> CourseClasses { get; set; } = new List<ClassCourse>();
 
         [Comment("Grades assigned to the course")]
-        public ICollection<Grade> Grades { get; set; } = new List<Grade>();
+        public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
 
     }
 }

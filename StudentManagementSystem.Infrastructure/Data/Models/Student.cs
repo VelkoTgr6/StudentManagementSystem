@@ -18,7 +18,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public int SchoolId { get; set; }
 
         [ForeignKey(nameof(SchoolId))]
-        public School School { get; set; } = null!;
+        public virtual School School { get; set; } = null!;
 
         [Required]
         [MaxLength(StudentPersonalIdMinMaxLength)]
@@ -47,10 +47,10 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
 
         [MaxLength(StudentRemarksMaxLength)]
         [Comment("Remarks about the student")]
-        public ICollection<Remark> Remarks { get; set; } = new List<Remark>();
+        public virtual ICollection<Remark> Remarks { get; set; } = new List<Remark>();
 
         [Comment("Shows if student is Active")]
-        public ICollection<Absence> Аbsences { get; set; } = new List<Absence>();
+        public virtual ICollection<Absence> Аbsences { get; set; } = new List<Absence>();
 
         [Required]
         [Comment("Date of birth of Student")]
@@ -69,14 +69,14 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public string UserId { get; set; } = null!;
 
         [ForeignKey(nameof(UserId))]
-        public IdentityUser User { get; set; } = null!;
+        public virtual IdentityUser User { get; set; } = null!;
 
         [Required]
         [Comment("Class Identifier")]
         public int ClassId { get; set; }
 
         [ForeignKey(nameof(ClassId))]
-        public Class Class { get; set; } = null!;
+        public virtual Class Class { get; set; } = null!;
 
         [MaxLength(ProfilePictureMaxLength)]
         [Comment("Path to the profile picture of the student")]
@@ -86,6 +86,6 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public double Performance {  get; set; }
 
         [Comment("Collection of Grades assigned to the student")]
-        public ICollection<Grade> Grades { get; set; } = new List<Grade>();
+        public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
     }
 }

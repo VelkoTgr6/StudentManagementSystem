@@ -30,7 +30,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Models
         public string PublisherId { get; set; } = null!;
 
         [ForeignKey(nameof(PublisherId))]
-        public IdentityUser Publisher { get; set; } = null!;
+        public virtual IdentityUser Publisher { get; set; } = null!;
 
         [Comment("Shows if news is Deleted")]
         public bool IsDeleted { get; set; } = false;

@@ -12,8 +12,8 @@ using StudentManagementSystem.Infrastructure;
 namespace StudentManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(StudentManagementDbContext))]
-    [Migration("20241204190515_AddedSchoolAndAddedIsDeletedToAbsenceAndRemarks")]
-    partial class AddedSchoolAndAddedIsDeletedToAbsenceAndRemarks
+    [Migration("20241206223107_AddedUserRoles")]
+    partial class AddedUserRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -153,335 +153,335 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "aa7d01c6-9499-4ed4-a38e-3d0afa2b707c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6b3a5962-c4ba-4213-a4d1-c818ae3f40e9",
+                            ConcurrencyStamp = "dc6f7d43-5391-4959-9bb9-198a23e90fac",
                             Email = "ivan414@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "IVAN414@GMAIL.COM",
                             NormalizedUserName = "IVAN414@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHyEbl2KnD6e00sXNRXjpAPy9HI/BsDur/aOz5jKLUn9mpEaxdLINrSMdbAa7PkZcA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOvbEdelRID5QnW17gLF1xfUfZcpoQqAas19IPiz8cPDhxQzH5JV7Ht8wJWoM1N8EQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e4a54a7b-02a3-4902-bb77-ec62ded3dc34",
+                            SecurityStamp = "5f4eefca-9d71-4d57-af56-4d9330f6f6ad",
                             TwoFactorEnabled = false,
                             UserName = "ivan414@gmail.com"
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "f2875100-0cf1-4b1d-ba91-1dfa38690f84",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e338a08f-ab92-4000-8279-c85cefa78639",
+                            ConcurrencyStamp = "54047de5-6fc5-4f75-a7a7-d253a907a008",
                             Email = "maria270@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MARIA270@GMAIL.COM",
                             NormalizedUserName = "MARIA270@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOtnHbk9GHWUQ3UaAe5NyfxkHD8aXbCPKEfC3TmPVcCQukX0HWbvx3vb4PIapWJbig==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAnu79HWOwj5Ti9yhHCvXH7emawLJbC4AIwB6Y+lyFiEEAZClgVaEUSt7PvZZlYj2A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d4ec19a3-64e6-4b48-a5a8-7a5b07c9ca8b",
+                            SecurityStamp = "7aaff1d7-1bc0-4925-9af9-06cfe54b47de",
                             TwoFactorEnabled = false,
                             UserName = "maria270@gmail.com"
                         },
                         new
                         {
-                            Id = "3",
+                            Id = "b65e6163-1454-4164-9869-2ff822f9da98",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "163a5164-01a2-489f-bff9-1ad6d0764f03",
+                            ConcurrencyStamp = "6564e3c6-54dc-4fe9-bfdd-00ec36f94dc4",
                             Email = "elena309@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ELENA309@GMAIL.COM",
                             NormalizedUserName = "ELENA309@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEuhzLt7G+SkH6IN9alIkJOXTQ7Z+FZHjmSP+UC1mpKtHi2mRB8xusubblCL7M7NTg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKAoU1QUgDjytQTHDLNW2PNQuHRTK22MJnNA0RgNDBdTg2ilFfD0e8TOepU4EpzUdQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e78b621b-f8d7-45eb-837c-56a7fb7aebaa",
+                            SecurityStamp = "a6b1222d-7ba0-4dff-bdb7-0dfd8bf0ccde",
                             TwoFactorEnabled = false,
                             UserName = "elena309@gmail.com"
                         },
                         new
                         {
-                            Id = "4",
+                            Id = "c5d7d80f-08d5-41ec-892c-30833098c047",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c0c40e92-a5ca-445e-b642-7e81338c8e48",
+                            ConcurrencyStamp = "54d42173-fd52-425b-83f5-4c205c781f32",
                             Email = "viktor725@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "VIKTOR725@GMAIL.COM",
                             NormalizedUserName = "VIKTOR725@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEK2HaRvfFRCSemaPm93NXZ+jw9tQbEu5ask+wDl+TpMeZUJEK6ZfrrtlWh5+dHCzdA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKJ/hUaRMFOHIeHHK8yZWKREXSZQjQkktHiWYyLv7LlCTVM9xauE94bKbRtLT+IcKA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8e6448f0-ef57-4dea-85f8-51625f057b3a",
+                            SecurityStamp = "bafe1686-b913-4158-b0e3-733099489add",
                             TwoFactorEnabled = false,
                             UserName = "viktor725@gmail.com"
                         },
                         new
                         {
-                            Id = "5",
+                            Id = "217e3e65-026d-4a8e-97af-a4fb30dfab30",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5d517f8a-7a4e-465e-a546-4d691a043385",
+                            ConcurrencyStamp = "0dd0be68-83fb-40fa-92fc-91e43f8a3984",
                             Email = "pesho278@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PESHO278@GMAIL.COM",
                             NormalizedUserName = "PESHO278@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIaeANUplXuS4EKgJPXJeW3mK6BTnOptcsxOU/iK1c4M6GJrISROC8Vv4RKKOeN62w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEP6oBA19xwLMwF4C+v+mkcgJOPgqoagxWTdQkFgqczvFDyDTMBnPtux5O1fWWy54ng==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "246a9b18-0cdd-40b2-8cac-aa2951b91aca",
+                            SecurityStamp = "c65d26a7-9f27-4ca8-abf4-3a6609291236",
                             TwoFactorEnabled = false,
                             UserName = "pesho278@gmail.com"
                         },
                         new
                         {
-                            Id = "6",
+                            Id = "8f7bca8f-059f-4750-8bfe-7def13ef37e8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0156a8ca-aea6-433e-8e8c-30eb33cb84ac",
+                            ConcurrencyStamp = "c5b4dffe-9eee-489e-980e-331b975df4c8",
                             Email = "nina.borisova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "NINA.BORISOVA@GMAIL.COM",
                             NormalizedUserName = "NINA.BORISOVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBCnIfj+JksqJ3QSnzz1BcxoMGBDvuBu9dJtcNSVbfuq1AZr3QLpJY4m/uAxD3FmyA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENEojz8wg+Aa5CKkb7t/DjM/q0CCaLE3raqcY5kBTugGvmzYaelyaIrEi1YjvCFjxA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "92ad6049-0f80-46bb-a476-5d3cc9b98ba0",
+                            SecurityStamp = "598c6862-c80d-4e15-9c01-d75937d3d3be",
                             TwoFactorEnabled = false,
                             UserName = "nina.borisova@gmail.com"
                         },
                         new
                         {
-                            Id = "7",
+                            Id = "1a688e82-f609-47af-a359-d8bcdd62b5e9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2724bbd5-d8e3-4ab2-986c-0aedc8e123ee",
+                            ConcurrencyStamp = "562525bf-e8f9-4ea9-8d44-f744ee31ef80",
                             Email = "ivo.pavlov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "IVO.PAVLOV@GMAIL.COM",
                             NormalizedUserName = "IVO.PAVLOV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKN4Y7+KmhKgUOG1+I3TLh2ip5rZDWz6nwEsNviNG65exkuFU4OP6PsSDJlI5GadGg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECHTCDwhtek3OffwRxRNF2zHgRNTPigVsSZ3SEv2nbjtXlho8q6ZSyicG5ikGeZz1g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ccde491e-f11f-4681-b020-edbdc2df6ec5",
+                            SecurityStamp = "ceaa7f06-615b-430e-93db-0b92eb4693aa",
                             TwoFactorEnabled = false,
                             UserName = "ivo.pavlov@gmail.com"
                         },
                         new
                         {
-                            Id = "8",
+                            Id = "01185cf1-525d-478a-ad05-b9629573333a",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b3256ea3-8f69-4eda-a7f2-44fe82b15746",
+                            ConcurrencyStamp = "40bdfb6a-e787-4a5e-aa75-5056dce082fe",
                             Email = "katerina.gancheva@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KATERINA.GANCHEVA@GMAIL.COM",
                             NormalizedUserName = "KATERINA.GANCHEVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEP3fUkfyXmw+jPdDFkqKic83xZxcn6VdzE0Vyjy7cgXsa3IqKlxeSg1xohgXWIdePQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOoHoSBqZAHVXMSw0aLHeUx9y/IbbJC/cFdjUY8tyo6q1hqjeluBUZhYeqvV7U2vRQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cabe2ec6-5284-498f-b8a5-786524e700bd",
+                            SecurityStamp = "c367c63f-99dd-40c7-be3d-60aa20bd4243",
                             TwoFactorEnabled = false,
                             UserName = "katerina.gancheva@gmail.com"
                         },
                         new
                         {
-                            Id = "9",
+                            Id = "cab3584a-da3f-4858-a65a-3f7bde9e553f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b79dfea8-f244-4970-8eae-ea412c2b9013",
+                            ConcurrencyStamp = "daa41785-1f7f-4663-9a5d-a4b3dbbb8aca",
                             Email = "dimitar.mihailov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "DIMITAR.MIHAILOV@GMAIL.COM",
                             NormalizedUserName = "DIMITAR.MIHAILOV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENgEZW9bNRy53ekKL/WPC/9FV8+QwVdnZhLj5+T13PBect77ko7UyGYBCbf6osmPfA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPiAqxkhr6ovvS86jLuFJ7Fsmjpt2a+4wrKxo9s/ZDBPu4+ISrk/TGC9pzO+dZF4BQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "12570ae5-2e09-432e-a1b6-99477239b002",
+                            SecurityStamp = "2b12c14b-087e-4aed-9a2b-6bb755faaf81",
                             TwoFactorEnabled = false,
                             UserName = "dimitar.mihailov@gmail.com"
                         },
                         new
                         {
-                            Id = "10",
+                            Id = "325092c7-9882-40d9-854b-32326c2bd43b",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "659c090d-f4d6-4be1-9bc7-fc67428fdc75",
+                            ConcurrencyStamp = "552a2b10-72fd-40cf-a016-16f9db25fa2f",
                             Email = "stefan.yordanov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "STEFAN.YORDANOV@GMAIL.COM",
                             NormalizedUserName = "STEFAN.YORDANOV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH4UtuyCeeaa3/eDZfjttJQsJCzfoGPqYn1kjX9Uafeum7YkN+yavpSSkpcuYX/0Tw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPzZb7yZW0hqTQ2kG2pEP1ea9vOTSspkuVMusp0obUEtK1FvgA5mpJPHt3DmA32lGQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d1d6d4b4-fa90-4223-be3f-3d478aa122a2",
+                            SecurityStamp = "71a10b0e-28a6-446d-b993-be675995e745",
                             TwoFactorEnabled = false,
                             UserName = "stefan.yordanov@gmail.com"
                         },
                         new
                         {
-                            Id = "11",
+                            Id = "2e830c43-2ce2-462d-9880-be8aa1e71696",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bea24560-0cab-4764-a52c-12094a2f61cb",
+                            ConcurrencyStamp = "5963eb82-2b1a-4c5b-9b61-584851d5e45d",
                             Email = "diana.ruseva@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "DIANA.RUSEVA@GMAIL.COM",
                             NormalizedUserName = "DIANA.RUSEVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDUgAG+KDCPkZKWui0Itsf9LH4dgZTWOjLQox53LqXVLHj1aoZiGHEWDwv4H83iNgw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBoHrvP6QEO+eVyGk5k4PqX4+PZjXIQtu4cM8bcpLnBT9dOz7H4cmH44HvktCWUDiA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e5d4cee7-8f04-4aa4-b941-f3e0447a4b3c",
+                            SecurityStamp = "cd970466-b9d2-49bc-896c-5bb168f74ec7",
                             TwoFactorEnabled = false,
                             UserName = "diana.ruseva@gmail.com"
                         },
                         new
                         {
-                            Id = "12",
+                            Id = "c64af0f1-3716-4e30-b5f7-b0c5153e2b01",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "05e2645b-8159-43e9-a08a-bb8eb9b3121e",
+                            ConcurrencyStamp = "8f703926-d3ae-48ce-99be-89b79975c20a",
                             Email = "petar.georgiev@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PETAR.GEORGIEV@GMAIL.COM",
                             NormalizedUserName = "PETAR.GEORGIEV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAZ2kVaRSYw/99MkJrt9mbSe2Yucmo3n/8GKwz+drCh74np7/TqUBUkreUwlZqF9Aw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFG+pQYHFOHFUEMTEcsM5Lz8X//6ck7KvNAKZuKOSD0DJ5T1K71Lsznc0jigaTstSQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1480f1f7-8f1c-45ac-81f0-f45ab918dcf5",
+                            SecurityStamp = "e9800a90-e0af-4dbd-888b-784a19dab290",
                             TwoFactorEnabled = false,
                             UserName = "petar.georgiev@gmail.com"
                         },
                         new
                         {
-                            Id = "13",
+                            Id = "ab696b9f-f5d2-45a0-8495-96e2d2a01acc",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "24de44e5-9676-4018-a78c-b0232de6775e",
+                            ConcurrencyStamp = "0a4d2cfd-be58-4850-99c8-eafe7820255a",
                             Email = "tanya.ivanova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "TANYA.IVANOVA@GMAIL.COM",
                             NormalizedUserName = "TANYA.IVANOVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEF/JI/dQJYQXz784HgrZIfl5a9c6u61w5HbLEnccpXeeyJYwz02JC7O4eosE+1ihrQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENJLwgRtGOxHQDEXQbKiftywBN606CebVJLbPEBNVXde2QUt0mLiOhmcdomX2ay+yg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ab811866-d3d5-4c18-a6b9-3e2c821d316e",
+                            SecurityStamp = "32edbf80-7597-4000-9156-a84d72e1e06f",
                             TwoFactorEnabled = false,
                             UserName = "tanya.ivanova@gmail.com"
                         },
                         new
                         {
-                            Id = "14",
+                            Id = "8eb86d7d-02f7-477d-8e6f-539d7c155930",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ccaab036-dc5b-4f29-83f5-d80f6a760fab",
+                            ConcurrencyStamp = "fde7f5a9-b8cb-4d06-9198-d5cf8e60dbf1",
                             Email = "aleksandar.pavlov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ALEKSANDAR.PAVLOV@GMAIL.COM",
                             NormalizedUserName = "ALEKSANDAR.PAVLOV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHuRV8UKFsvYvq2YSOl9RM9p8iznEiBGhLcqLgDIH0/76nwKPmUzB2KdjrgmoN4log==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAysbEPqGplCyWqSz8pmjX2r1oeXNoTAS1IXCBrzkC/0UDGHTDNZ+PBwl6XAY0c+LA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f7f53a27-b370-454c-88f8-255944c78a4e",
+                            SecurityStamp = "1d3323ce-4c2a-4c1c-a0c6-2432a37643b7",
                             TwoFactorEnabled = false,
                             UserName = "aleksandar.pavlov@gmail.com"
                         },
                         new
                         {
-                            Id = "15",
+                            Id = "3034c6c5-e1f5-4655-9baf-079f41605550",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "33c0c38f-1788-4eb9-beba-d563f19b4bdc",
+                            ConcurrencyStamp = "d120d16a-f9e0-4459-9e76-029b699be45c",
                             Email = "julia.dimitrova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "JULIA.DIMITROVA@GMAIL.COM",
                             NormalizedUserName = "JULIA.DIMITROVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDWKjA4pZYm7AdsFARcWonCKqHeXthaBjm+d4zHap7Q6p9abzLbUbC+532bf2Zn8NQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEccgle1Zm0ejm93gR0ya2XezW9A4TQTR7pR7h8zFoINnawP7vXmqKen3yg6fAgg9Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "bc1dcddd-9433-4228-a279-fba63ee979b4",
+                            SecurityStamp = "19516818-f9ea-4c6b-9c79-9d7f1266e39e",
                             TwoFactorEnabled = false,
                             UserName = "julia.dimitrova@gmail.com"
                         },
                         new
                         {
-                            Id = "16",
+                            Id = "e8264a26-ea76-44c4-a013-12759599a081",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e82b821e-0237-43b9-bd47-e82f0f6e2d9d",
+                            ConcurrencyStamp = "ab86e954-886a-4fce-8e2d-37897e954ae2",
                             Email = "kiril.kolarov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KIRIL.KOLAROV@GMAIL.COM",
                             NormalizedUserName = "KIRIL.KOLAROV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH6T1sET2Y6AYorwA7d9Gq+ZPquGCtkpnAVRwk8e0n2xhOAyOTNss2mZpL7PLZOZBw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEdaX2WaEIoQEBgvb2t2Pj827OTYWxELbifh9B2FGy45QBA5eMcCbwdmCURWbft5qA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "37260788-c66d-4743-8307-71f96dac2a48",
+                            SecurityStamp = "ef11f74d-5e70-4814-b9f2-5048bdce129a",
                             TwoFactorEnabled = false,
                             UserName = "kiril.kolarov@gmail.com"
                         },
                         new
                         {
-                            Id = "17",
+                            Id = "e0e396e6-53f2-40e9-8013-664b8a8dbd46",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c7ce8f6e-188f-40d8-be3c-27aa33fb85cb",
+                            ConcurrencyStamp = "8213fc0d-20f5-4152-8d42-c908513c58a1",
                             Email = "daniela.todorova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "DANIELA.TODOROVA@GMAIL.COM",
                             NormalizedUserName = "DANIELA.TODOROVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENW6NsWSRZi+yzFNHz6Q2xUmIeQXcXgE6J2SLuCXOFqJ5GIsL9vqFCoMeNOin8Zu+A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHqOi8bRufygqc6YnWacDZkZL1ywpAGoOe3Ti8ak3/o95ztywmt3KYLIlUWX6icSwA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f0048fda-111d-4790-93c2-6a0ed4a1744d",
+                            SecurityStamp = "254ba5f4-43eb-44b0-8745-5eebba3e9466",
                             TwoFactorEnabled = false,
                             UserName = "daniela.todorova@gmail.com"
                         },
                         new
                         {
-                            Id = "18",
+                            Id = "b8d81f44-f8a9-43e6-83fe-e62ab38f30cf",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3ec58298-aac4-4dc8-822e-b6725ac22e35",
+                            ConcurrencyStamp = "b3a0143d-9a45-4a78-8a85-dd7d02371139",
                             Email = "lazar.grigorov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "LAZAR.GRIGOROV@GMAIL.COM",
                             NormalizedUserName = "LAZAR.GRIGOROV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEHkwJCQbRhITxpmnUe09QGGJDUTtwVDmtKI4bcle2xgyJhCHoYVIssU8yQo462UEA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKqZsB4vetnMZc2g4F7/8ipNFD9jg+iimB+kYkMCE9sGDAP1jM1zE3Hg60dIJP2D6A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "942b800b-567f-4754-b81d-936e8de87a34",
+                            SecurityStamp = "34b69204-09bb-4405-a6c3-34728303ee60",
                             TwoFactorEnabled = false,
                             UserName = "lazar.grigorov@gmail.com"
                         },
                         new
                         {
-                            Id = "19",
+                            Id = "0c4b8988-22f2-4ed5-8486-85e757a97e41",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b61b154d-2b0c-46a5-9215-e1dfe0b7d5a9",
+                            ConcurrencyStamp = "deae9467-01f4-446e-949f-2cb5d869ad28",
                             Email = "ivanka.nikolova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "IVANKA.NIKOLOVA@GMAIL.COM",
                             NormalizedUserName = "IVANKA.NIKOLOVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGMdMIEWK6hTy2grPwmTX7nOp3GjI0EghWBpRWgZm81fKGsUCLNao3lFfzcGnxTwHg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHjZMW61bYdkjDBG6lh/6smW8UZ8td4npVgbiy7jc026W0qHpVX3bkd3iMCPIpjOpQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e1c4d1dd-1381-4c74-b6d9-fc9beb5e699a",
+                            SecurityStamp = "48d8b8f0-03d2-4956-b52e-4e628103a016",
                             TwoFactorEnabled = false,
                             UserName = "ivanka.nikolova@gmail.com"
                         },
                         new
                         {
-                            Id = "20",
+                            Id = "3a76fd9d-a1bb-48f2-9626-1122ecf2d797",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "71f09cfd-74d5-4764-816e-c74684c3ff20",
+                            ConcurrencyStamp = "d3ca3283-c453-4b30-8773-707bb0b1b879",
                             Email = "gergana.georgieva@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "GERGANA.GEORGIEVA@GMAIL.COM",
                             NormalizedUserName = "GERGANA.GEORGIEVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDNY2CLMIMwcv9CDaRWYmEnOo/6O7Tlbpex/7JJXLEcX42WsCb6vO4mD/fujMNIa8w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPNaK/w1AA1RKye6LB921S+CqaJ33B+zl+JuAxSsajDyi3XBIn9kshl36VKR1fA2Og==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "24801eee-f6fa-49c1-b19b-106524704cad",
+                            SecurityStamp = "fc500cf5-ebfd-4df1-9791-9453c35a1bbb",
                             TwoFactorEnabled = false,
                             UserName = "gergana.georgieva@gmail.com"
                         },
                         new
                         {
-                            Id = "21",
+                            Id = "51065229-23b9-402f-a54d-00bb813d6b1c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8ea82a04-1f15-46ae-8ac1-8e70c04f6688",
+                            ConcurrencyStamp = "f99be443-0d9d-4154-9f11-d900a26b5cbd",
                             Email = "stan12@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "STAN12@GMAIL.COM",
                             NormalizedUserName = "STAN12@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKdRFxm0mW2oZyE83iIUDJm9TrXa6UI57aicJ9KgMSz6yUptrvxOG91DlpC2Zec24A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELwskAyRv72uGRcmXEth8YEm2xzklpaN4m4IdKHPPp13VBetjvI1VeBnADLFfkAJbw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -489,15 +489,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "22",
+                            Id = "6b6433a7-3564-4cba-ace2-4a44afca4177",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fe00fae0-c40b-403f-94c7-e133aa1a88ec",
+                            ConcurrencyStamp = "895ecca8-15df-4971-9332-9eb3380da8a0",
                             Email = "ivdra23@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "IVDRA23@GMAIL.COM",
                             NormalizedUserName = "IVDRA23@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGt5Kdw3ywlmgh6mIyuzs7G7dC3kF4m/pT3GV2rY4yrjz366D/OyxqwYvpcbx7nfRw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKGzloLuwtLbNZFtL5O6unVdJ5U694spQR6tehiAic1H3B9zBN1Zv5NqnK9I0BCkxw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -505,15 +505,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "23",
+                            Id = "331d08d0-d407-4d61-af6e-1bb134ae7998",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "86cc5c11-532d-4543-93da-f2c3c4261e47",
+                            ConcurrencyStamp = "3e762a45-7ee2-4163-8b94-c5e4a15f4c13",
                             Email = "mariya.petrova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MARIYA.PETROVA@GMAIL.COM",
                             NormalizedUserName = "MARIYA.PETROVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAdHWig8rVbHVM2SPaoiLw5sMOB8bHttR0CgqUf30uGLDx94uBHZMlh+WwM1tgIPiA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH0+9rWQCBa4i1cFZbDPE+fFf6gSFVYB7cvWTkcl7Z2PZ6kauVUkuFAFUecvLmoOyg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -521,15 +521,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "24",
+                            Id = "030ddabd-7dcb-46ca-bab6-3feeae3492a8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "498ff5d6-a1da-4371-8a0d-2a6e52e05a56",
+                            ConcurrencyStamp = "3e3ac846-82ab-42bb-9072-0a1cb81c96c0",
                             Email = "nikolai.vasilev@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "NIKOLAI.VASILEV@GMAIL.COM",
                             NormalizedUserName = "NIKOLAI.VASILEV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEB04fGz+GRT+v+oTM1FuYWeYhgd9P7Pc2k7J2VnqGkN5Pr/CvCzMtAmHwT1zx1vKAQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI5j1YCgRLHwInKoh3UZYRJM/R0vUEZCRQ6Yglu3haYbAgyBbm6SMj/3aFRwbKVcPg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -537,15 +537,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "25",
+                            Id = "291cc1a8-8f2c-4f48-a919-ff4d9692a859",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "469f29ef-09dc-449f-aa11-1ea15443af43",
+                            ConcurrencyStamp = "903e1ad2-ce79-4773-bb7e-aebd162600ff",
                             Email = "radoslav.ivanov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "RADOSLAV.IVANOV@GMAIL.COM",
                             NormalizedUserName = "RADOSLAV.IVANOV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGh2BjuqNUv9QuUPtv1yo5CN7TN1BqNtBq03+/zlz4GYsg4OifGM3DPGXxEzoMOhig==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEP7N+qKNixVcyg5XYAwIgYLo4Q36SPz70kRLPEtimF3ttPJ7HGMRKmk69Rc/GWmt4A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -553,15 +553,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "26",
+                            Id = "32739a60-8250-4178-a19c-96d90444ebd3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "84750334-c996-4aba-a9b1-108875d4be7b",
+                            ConcurrencyStamp = "88c5f051-b619-4173-98bd-3463d7caaaf4",
                             Email = "katerina.dimitrova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KATERINA.DIMITROVA@GMAIL.COM",
                             NormalizedUserName = "KATERINA.DIMITROVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPddRTikl/9+PpxOZ/MXCHWV1jWOBHk4qMv9OTZzY8CR5BInHFO3Tp/AJYY6a+KbYA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECEUeAOhohjD2+ixo+BoMiHDa1rlyqmaW0TXZRIZEolD/4JhcMYIFFuBGuOqG/FK3g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -569,15 +569,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "27",
+                            Id = "3647bea5-9ce4-4d8b-bf0f-7a5fbd3ea729",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "73b57e5f-8e1c-4989-a151-a48eb97e8284",
+                            ConcurrencyStamp = "abe8f222-6fe5-4271-bae5-565e945f8a08",
                             Email = "gosho.georgiev@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "GOSHO.GEORGIEV@GMAIL.COM",
                             NormalizedUserName = "GOSHO.GEORGIEV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHWb1BuAcQgLKYWCCSY9Yy9FAjf189lt8VkHdFXFJ7+/L9X4Rxr4iA/7W782elU6zg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOP6KpjKlE+sJGDG51owqWd3navXdBzFB58Mk8OzVHdZ8WbZAN4x+MqA1g42iVVHLQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -585,15 +585,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "28",
+                            Id = "2ad410b1-c108-4b9c-99f1-0f68dbd6ad45",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "21aa7482-3419-4747-b1fa-75eb1e5f0917",
+                            ConcurrencyStamp = "eb952287-5c32-4ae7-a9c5-7136308fcc75",
                             Email = "lidia.todorova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "LIDIA.TODOROVA@GMAIL.COM",
                             NormalizedUserName = "LIDIA.TODOROVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE0Y3q1e/4Urk3jasRODpBNbsFRDGvb5WTza3JPnjt8mpT/Pc1/FjPSoUHDt44ePiw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE28jIC12e/N9dQ5TcDLdF4Z8vQHze5jJoP2oo3NJKGVkWzwj0DK1r3TIY0MX8QQwQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -601,15 +601,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "29",
+                            Id = "04b6c6b1-5f9b-4c7a-9f42-86193c03d327",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e09b83b3-c7b4-483c-907a-6d773096c95f",
+                            ConcurrencyStamp = "84c686ef-7642-4a5d-adc7-2c2f341e3e2c",
                             Email = "stefan.kovachev@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "STEFAN.KOVACHEV@GMAIL.COM",
                             NormalizedUserName = "STEFAN.KOVACHEV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEA14AfhH0Wcfu5vWUcKwHU4cY6C9oryPBjlzbW9K/ZhGJZxk7KbOTGLVdee/tk/tkw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE5Sq/KF7cT7Vr7l5EAyuHRS8v6u4ZHG9W6jtoN1btx69e4PPLjvFJgUNL0TXzuVkQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -617,19 +617,35 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "30",
+                            Id = "9ab8c775-88c0-4dc3-b11d-178c3ca2129",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f328d513-3418-41e5-a1c4-0e836fc92aae",
+                            ConcurrencyStamp = "88d14218-7174-49d4-94f2-411c3fe6d226",
                             Email = "valentina.nikolova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "VALENTINA.NIKOLOVA@GMAIL.COM",
                             NormalizedUserName = "VALENTINA.NIKOLOVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJXXTSD5zkQTJAPiQxWQ6zQUGnK0FIOVVSrZ/2jUdcDIf3sw+SVXDrxFsdMNIJhScQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJxafz/13jXmxSXalS7Rk2TaTMU1VzmRQ2+BMKELK2jr+gzvZ+NZMHXWQThS9AfG0A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
                             UserName = "valentina.nikolova@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c6b456fb-9234-440f-9967-1f0fee2d9719",
+                            Email = "admin@admin.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@ADMIN.COM",
+                            NormalizedUserName = "ADMIN@ADMIN.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM6amIi5NzDIF5FTmteuUSYSsy8I2ctkkjf07AsR3hGx+L9XhIdXqOvCu/Uw8AG9sw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@admin.com"
                         });
                 });
 
@@ -695,6 +711,23 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            UserId = "51065229-23b9-402f-a54d-00bb813d6b1c",
+                            RoleId = "2"
+                        },
+                        new
+                        {
+                            UserId = "aa7d01c6-9499-4ed4-a38e-3d0afa2b707c",
+                            RoleId = "3"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -937,7 +970,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "Biology",
-                            PublisherId = "1",
+                            PublisherId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 21
                         },
@@ -949,7 +982,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "History",
-                            PublisherId = "1",
+                            PublisherId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 22
                         },
@@ -961,7 +994,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "Mathematics",
-                            PublisherId = "2",
+                            PublisherId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 23
                         },
@@ -973,7 +1006,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "Physics",
-                            PublisherId = "2",
+                            PublisherId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 24
                         },
@@ -985,7 +1018,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "Chemistry",
-                            PublisherId = "3",
+                            PublisherId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 25
                         },
@@ -997,7 +1030,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "English Literature",
-                            PublisherId = "3",
+                            PublisherId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 26
                         },
@@ -1009,7 +1042,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "Computer Science",
-                            PublisherId = "4",
+                            PublisherId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 27
                         },
@@ -1021,7 +1054,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "Economics",
-                            PublisherId = "4",
+                            PublisherId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 28
                         },
@@ -1033,7 +1066,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "Geography",
-                            PublisherId = "5",
+                            PublisherId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 29
                         },
@@ -1045,7 +1078,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             EnrollmentCap = 0,
                             IsDeleted = false,
                             Name = "Art History",
-                            PublisherId = "5",
+                            PublisherId = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TeacherId = 30
                         });
@@ -1148,6 +1181,10 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int")
                         .HasComment("Course Identifier");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date of the remark");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
@@ -1342,7 +1379,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 1,
                             ClassId = 3,
                             ContactDetails = "GSM:882163890",
-                            DateOfBirth = new DateTime(2006, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1058),
+                            DateOfBirth = new DateTime(2006, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1872),
                             Email = "ivan414@gmail.com",
                             FirstName = "Ivan",
                             IsDeleted = false,
@@ -1352,14 +1389,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "9564039305",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "1"
+                            UserId = "aa7d01c6-9499-4ed4-a38e-3d0afa2b707c"
                         },
                         new
                         {
                             Id = 2,
                             ClassId = 5,
                             ContactDetails = "GSM:889556992",
-                            DateOfBirth = new DateTime(2007, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1125),
+                            DateOfBirth = new DateTime(2007, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1929),
                             Email = "maria270@gmail.com",
                             FirstName = "Maria",
                             IsDeleted = false,
@@ -1369,14 +1406,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "6934567210",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "2"
+                            UserId = "f2875100-0cf1-4b1d-ba91-1dfa38690f84"
                         },
                         new
                         {
                             Id = 3,
                             ClassId = 5,
                             ContactDetails = "GSM:883854732",
-                            DateOfBirth = new DateTime(2007, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1131),
+                            DateOfBirth = new DateTime(2007, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1935),
                             Email = "elena309@gmail.com",
                             FirstName = "Elena",
                             IsDeleted = false,
@@ -1386,14 +1423,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "3699302616",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "3"
+                            UserId = "b65e6163-1454-4164-9869-2ff822f9da98"
                         },
                         new
                         {
                             Id = 4,
                             ClassId = 4,
                             ContactDetails = "GSM:886992374",
-                            DateOfBirth = new DateTime(2006, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1146),
+                            DateOfBirth = new DateTime(2006, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1939),
                             Email = "viktor725@gmail.com",
                             FirstName = "Viktor",
                             IsDeleted = false,
@@ -1403,14 +1440,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "2940063663",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "4"
+                            UserId = "c5d7d80f-08d5-41ec-892c-30833098c047"
                         },
                         new
                         {
                             Id = 5,
                             ClassId = 2,
                             ContactDetails = "GSM:884738222",
-                            DateOfBirth = new DateTime(2008, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1151),
+                            DateOfBirth = new DateTime(2008, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1943),
                             Email = "pesho278@gmail.com",
                             FirstName = "Pesho",
                             IsDeleted = false,
@@ -1420,14 +1457,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "4204190914",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "5"
+                            UserId = "217e3e65-026d-4a8e-97af-a4fb30dfab30"
                         },
                         new
                         {
                             Id = 6,
                             ClassId = 1,
                             ContactDetails = "GSM:888183734",
-                            DateOfBirth = new DateTime(2005, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1155),
+                            DateOfBirth = new DateTime(2005, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1947),
                             Email = "nina.borisova@gmail.com",
                             FirstName = "Nina",
                             IsDeleted = false,
@@ -1437,14 +1474,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "5392831842",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "6"
+                            UserId = "8f7bca8f-059f-4750-8bfe-7def13ef37e8"
                         },
                         new
                         {
                             Id = 7,
                             ClassId = 1,
                             ContactDetails = "GSM:883764543",
-                            DateOfBirth = new DateTime(2004, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1170),
+                            DateOfBirth = new DateTime(2004, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1963),
                             Email = "ivo.pavlov@gmail.com",
                             FirstName = "Ivo",
                             IsDeleted = false,
@@ -1454,14 +1491,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "6758374932",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "7"
+                            UserId = "1a688e82-f609-47af-a359-d8bcdd62b5e9"
                         },
                         new
                         {
                             Id = 8,
                             ClassId = 3,
                             ContactDetails = "GSM:882847361",
-                            DateOfBirth = new DateTime(2003, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1174),
+                            DateOfBirth = new DateTime(2003, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1967),
                             Email = "katerina.gancheva@gmail.com",
                             FirstName = "Katerina",
                             IsDeleted = false,
@@ -1471,14 +1508,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "8293840598",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "8"
+                            UserId = "01185cf1-525d-478a-ad05-b9629573333a"
                         },
                         new
                         {
                             Id = 9,
                             ClassId = 4,
                             ContactDetails = "GSM:887654321",
-                            DateOfBirth = new DateTime(2002, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1182),
+                            DateOfBirth = new DateTime(2002, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1976),
                             Email = "dimitar.mihailov@gmail.com",
                             FirstName = "Dimitar",
                             IsDeleted = false,
@@ -1488,14 +1525,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "9382843621",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "9"
+                            UserId = "cab3584a-da3f-4858-a65a-3f7bde9e553f"
                         },
                         new
                         {
                             Id = 10,
                             ClassId = 5,
                             ContactDetails = "GSM:885676543",
-                            DateOfBirth = new DateTime(2001, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1187),
+                            DateOfBirth = new DateTime(2001, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1980),
                             Email = "stefan.yordanov@gmail.com",
                             FirstName = "Stefan",
                             IsDeleted = false,
@@ -1505,14 +1542,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "4902385726",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "10"
+                            UserId = "325092c7-9882-40d9-854b-32326c2bd43b"
                         },
                         new
                         {
                             Id = 11,
                             ClassId = 2,
                             ContactDetails = "GSM:882364788",
-                            DateOfBirth = new DateTime(2004, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1194),
+                            DateOfBirth = new DateTime(2004, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1988),
                             Email = "diana.ruseva@gmail.com",
                             FirstName = "Diana",
                             IsDeleted = false,
@@ -1522,14 +1559,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "2945641207",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "11"
+                            UserId = "2e830c43-2ce2-462d-9880-be8aa1e71696"
                         },
                         new
                         {
                             Id = 12,
                             ClassId = 3,
                             ContactDetails = "GSM:889276400",
-                            DateOfBirth = new DateTime(2003, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1198),
+                            DateOfBirth = new DateTime(2003, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1992),
                             Email = "petar.georgiev@gmail.com",
                             FirstName = "Petar",
                             IsDeleted = false,
@@ -1539,14 +1576,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "1298345761",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "12"
+                            UserId = "c64af0f1-3716-4e30-b5f7-b0c5153e2b01"
                         },
                         new
                         {
                             Id = 13,
                             ClassId = 4,
                             ContactDetails = "GSM:883712508",
-                            DateOfBirth = new DateTime(2005, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1203),
+                            DateOfBirth = new DateTime(2005, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(1996),
                             Email = "tanya.ivanova@gmail.com",
                             FirstName = "Tanya",
                             IsDeleted = false,
@@ -1556,14 +1593,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "8471629304",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "13"
+                            UserId = "ab696b9f-f5d2-45a0-8495-96e2d2a01acc"
                         },
                         new
                         {
                             Id = 14,
                             ClassId = 2,
                             ContactDetails = "GSM:887327015",
-                            DateOfBirth = new DateTime(2006, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1207),
+                            DateOfBirth = new DateTime(2006, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(2000),
                             Email = "aleksandar.pavlov@gmail.com",
                             FirstName = "Aleksandar",
                             IsDeleted = false,
@@ -1573,14 +1610,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "6503849201",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "14"
+                            UserId = "8eb86d7d-02f7-477d-8e6f-539d7c155930"
                         },
                         new
                         {
                             Id = 15,
                             ClassId = 5,
                             ContactDetails = "GSM:888014697",
-                            DateOfBirth = new DateTime(2004, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1211),
+                            DateOfBirth = new DateTime(2004, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(2004),
                             Email = "julia.dimitrova@gmail.com",
                             FirstName = "Julia",
                             IsDeleted = false,
@@ -1590,14 +1627,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "8473926140",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "15"
+                            UserId = "3034c6c5-e1f5-4655-9baf-079f41605550"
                         },
                         new
                         {
                             Id = 16,
                             ClassId = 1,
                             ContactDetails = "GSM:884728672",
-                            DateOfBirth = new DateTime(2006, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1231),
+                            DateOfBirth = new DateTime(2006, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(2029),
                             Email = "kiril.kolarov@gmail.com",
                             FirstName = "Kiril",
                             IsDeleted = false,
@@ -1607,14 +1644,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "5392837362",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "16"
+                            UserId = "e8264a26-ea76-44c4-a013-12759599a081"
                         },
                         new
                         {
                             Id = 17,
                             ClassId = 3,
                             ContactDetails = "GSM:889253738",
-                            DateOfBirth = new DateTime(2002, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1235),
+                            DateOfBirth = new DateTime(2002, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(2034),
                             Email = "daniela.todorova@gmail.com",
                             FirstName = "Daniela",
                             IsDeleted = false,
@@ -1624,14 +1661,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "8282020193",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "17"
+                            UserId = "e0e396e6-53f2-40e9-8013-664b8a8dbd46"
                         },
                         new
                         {
                             Id = 18,
                             ClassId = 4,
                             ContactDetails = "GSM:888107316",
-                            DateOfBirth = new DateTime(2003, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1239),
+                            DateOfBirth = new DateTime(2003, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(2038),
                             Email = "lazar.grigorov@gmail.com",
                             FirstName = "Lazar",
                             IsDeleted = false,
@@ -1641,14 +1678,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "9273628105",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "18"
+                            UserId = "b8d81f44-f8a9-43e6-83fe-e62ab38f30cf"
                         },
                         new
                         {
                             Id = 19,
                             ClassId = 2,
                             ContactDetails = "GSM:887726051",
-                            DateOfBirth = new DateTime(2008, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1243),
+                            DateOfBirth = new DateTime(2008, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(2042),
                             Email = "ivanka.nikolova@gmail.com",
                             FirstName = "Ivanka",
                             IsDeleted = false,
@@ -1658,14 +1695,14 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "3846204951",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "19"
+                            UserId = "0c4b8988-22f2-4ed5-8486-85e757a97e41"
                         },
                         new
                         {
                             Id = 20,
                             ClassId = 5,
                             ContactDetails = "GSM:883467150",
-                            DateOfBirth = new DateTime(2005, 12, 4, 21, 5, 14, 86, DateTimeKind.Local).AddTicks(1248),
+                            DateOfBirth = new DateTime(2005, 12, 7, 0, 31, 6, 264, DateTimeKind.Local).AddTicks(2046),
                             Email = "gergana.georgieva@gmail.com",
                             FirstName = "Gergana",
                             IsDeleted = false,
@@ -1675,7 +1712,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             PersonalId = "1294956172",
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
-                            UserId = "20"
+                            UserId = "3a76fd9d-a1bb-48f2-9626-1122ecf2d797"
                         });
                 });
 
@@ -1756,7 +1793,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
                             Titles = "prof. dr. ",
-                            UserId = "21"
+                            UserId = "51065229-23b9-402f-a54d-00bb813d6b1c"
                         },
                         new
                         {
@@ -1769,7 +1806,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
                             Titles = "doc. ",
-                            UserId = "22"
+                            UserId = "6b6433a7-3564-4cba-ace2-4a44afca4177"
                         },
                         new
                         {
@@ -1782,7 +1819,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
                             Titles = "assoc. prof. ",
-                            UserId = "23"
+                            UserId = "331d08d0-d407-4d61-af6e-1bb134ae7998"
                         },
                         new
                         {
@@ -1795,7 +1832,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
                             Titles = "prof. dr. ",
-                            UserId = "24"
+                            UserId = "030ddabd-7dcb-46ca-bab6-3feeae3492a8"
                         },
                         new
                         {
@@ -1808,7 +1845,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
                             Titles = "lect. ",
-                            UserId = "25"
+                            UserId = "291cc1a8-8f2c-4f48-a919-ff4d9692a859"
                         },
                         new
                         {
@@ -1821,7 +1858,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
                             Titles = "assoc. prof. ",
-                            UserId = "26"
+                            UserId = "32739a60-8250-4178-a19c-96d90444ebd3"
                         },
                         new
                         {
@@ -1834,7 +1871,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
                             Titles = "lect. ",
-                            UserId = "27"
+                            UserId = "3647bea5-9ce4-4d8b-bf0f-7a5fbd3ea729"
                         },
                         new
                         {
@@ -1847,7 +1884,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
                             Titles = "prof. ",
-                            UserId = "28"
+                            UserId = "2ad410b1-c108-4b9c-99f1-0f68dbd6ad45"
                         },
                         new
                         {
@@ -1860,7 +1897,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
                             Titles = "doc. ",
-                            UserId = "29"
+                            UserId = "04b6c6b1-5f9b-4c7a-9f42-86193c03d327"
                         },
                         new
                         {
@@ -1873,7 +1910,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             ProfilePicturePath = "images/profiles/default.jpg",
                             SchoolId = 1,
                             Titles = "prof. dr. ",
-                            UserId = "30"
+                            UserId = "9ab8c775-88c0-4dc3-b11d-178c3ca2129"
                         });
                 });
 
