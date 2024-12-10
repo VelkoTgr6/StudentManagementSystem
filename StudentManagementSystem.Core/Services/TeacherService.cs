@@ -155,7 +155,8 @@ namespace StudentManagementSystem.Core.Services
                         {
                             Id = r.Id,
                             CourseName = r.Course.Name,
-                            RemarkText = r.RemarkText
+                            RemarkText = r.RemarkText,
+                            Date = r.Date.ToString("dd/MM/yyyy")
                         })
                         .OrderBy(r => r.CourseName)
                         .ToList()
@@ -281,7 +282,8 @@ namespace StudentManagementSystem.Core.Services
                 StudentId = studentId,
                 TeacherId = model.TeacherId,
                 CourseId = model.CourseId,
-                RemarkText = model.RemarkText
+                RemarkText = model.RemarkText,
+                Date = DateTime.Now
             };
 
             student.Remarks.Add(remark);
