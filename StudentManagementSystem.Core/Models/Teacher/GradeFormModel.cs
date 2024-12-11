@@ -11,7 +11,7 @@ namespace StudentManagementSystem.Core.Models.Teacher
         public string ?CustomGradeType { get; set; }
 
         [MaxLength(100)]
-        public string GradeType { get; set; } = "Assignment";
+        public string GradeType { get; set; } = string.Empty;
         public string SelectedGrade { get; set; } = string.Empty;
         public int SelectedCourseId { get; set; }
         public string SelectedGradeType { get; set; } = string.Empty;

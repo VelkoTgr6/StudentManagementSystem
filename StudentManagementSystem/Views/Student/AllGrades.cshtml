@@ -1,0 +1,149 @@
+﻿@model IEnumerable<StudentGradesViewModel>
+
+@{
+    var averageGrades = Model.FirstOrDefault()?.AverageGrade;
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">
+        @Model.FirstOrDefault()?.StudentName's Grades
+    </h2>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col" style="width: 20%;">Course</th>
+                <th scope="col">Grades</th>
+                <th scope="col" style="width: 7%;">1st Term</th>
+                <th scope="col" style="width: 7%;">2nd Term</th>
+                <th scope="col" style="width: 3%;">Final</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var course in Model)
+            {
+                <tr>
+                    <td class="align-middle">@course.CourseName</td>
+                    <td>
+                        @if (course.Grades.Any())
+                        {
+                            <div class="grades-container">
+                                @foreach (var grade in course.Grades.Select((value, index) => new { value, index }))
+                                {
+                                    @if (grade.value.GradeType != "First Term Assessment" &&
+                                   grade.value.GradeType != "Second Term Assessment" &&
+                                   grade.value.GradeType != "Final")
+                                    {
+                                        <div class="grade-item" title="@grade.value.GradeType">
+                                            <span class="grade-pill">@grade.value.GradeScore</span>
+                                            @if (grade.index < course.Grades.Count() - 1)
+                                            {
+                                                <div class="vertical-line"></div>
+                                            }
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No grades available</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="grades-container">
+                            @foreach (var grade in course.Grades.Select((value, index) => new { value, index }))
+                            {
+                                @if (grade.value.GradeType == "First Term Assessment")
+                                {
+                                    <div class="grade-item" title="@grade.value.GradeType">
+                                        <span class="grade-pill">@grade.value.GradeScore</span>
+                                        @if (grade.index < course.Grades.Count() - 1)
+                                        {
+                                            <div class="vertical-line"></div>
+                                        }
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <div class="grades-container">
+                            @foreach (var grade in course.Grades.Select((value, index) => new { value, index }))
+                            {
+                                @if (grade.value.GradeType == "Second Term Assessment")
+                                {
+                                    <div class="grade-item" title="@grade.value.GradeType">
+                                        <span class="grade-pill">@grade.value.GradeScore</span>
+                                        @if (grade.index < course.Grades.Count() - 1)
+                                        {
+                                            <div class="vertical-line"></div>
+                                        }
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <div class="grades-container">
+                            @foreach (var grade in course.Grades.Select((value, index) => new { value, index }))
+                            {
+                                @if (grade.value.GradeType == "Final")
+                                {
+                                    <div class="grade-item" title="@grade.value.GradeType">
+                                        <span class="grade-pill">@grade.value.GradeScore</span>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="5" class="text-center  align-middle">
+                    <p style="display: inline-block; margin-right: 10px;">Average Score</p>
+                    <span class="average-grade-box  align-middle">@averageGrades</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .grades-container {
+        display: flex;
+        align-items: center;
+        display: inline-flex;
+    }
+
+    .grade-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .grade-pill {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 50%;
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .vertical-line {
+        width: 1px;
+        height: 30px;
+        background-color: #ccc;
+        margin: 0 10px;
+    }
+
+    .average-grade-box {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 5px;
+        background-color: #28a745;
+        color: white;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+</style>

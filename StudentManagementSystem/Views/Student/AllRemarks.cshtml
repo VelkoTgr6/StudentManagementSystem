@@ -1,0 +1,31 @@
+﻿@model IEnumerable<StudentRemarksViewModel>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Student Remarks</h2>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No remarks available for this student.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var remark in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">@remark.CourseName</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text"><strong>Remark:</strong> @remark.Content</p>
+                            <p class="card-text"><strong>Date:</strong> @remark.Date</p>
+                            <p class="card-text"><strong>Teacher:</strong> @remark.TeacherName</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

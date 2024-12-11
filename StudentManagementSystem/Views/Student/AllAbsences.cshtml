@@ -1,0 +1,74 @@
+﻿@model IEnumerable<StudentAbsencesViewModel>
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card" style="width: 90%; max-width: 900px;">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4">Absences</h2>
+            <h5 class="card-subtitle mb-2 text-muted text-center">Total Absences: @(Model?.Count() ?? 0)</h5>
+            <h5 class="card-subtitle mb-2 text-muted text-center">Excused Absences: @(Model?.FirstOrDefault()?.ExcusedAbsences ?? 0)</h5>
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-bordered table-striped text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" style="width: 10%;">#</th>
+                            <th scope="col" style="width: 45%;">Course</th>
+                            <th scope="col" style="width: 45%;">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            var rowNumber = 1;
+                            foreach (var absence in Model)
+                            {
+                                <tr>
+                                    <td>@rowNumber</td>
+                                    <td>@absence.CourseName</td>
+                                    <td>@absence.Date</td>
+                                </tr>
+                                rowNumber++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" class="text-muted">No absences found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Full height container for centering */
+    .vh-100 {
+        height: 100vh;
+    }
+
+    /* Center card and responsive design */
+    .card {
+        margin: auto;
+        font-size: 1.2rem; /* Bigger text for better readability */
+    }
+
+    /* Table header style */
+    .table-dark {
+        background-color: #343a40;
+        color: white;
+    }
+
+    /* Numbering column */
+    th:first-child,
+    td:first-child {
+        font-weight: bold;
+        color: #007bff; /* Highlight the numbering in blue */
+    }
+
+    /* Center text in the cells */
+    .text-center {
+        text-align: center;
+    }
+</style>

@@ -6,7 +6,6 @@ using StudentManagementSystem.Core.Services;
 using StudentManagementSystem.Core.Services.Admin;
 using StudentManagementSystem.Infrastructure;
 using StudentManagementSystem.Infrastructure.Data.Common;
-using StudentManagementSystem.Infrastructure.Data.Models;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -14,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IStudentService,StudentService>();
             services.AddScoped<ITeacherService, TeacherService>();
 
             services.AddScoped<IAdminService, AdminService>();

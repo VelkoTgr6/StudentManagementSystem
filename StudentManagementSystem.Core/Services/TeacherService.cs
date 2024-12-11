@@ -479,7 +479,7 @@ namespace StudentManagementSystem.Core.Services
         {
             var absence =await repository.All<Absence>()
                 .FirstOrDefaultAsync(a => a.Id == absenceId && !a.IsDeleted);
-
+            
             if (absence == null)
             {
                 throw new ArgumentNullException(nameof(absence), "Absence not found");

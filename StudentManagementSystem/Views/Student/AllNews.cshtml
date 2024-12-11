@@ -1,0 +1,31 @@
+﻿@model IEnumerable<StudentNewsViewModel>
+
+<div class="container mt-5">
+   <h2 class="mb-4 text-center">News</h2>
+   @if (!Model.Any())
+   {
+       <div class="alert alert-info text-center">
+           No news available for this class.
+       </div>
+   }
+   else
+   {
+       <div class="d-flex flex-column align-items-center">
+           @foreach (var news in Model)
+           {
+               <div class="col-md-6 mb-4">
+                   <div class="card h-100">
+                       <div class="card-body">
+                           <h5 class="card-title">@news.Title</h5>
+                           <h6 class="card-subtitle mb-2 text-muted">By @news.CreatedBy</h6>
+                           <p class="card-text">@news.Content</p>
+                       </div>
+                       <div class="card-footer text-muted">
+                           Created on: @news.CreatedAt
+                       </div>
+                   </div>
+               </div>
+           }
+       </div>
+   }
+</div>
