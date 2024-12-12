@@ -1,0 +1,75 @@
+﻿@model IEnumerable<StudentManagementSystem.Core.Models.Student.StudentScheduleViewModel>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Schedule</h2>
+    <table class="table table-striped schedule-table">
+        <thead>
+            <tr>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @foreach (var day in Enum.GetNames(typeof(DayOfWeek)).Where(d => d != "Saturday" && d != "Sunday"))
+                {
+                    <td>
+                        @if (Model != null)
+                        {
+                            var daySchedule = Model.Where(s => s.Day == day);
+                            if (daySchedule.Any())
+                            {
+                                foreach (var item in daySchedule)
+                                {
+                                    <div class="course-item">
+                                        <span class="course-name">@item.CourseName</span><br />
+                                        <span>@item.TeacherName</span><br />
+                                        <span>@DateTime.Parse(item.StartTime).ToString("HH:mm") - @DateTime.Parse(item.EndTime).ToString("HH:mm")</span>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="no-classes">No classes</div>
+                            }
+                        }
+                    </td>
+                }
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<style>
+/* Custom styles for the schedule table */
+.schedule-table th {
+    font-size: 1.5em;
+    text-align: center;
+    background-color: #f8f9fa;
+}
+
+.schedule-table td {
+    border: 1px solid #dee2e6;
+    vertical-align: top;
+    padding: 10px;
+}
+
+.schedule-table .course-name {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.schedule-table .no-classes {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.schedule-table .course-item {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+</style>

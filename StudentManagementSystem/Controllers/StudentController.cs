@@ -17,6 +17,14 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var studentId = await studentService.GetStudentIdAsync(User.GetId());
+            var student = await studentService.GetHomePageAsync(studentId);
+            return View(student);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             if (id == 0) 
@@ -57,6 +65,14 @@ namespace StudentManagementSystem.Controllers
             var studentId = await studentService.GetStudentIdAsync(User.GetId());
             var absences = await studentService.GetAllAbsencesAsync(studentId);
             return View(absences);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Schedule()
+        {
+            var studentId = await studentService.GetStudentIdAsync(User.GetId());
+            var schedule = await studentService.GetScheduleAsync(studentId);
+            return View(schedule);
         }
     }
 }

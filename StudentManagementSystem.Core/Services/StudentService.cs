@@ -133,6 +133,51 @@ namespace StudentManagementSystem.Core.Services
             return remarks;
         }
 
+        public async Task<StudentHomePageViewModel> GetHomePageAsync(int studentId)
+        {
+            var student =await repository.AllAsReadOnly<Student>()
+                .Include(s=>s.Аbsences)
+                .Include(s => s.Class)
+                .Where(s => s.Id == studentId)
+                .Select(s => new StudentHomePageViewModel
+                {
+                    Name = s.FirstName + " " + s.LastName,
+                    SchoolName = s.School.Name,
+                    ClassName = s.Class.Name,
+                    ClassTeacher = s.Class.Teacher.Titles + " " + s.Class.Teacher.FirstName + " " + s.Class.Teacher.LastName,
+                    AbsencesCount = s.Аbsences.Count().ToString(),
+                    AverageGrade = s.Grades.Average(g => g.GradeScore).ToString(),
+                    GradesCount = s.Grades.Count().ToString(),
+                    Remarks = s.Remarks.Count().ToString(),
+                })
+                .FirstOrDefaultAsync();
+
+            return student;
+        }
+
+        public async Task<IEnumerable<StudentScheduleViewModel>> GetScheduleAsync(int studentId)
+        {
+            var classId =await repository.AllAsReadOnly<Student>()
+                .Where(s => s.Id == studentId)
+                .Select(s => s.ClassId)
+                .FirstOrDefaultAsync();
+
+            var schedule =await repository.AllAsReadOnly<CourseSchedule>()
+                .Include(s => s.Course)
+                .Where(s => s.ClassId == classId)
+                .Select(s => new StudentScheduleViewModel
+                {
+                    CourseName = s.Course.Name,
+                    StartTime = s.StartTime.ToString(),
+                    EndTime = s.EndTime.ToString(),
+                    Day = s.Day.ToString(),
+                    TeacherName = s.Course.Teacher.Titles + " " + s.Course.Teacher.FirstName + " " + s.Course.Teacher.LastName
+                })
+                .ToListAsync();
+
+            return schedule;
+        }
+
         public async Task<int> GetStudentIdAsync(string userId)
         {
             return await repository.AllAsReadOnly<Student>()

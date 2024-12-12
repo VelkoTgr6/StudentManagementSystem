@@ -1,0 +1,62 @@
+﻿@model StudentManagementSystem.Core.Models.Student.StudentHomePageViewModel
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Welcome, @Model.Name</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>Class Information</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>School Name:</strong> @Model.SchoolName</p>
+                    <p><strong>Class Name:</strong> @Model.ClassName</p>
+                    <p><strong>Class Teacher:</strong> @Model.ClassTeacher</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4>Performance</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Average Grade:</strong> @Model.AverageGrade</p>
+                    <p><strong>Total Grades:</strong> @Model.GradesCount</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h4>Absences</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Absences:</strong> @Model.AbsencesCount</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h4>Remarks</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Remarks:</strong> @Model.Remarks</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-header {
+        font-size: 1.25em;
+    }
+
+    .card-body p {
+        font-size: 1.1em;
+    }
+</style>

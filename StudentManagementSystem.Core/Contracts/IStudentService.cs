@@ -10,5 +10,7 @@ namespace StudentManagementSystem.Core.Contracts
         Task<IEnumerable<StudentGradesViewModel>> GetAllGradesAsync(int studentId);
         Task<IEnumerable<StudentRemarksViewModel>> GetAllRemarksAsync(int studentId);
         Task<IEnumerable<StudentAbsencesViewModel>> GetAllAbsencesAsync(int studentId);
+        Task<IEnumerable<StudentScheduleViewModel>> GetScheduleAsync(int studentId);
+        Task<StudentHomePageViewModel> GetHomePageAsync(int studentId);
     }
 }
