@@ -4,3 +4,23 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+
+table {
+    background-color: rgba(255, 255, 255, 0.8); 
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+    text-align: left; 
+}
+
+th {
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* Add a background color to even rows */
+}

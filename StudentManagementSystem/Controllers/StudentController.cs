@@ -74,5 +74,13 @@ namespace StudentManagementSystem.Controllers
             var schedule = await studentService.GetScheduleAsync(studentId);
             return View(schedule);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var studentId = await studentService.GetStudentIdAsync(User.GetId());
+            var student = await studentService.GetStudentDetailsAsync(studentId);
+            return View(student);
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace StudentManagementSystem.Core.Services
         public async Task<IEnumerable<StudentGradesViewModel>> GetAllGradesAsync(int studentId)
         {
             var studentClassId = await repository.AllAsReadOnly<Student>()
-                .Where(s => s.Id == studentId)
+                .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => s.ClassId)
                 .FirstOrDefaultAsync();
 
@@ -52,7 +52,7 @@ namespace StudentManagementSystem.Core.Services
                 .ToListAsync();
 
             var student = await repository.AllAsReadOnly<Student>()
-                .Where(s => s.Id == studentId)
+                .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => new
                 {
                     s.FirstName,
@@ -88,14 +88,14 @@ namespace StudentManagementSystem.Core.Services
         public async Task<IEnumerable<StudentNewsViewModel>> GetAllNewsForStudentAsync(int studentId)
         {
             var teacherId = await repository.AllAsReadOnly<Student>()
-                .Where(s => s.Id == studentId)
+                .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Include(s=>s.Class)
                 .Include(s => s.Class.Teacher)
                 .Select(s=>s.Class.Teacher.UserId)
                 .FirstOrDefaultAsync();
 
             var teacherName = await repository.AllAsReadOnly<Student>()
-                .Where(s => s.Id == studentId)
+                .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Include(s => s.Class)
                 .Include(s => s.Class.Teacher)
                 .Select(s => $"{s.Class.Teacher.Titles} {s.Class.Teacher.FirstName} {s.Class.Teacher.LastName}")
@@ -138,7 +138,7 @@ namespace StudentManagementSystem.Core.Services
             var student =await repository.AllAsReadOnly<Student>()
                 .Include(s=>s.Аbsences)
                 .Include(s => s.Class)
-                .Where(s => s.Id == studentId)
+                .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => new StudentHomePageViewModel
                 {
                     Name = s.FirstName + " " + s.LastName,
@@ -158,7 +158,7 @@ namespace StudentManagementSystem.Core.Services
         public async Task<IEnumerable<StudentScheduleViewModel>> GetScheduleAsync(int studentId)
         {
             var classId =await repository.AllAsReadOnly<Student>()
-                .Where(s => s.Id == studentId)
+                .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => s.ClassId)
                 .FirstOrDefaultAsync();
 
@@ -176,6 +176,33 @@ namespace StudentManagementSystem.Core.Services
                 .ToListAsync();
 
             return schedule;
+        }
+
+        public async Task<StudentProfileViewModel> GetStudentDetailsAsync(int studentId)
+        {
+            var student =await repository.AllAsReadOnly<Student>()
+                .Where(s => s.Id == studentId && !s.IsDeleted)
+                .Select(s => new StudentProfileViewModel
+                {
+                    FirstName = s.FirstName,
+                    MiddleName = s.MiddleName,
+                    LastName = s.LastName,
+                    BirthDate = s.DateOfBirth.ToString("dd/MM/yyyy"),
+                    PersonalIdentificationNumber = s.PersonalId,
+                    SchoolName = s.School.Name,
+                    ClassName = s.Class.Name,
+                    Email = s.Email,
+                    ContactDetails = s.ContactDetails,
+                    ProfilePicturePath = s.ProfilePicturePath
+                })
+                .FirstOrDefaultAsync();
+
+            if (student == null)
+            {
+                throw new ArgumentException();
+            }
+
+            return student;
         }
 
         public async Task<int> GetStudentIdAsync(string userId)
