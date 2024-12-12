@@ -1,0 +1,78 @@
+﻿@model CourseScheduleInputModel
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Edit Course Schedule</h2>
+
+    <form asp-action="Edit" method="post">
+        <div class="form-group mb-3">
+            <label for="CourseId">Course</label>
+            <select id="CourseId" class="form-control" name="CourseId" required>
+                <option value="">Select Course</option>
+                @foreach (var course in Model.Courses)
+                {
+                    <option value="@course.Id" selected=@(course.Id == Model.SelectedCourseId)>@course.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="ClassId">Class</label>
+            <select id="ClassId" class="form-control" name="ClassId" required>
+                <option value="">Select Class</option>
+                @foreach (var classItem in Model.Classes)
+                {
+                    <option value="@classItem.Id" selected=@(classItem.Id == Model.SelectedClassId)>@classItem.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Day">Day</label>
+            <select id="Day" class="form-control" name="Day" required>
+                <option value="">Select Day</option>
+                <option value="Monday" selected="@(Model.Day == DayOfWeek.Monday)">Monday</option>
+                <option value="Tuesday" selected="@(Model.SelectedDay == DayOfWeek.Tuesday)">Tuesday</option>
+                <option value="Wednesday" selected="@(Model.SelectedDay ==  DayOfWeek.Wednesday)">Wednesday</option>
+                <option value="Thursday" selected="@(Model.SelectedDay ==  DayOfWeek.Thursday)">Thursday</option>
+                <option value="Friday" selected="@(Model.SelectedDay ==  DayOfWeek.Friday)">Friday</option>
+            </select>
+        </div>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+        <!-- Input Fields -->
+        <div class="form-group mb-3">
+            <label for="StartTime">Start Time</label>
+            <input id="StartTime" class="form-control" name="StartTime" value="@Model.StartTime" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="EndTime">End Time</label>
+            <input id="EndTime" class="form-control" name="EndTime" value="@Model.EndTime" required>
+        </div>
+        <a asp-action="Index" asp-controller="AdminHome" class="btn btn-secondary">Back</a>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+<!-- Include Flatpickr JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    // Initialize Flatpickr
+    flatpickr("#StartTime", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i", // 24-hour format
+      time_24hr: true,
+      defaultDate: "@Model.StartTime"
+    });
+
+    flatpickr("#EndTime", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",
+      time_24hr: true,
+      defaultDate: "@Model.EndTime"
+    });
+</script>

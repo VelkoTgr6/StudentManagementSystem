@@ -4,59 +4,63 @@
 
 <h2 class="text-center my-4">User Management</h2>
 
-    <div class="container">
-        <div class="row g-3">
-            <!-- Create Buttons -->
-            <div class="col-md-3">
-                <a class="btn btn-primary btn-lg w-100" asp-controller ="AdminStudent" asp-action="CreateStudent">Create Student</a>
-            </div>
-            <div class="col-md-3">
-            <a class="btn btn-success btn-lg w-100" asp-controller="AdminTeacher" asp-action="CreateTeacher">Create Teacher</a>
-            </div>
-            <div class="col-md-3">
-            <a class="btn btn-warning btn-lg w-100" asp-controller="AdminCourse" asp-action="CreateCourse">Create Course</a>
-            </div>
-            <div class="col-md-3">
-            <a class="btn btn-primary btn-lg w-100" asp-controller="AdminClass" asp-action="CreateClass">Create Class</a>
-            </div>
-            <div class="col-md-3">
-            <a class="btn btn-secondary btn-lg w-100" asp-controller="AdminUserManage" asp-action="CreateRole">Create Role</a>
-            </div>
-            <div class="col-md-3">
-            <a class="btn btn-secondary btn-lg w-100" asp-controller="AdminUserManage" asp-action="AddUserToRole">Add User To Role</a>
-            </div>                                                         
-            <div class="col-md-3">                                         
-            <a class="btn btn-secondary btn-lg w-100" asp-controller="AdminUserManage" asp-action="RemoveUserFromRole">Remove User From Role</a>
-            </div>                                                         
-            <div class="col-md-3">                                         
-            <a class="btn btn-secondary btn-lg w-100" asp-controller="AdminUserManage" asp-action="EditRole">Edit Role</a>
-            </div>
-            <hr />
-
-            <div class="d-flex flex-column align-items-center vh-100">
-                <div class="form-group text-center w-100" style="max-width: 400px;">
-                    <label for="editOptions" class="form-label" style="font-size: 1.5rem">Select to Edit</label>
-                    <select id="editOptions" class="form-control form-control-lg" name="selectedAction">
-                        <option value="/AdminStudent/AllStudents">Edit Student</option>
-                        <option value="/AdminTeacher/AllTeachers">Edit Teacher</option>
-                        <option value="/AdminCourse/AllCourses">Edit Course</option>
-                        <option value="/AdminClass/AllClasses">Edit Class</option>
-                    </select>
-                </div>
-
-                <!-- Submit Button -->
-                <form id="editForm" method="get" action="/AdminStudent/AllStudents" class="mt-3">
-                    <button type="submit" class="btn btn-danger btn-lg w-100" style="max-width: 150px;">Go to Edit</button>
-                </form>
-            </div>
-
-            <script>
-                // JavaScript to dynamically set form action based on dropdown selection
-                document.getElementById('editOptions').addEventListener('change', function () {
-                    const form = document.getElementById('editForm');
-                    const selectedValue = this.value; // Get the selected action
-                    form.action = selectedValue; // Update form action dynamically
-                });
-            </script>
+<div class="container">
+    <div class="row g-3">
+        <!-- Create Buttons -->
+        <div class="col-md-3">
+            <a class="btn btn-primary btn-lg w-100" asp-controller="AdminStudent" asp-action="CreateStudent">Create Student</a>
         </div>
+        <div class="col-md-3">
+            <a class="btn btn-success btn-lg w-100" asp-controller="AdminTeacher" asp-action="CreateTeacher">Create Teacher</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-warning btn-lg w-100" asp-controller="AdminCourse" asp-action="CreateCourse">Create Course</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-primary btn-lg w-100" asp-controller="AdminClass" asp-action="CreateClass">Create Class</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-secondary btn-lg w-100" asp-controller="AdminSchedule" asp-action="Add">Create Schedule</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-secondary btn-lg w-100" asp-controller="AdminUserManage" asp-action="CreateRole">Create Role</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-secondary btn-lg w-100" asp-controller="AdminUserManage" asp-action="AddUserToRole">Add User To Role</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-secondary btn-lg w-100" asp-controller="AdminUserManage" asp-action="RemoveUserFromRole">Remove User From Role</a>
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-secondary btn-lg w-100" asp-controller="AdminUserManage" asp-action="EditRole">Edit Role</a>
+        </div>
+        <hr />
+
+        <div class="d-flex flex-column align-items-center vh-100">
+            <div class="form-group text-center w-100" style="max-width: 400px;">
+                <label for="editOptions" class="form-label" style="font-size: 1.5rem">Select to Edit</label>
+                <select id="editOptions" class="form-control form-control-lg" name="selectedAction">
+                    <option value="/AdminStudent/AllStudents">Edit Student</option>
+                    <option value="/AdminTeacher/AllTeachers">Edit Teacher</option>
+                    <option value="/AdminCourse/AllCourses">Edit Course</option>
+                    <option value="/AdminClass/AllClasses">Edit Class</option>
+                    <option value="/AdminSchedule/Index">Edit Schedule</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <form id="editForm" method="get" action="/AdminStudent/AllStudents" class="mt-3">
+                <button type="submit" class="btn btn-danger btn-lg w-100" style="max-width: 150px;">Go to Edit</button>
+            </form>
+        </div>
+
+        <script>
+            // JavaScript to dynamically set form action based on dropdown selection
+            document.getElementById('editOptions').addEventListener('change', function () {
+                const form = document.getElementById('editForm');
+                const selectedValue = this.value; // Get the selected action
+                form.action = selectedValue; // Update form action dynamically
+            });
+        </script>
     </div>
+</div>

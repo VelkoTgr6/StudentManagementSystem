@@ -1,0 +1,22 @@
+﻿@model IEnumerable<ClassServiceModel>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="get" asp-action="ClassSchedule" asp-controller="AdminSchedule">
+                <div class="form-group mb-3">
+                    <label for="classId" class="form-label">Select a Class</label>
+                    <select id="classId" name="classId" class="form-select" required>
+                        <option value="">-- Select a Class --</option>
+                        @foreach (var classModel in Model)
+                        {
+                            <option value="@classModel.Id">@classModel.Name</option>
+                        }
+                    </select>
+                </div>
+                <a asp-action="Index" asp-controller="AdminHome" class="btn btn-secondary">Back</a>
+                <button type="submit" class="btn btn-primary">View Schedule</button>
+            </form>
+        </div>
+    </div>
+</div>

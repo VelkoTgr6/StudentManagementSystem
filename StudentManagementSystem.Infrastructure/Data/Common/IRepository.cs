@@ -17,5 +17,6 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
         Task<string> GetIdByEmailAsync(string email);
         Task UpdateStudentsPerformanceAllAsync();
         Task<IdentityUser> GetIdentityUserByIdAsync(string id);
+        void DeleteSchedule(CourseSchedule entity);
     }
 }

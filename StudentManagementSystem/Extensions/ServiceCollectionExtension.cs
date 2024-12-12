@@ -21,8 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IAdminCourseService, AdminCourseService>();
             services.AddScoped<IAdminTeacherService, AdminTeacherService>();
             services.AddScoped<IAdminStudentService, AdminStudentService>();
+            services.AddScoped<IAdminScheduleService, AdminScheduleService>();
 
-            
 
             return services;
         }

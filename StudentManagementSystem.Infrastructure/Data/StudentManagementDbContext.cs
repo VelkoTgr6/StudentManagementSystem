@@ -104,5 +104,6 @@ namespace StudentManagementSystem.Infrastructure
         public DbSet<Remark> Remarks { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<School> Schools { get; set; }
+        public DbSet<CourseSchedule> CoursesSchedules { get; set; }
     }
 }

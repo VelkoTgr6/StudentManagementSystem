@@ -1,0 +1,36 @@
+﻿@model IEnumerable<CourseScheduleViewModel>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Course Schedules</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Course</th>
+                <th scope="col">Class</th>
+                <th scope="col">Day</th>
+                <th scope="col">Start Time</th>
+                <th scope="col">End Time</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var schedule in Model.Select((value, index) => new { value, index }))
+            {
+                <tr>
+                    <td>@(schedule.index + 1)</td>
+                    <td>@schedule.value.CourseName</td>
+                    <td>@schedule.value.ClassName</td>
+                    <td>@schedule.value.Day</td>
+                    <td>@schedule.value.StartTime</td>
+                    <td>@schedule.value.EndTime</td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="AdminSchedule" asp-route-id="@schedule.value.Id" class="btn btn-primary btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-controller="AdminSchedule" asp-route-id="@schedule.value.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this grade?');">Delete</a>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-action="Index" asp-controller="AdminSchedule" class="btn btn-secondary">Back</a>
+</div>

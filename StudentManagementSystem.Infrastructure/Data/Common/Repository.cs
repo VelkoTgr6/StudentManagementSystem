@@ -125,5 +125,17 @@ namespace StudentManagementSystem.Infrastructure.Data.Common
 
             return user;
         }
+
+        public async void DeleteSchedule(CourseSchedule entity)
+        {
+            var schedule =await DbSet<CourseSchedule>()
+                .Where(cs => cs.Id == entity.Id)
+                .FirstOrDefaultAsync();
+
+            if (schedule != null)
+            {
+                DbSet<CourseSchedule>().Remove(schedule);
+            }
+        }
     }
 }
