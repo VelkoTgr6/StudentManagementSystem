@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Infrastructure.Data.Configuration;
+using StudentManagementSystem.Infrastructure.Data.Configuration.StudentManagementSystem.Infrastructure.Data.Configuration;
 using StudentManagementSystem.Infrastructure.Data.Models;
 
 namespace StudentManagementSystem.Infrastructure
@@ -88,7 +89,12 @@ namespace StudentManagementSystem.Infrastructure
             builder.ApplyConfiguration(new CourseConfiguration());
             builder.ApplyConfiguration(new ClassConfiguration());
             builder.ApplyConfiguration(new StudentConfiguration());
-            
+            builder.ApplyConfiguration(new AbsenceConfiguration());
+            builder.ApplyConfiguration(new ClassCourseConfiguration());
+            builder.ApplyConfiguration(new CourseScheduleConfiguration());
+            builder.ApplyConfiguration(new GradeConfiguration());
+            builder.ApplyConfiguration(new NewsConfiguration());
+            builder.ApplyConfiguration(new RemarkConfiguration());
 
             base.OnModelCreating(builder);
         }
