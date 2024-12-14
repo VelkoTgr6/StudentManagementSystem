@@ -96,7 +96,7 @@
                                 <td>@Model.Absences[i].CourseName</td>
                                 <td>@Model.Absences[i].Date</td>
                                 <td>
-                                    @if (Model.Grades[i].TeacherId == ViewBag.TeacherId)
+                                    @if (Model.Absences[i].TeacherId == ViewBag.TeacherId)
                                     {
                                         <a class="btn btn-primary btn-sm" asp-action="EditAbsence" asp-route-id="@Model.Absences[i].Id">Edit</a>
                                     }

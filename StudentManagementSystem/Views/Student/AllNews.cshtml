@@ -1,7 +1,10 @@
 ﻿@model IEnumerable<StudentNewsViewModel>
 
 <div class="container mt-5">
-   <h2 class="mb-4 text-center">News</h2>
+   <h1 class="mb-4 text-center" style="text-decoration: underline;">News</h1>
+    <div class="text-center mt-4 pb-4">
+        <button class="btn btn-primary" onclick="showAllNewsCards()">Show All</button>
+    </div>
    @if (!Model.Any())
    {
        <div class="alert alert-info text-center">
@@ -13,10 +16,13 @@
        <div class="d-flex flex-column align-items-center">
            @foreach (var news in Model)
            {
-               <div class="col-md-6 mb-4">
+               <div class="col-md-6 mb-4" id="news-@news.Id">
                    <div class="card h-100">
-                       <div class="card-body">
-                           <h5 class="card-title">@news.Title</h5>
+                       <div class="card-body position-relative">
+                           <div class="d-flex justify-content-between align-items-center">
+                               <h5 class="card-title">@news.Title</h5>
+                                <button class="btn btn-danger btn-sm" style="justify-content:center; font-size: 0.5rem; font-weight: bold;" onmouseover="this.innerText='Hide'" onmouseout="this.innerText='X'" onclick="hideNewsCard('@news.Id')">X</button>
+                           </div>
                            <h6 class="card-subtitle mb-2 text-muted">By @news.CreatedBy</h6>
                            <p class="card-text">@news.Content</p>
                        </div>
@@ -29,3 +35,34 @@
        </div>
    }
 </div>
+
+<script>
+    function hideNewsCard(newsId) {
+        var hiddenNews = JSON.parse(localStorage.getItem('hiddenNews')) || [];
+        hiddenNews.push(newsId);
+        localStorage.setItem('hiddenNews', JSON.stringify(hiddenNews));
+
+        var newsCard = document.getElementById('news-' + newsId);
+        if (newsCard) {
+            newsCard.style.display = 'none';
+        }
+    }
+
+    function showAllNewsCards() {
+        localStorage.removeItem('hiddenNews');
+        var newsCards = document.querySelectorAll('[id^="news-"]');
+        newsCards.forEach(function(newsCard) {
+            newsCard.style.display = 'block';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var hiddenNews = JSON.parse(localStorage.getItem('hiddenNews')) || [];
+        hiddenNews.forEach(function(newsId) {
+            var newsCard = document.getElementById('news-' + newsId);
+            if (newsCard) {
+                newsCard.style.display = 'none';
+            }
+        });
+    });
+</script>

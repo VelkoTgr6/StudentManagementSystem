@@ -78,6 +78,8 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
             await teacherService.AddGradeToStudent(model, model.StudentId);
+            await teacherService.AddGradeNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId, model.GradeScore.ToString());
+
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
         }
 
@@ -99,6 +101,8 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
             await teacherService.EditGradeAsync(gradeId, model);
+            await teacherService.AddGradeNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId, model.GradeScore.ToString());
+
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
         }
 
@@ -131,6 +135,7 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
             await teacherService.AddAbsenceToStudentAsync(model, model.StudentId);
+            await teacherService.AddAbsenceNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
 
         }
@@ -140,6 +145,7 @@ namespace StudentManagementSystem.Controllers
         {
             var absence = await teacherService.GetAbsenceByIdAsync(id);
             absence.Courses = await teacherService.GetTeacherCourses(User.GetId());
+
             return View(absence);
         }
 
@@ -152,6 +158,8 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
             await teacherService.EditAbsenceAsync(id, model);
+            await teacherService.AddAbsenceNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
+
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
         }
 
@@ -194,6 +202,8 @@ namespace StudentManagementSystem.Controllers
             }
 
             await teacherService.AddRemarkToStudentAsync(model, model.StudentId);
+            await teacherService.AddRemarkNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
+
             model.CourseName = await teacherService.GetCourseNameById(model.CourseId);
 
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
@@ -216,6 +226,8 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
             await teacherService.EditRemarkASync(id, model);
+            await teacherService.AddRemarkNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
+
             model.CourseName = await teacherService.GetCourseNameById(model.CourseId);
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
         }

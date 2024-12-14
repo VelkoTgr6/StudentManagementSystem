@@ -30,5 +30,8 @@ namespace StudentManagementSystem.Core.Contracts
         Task<int> EditNewsAsync(int newsId, TeacherNewsFormViewModel model);
         Task DeleteNewsAsync(int newsId);
         Task<TeacherNewsFormViewModel> GetNewsByIdAsync(int newsId);
+        Task<int> AddGradeNewsToStudentAsync(string teacherId, int studentId, int courseId, string grade);
+        Task<int> AddRemarkNewsToStudentAsync(string teacherId, int studentId, int courseId);
+        Task<int> AddAbsenceNewsToStudentAsync(string teacherId, int studentId, int courseId);
     }
 }

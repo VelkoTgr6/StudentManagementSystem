@@ -36,13 +36,21 @@
        <!-- Grade Type Selection -->  
        <div class="form-group mt-3">  
            <label for="GradeType">Grade Type</label>  
-           <select id="GradeType" name="GradeType" class="form-control" required>  
-               <option value="Assignment" selected="@(Model.SelectedGradeType == "Assignment")">Assignment</option>  
+           <select id="GradeType" name="GradeType" class="form-control" required>
+                <option value="Assignment" selected="@(Model.SelectedGradeType == "Assignment")">Assignment</option>
+                <option value="First Term Assessment" selected="@(Model.SelectedGradeType == "First Term Assessment")">First Term Assessment</option>
+                <option value="Second Term Assessment" selected="@(Model.SelectedGradeType == "Second Term Assessment")">Second Term Assessment</option>
+                <option value="Final" selected="@(Model.SelectedGradeType == "Final")">Final</option>
+                <option value="Project" selected="@(Model.SelectedGradeType == "Project")">Project</option>
+                <option value="Test" selected="@(Model.SelectedGradeType == "Test")">Test</option>
+                <option value="Individual" selected="@(Model.SelectedGradeType == "Individual")">Individual</option>
+
+               @* <option value="Assignment" selected="@(Model.SelectedGradeType == "Assignment")">Assignment</option>  
                <option value="Midterm" selected="@(Model.SelectedGradeType == "Midterm")">Midterm</option>  
                <option value="Final" selected="@(Model.SelectedGradeType == "Final")">Final</option>  
                <option value="Project" selected="@(Model.SelectedGradeType == "Project")">Project</option>  
                <option value="Test" selected="@(Model.SelectedGradeType == "Test")">Test</option>  
-               <option value="Individual" selected="@(Model.SelectedGradeType == "Individual")">Individual</option>  
+               <option value="Individual" selected="@(Model.SelectedGradeType == "Individual")">Individual</option>   *@
            </select>  
        </div>  
 

@@ -106,20 +106,81 @@ namespace StudentManagementSystem.Core.Services
                 .Select(s => $"{s.Class.Teacher.Titles} {s.Class.Teacher.FirstName} {s.Class.Teacher.LastName}")
                 .FirstOrDefaultAsync();
 
+            var studentName = await repository.AllAsReadOnly<Student>()
+                .Where(s => s.Id == studentId && !s.IsDeleted)
+                .Select(s => $"{s.FirstName} {s.MiddleName} {s.LastName}")
+                .FirstOrDefaultAsync();
 
             var news = await repository.AllAsReadOnly<News>()
-                .Where(n => n.PublisherId == teacherId)
+                .Where(n=>!n.IsDeleted)
                 .OrderByDescending(n => n.Date)
-                .Select(n => new StudentNewsViewModel
-                {
-                    Title = n.Title,
-                    Content = n.Content,
-                    CreatedAt = n.Date.ToString("dd/MM/yyyy"),
-                    CreatedBy = teacherName
-                })
                 .ToListAsync();
 
-            return news;
+            var newsList = new List<StudentNewsViewModel>();
+
+            foreach (var n in news)
+            {
+                switch(n.Title)
+                {
+                    case "New Grade!":
+                       if (n.Content.Contains(studentName))
+                        {
+                           var newNews= new StudentNewsViewModel
+                            {
+                                Id = n.Id,
+                                Title = n.Title,
+                                Content = n.Content,
+                                CreatedAt = n.Date.ToString("dd/MM/yyyy"),
+                                CreatedBy = teacherName
+                            };
+                            newsList.Add(newNews);
+                        }
+                        break;
+                    case "New Remark!":
+                        if (n.Content.Contains(studentName))
+                        {
+                            var newNews = new StudentNewsViewModel
+                            { 
+                                Id = n.Id,
+                                Title = n.Title,
+                                Content = n.Content,
+                                CreatedAt = n.Date.ToString("dd/MM/yyyy"),
+                                CreatedBy = teacherName
+                            };
+                            newsList.Add(newNews);
+                        }
+                        break;
+                    case "New Absence!":
+                        if (n.Content.Contains(studentName))
+                        {
+                            var newNews = new StudentNewsViewModel
+                            {
+                                Id = n.Id,
+                                Title = n.Title,
+                                Content = n.Content,
+                                CreatedAt = n.Date.ToString("dd/MM/yyyy"),
+                                CreatedBy = teacherName
+                            };
+                            newsList.Add(newNews);
+                        }
+                        break;
+                    default:
+                        var defNews = new StudentNewsViewModel
+                        {
+                            Id = n.Id,
+                            Title = n.Title,
+                            Content = n.Content,
+                            CreatedAt = n.Date.ToString("dd/MM/yyyy"),
+                            CreatedBy = teacherName
+                        };
+                        newsList.Add(defNews);
+
+                        break;
+
+                }
+            }
+
+            return newsList;
         }
 
         public async Task<IEnumerable<StudentRemarksViewModel>> GetAllRemarksAsync(int studentId)

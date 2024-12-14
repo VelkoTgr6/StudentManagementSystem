@@ -3,6 +3,7 @@ using StudentManagementSystem.Core.Contracts;
 using StudentManagementSystem.Core.Models.Teacher;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
+using System.Diagnostics;
 
 namespace StudentManagementSystem.Core.Services
 {
@@ -64,7 +65,6 @@ namespace StudentManagementSystem.Core.Services
                 GradeType = $"{model.GradeType} ({model.CustomGradeType})",
                 GradeAssignedDate = DateTime.UtcNow
             };
-
 
             student.Grades.Add(customGrade);
 
@@ -550,7 +550,8 @@ namespace StudentManagementSystem.Core.Services
         public async Task<IEnumerable<TeacherNewsServiceModel>> GetAllNewsByTeacherIdAsync(string teacherId)
         {
             var teacherNews =await repository.AllAsReadOnly<News>()
-                .Where(tn => tn.Publisher.Id == teacherId && tn.IsDeleted == false)
+                .Where(tn => tn.Publisher.Id == teacherId && tn.IsDeleted == false && 
+                        tn.Title != "New Grade!" && tn.Title != "New Absence!" && tn.Title != "New Remark!")
                 .Select(tn => new TeacherNewsServiceModel
                 {
                     Id = tn.Id,
@@ -716,6 +717,87 @@ namespace StudentManagementSystem.Core.Services
             }
 
             return student;
+        }
+
+        public async Task<int> AddGradeNewsToStudentAsync(string teacherId, int studentId,int courseId,string grade)
+        {
+            var courseName = await repository.AllAsReadOnly<Course>()
+                .Where(c => c.Id == courseId && !c.IsDeleted)
+                .Select(c => c.Name)
+                .FirstOrDefaultAsync();
+
+            var studentName = await repository.AllAsReadOnly<Student>()
+                .Where(s => s.Id == studentId && !s.IsDeleted)
+                .Select(s => $"{s.FirstName} {s.MiddleName} {s.LastName}")
+                .FirstOrDefaultAsync();
+
+            var news = new News
+            {
+                Title = "New Grade!",
+                Content = $"{studentName} you got new grade ({grade}) for {courseName} course.",
+                Date = DateTime.UtcNow,
+                PublisherId = teacherId
+            };
+
+            await repository.AddAsync(news);
+
+            await repository.SaveChangesAsync();
+
+            return news.Id;
+        }
+
+        public async Task<int> AddRemarkNewsToStudentAsync(string teacherId, int studentId, int courseId)
+        {
+            var courseName = await repository.AllAsReadOnly<Course>()
+                .Where(c => c.Id == courseId && !c.IsDeleted)
+                .Select(c => c.Name)
+                .FirstOrDefaultAsync();
+
+            var studentName = await repository.AllAsReadOnly<Student>()
+                .Where(s => s.Id == studentId && !s.IsDeleted)
+                .Select(s => $"{s.FirstName} {s.MiddleName} {s.LastName}")
+                .FirstOrDefaultAsync();
+
+            var news = new News
+            {
+                Title = "New Remark!",
+                Content = $"{studentName} you got remark for {courseName} course.",
+                Date = DateTime.UtcNow,
+                PublisherId = teacherId
+            };
+
+            await repository.AddAsync(news);
+
+            await repository.SaveChangesAsync();
+
+            return news.Id;
+        }
+
+        public async Task<int> AddAbsenceNewsToStudentAsync(string teacherId, int studentId, int courseId)
+        {
+            var courseName = await repository.AllAsReadOnly<Course>()
+                 .Where(c => c.Id == courseId && !c.IsDeleted)
+                 .Select(c => c.Name)
+                 .FirstOrDefaultAsync();
+
+            var studentName = await repository.AllAsReadOnly<Student>()
+                .Where(s => s.Id == studentId && !s.IsDeleted)
+                .Select(s => $"{s.FirstName} {s.MiddleName} {s.LastName}")
+                .FirstOrDefaultAsync();
+
+            var news = new News
+            {
+                Title = "New Absence!",
+                Content = $"{studentName} you got absence for {courseName} course.",
+                Date = DateTime.UtcNow,
+                PublisherId = teacherId
+            };
+
+            await repository.AddAsync(news);
+
+            await repository.SaveChangesAsync();
+
+            return news.Id;
         }
     }
 }
