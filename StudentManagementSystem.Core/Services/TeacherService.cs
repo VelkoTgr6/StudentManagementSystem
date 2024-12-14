@@ -114,8 +114,10 @@ namespace StudentManagementSystem.Core.Services
             return model;
         }
 
-        public async Task<TeacherStudentDetailsViewModel> GetStudentDetailsAsync(int studentId)
+        public async Task<TeacherStudentDetailsViewModel> GetStudentDetailsAsync(int studentId,string teacherId)
         {
+            var teacher = await GetTeacherEntityIdByUserIdAsync(teacherId);
+
             var student = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Include(s => s.Class)
@@ -129,7 +131,7 @@ namespace StudentManagementSystem.Core.Services
                     ClassName = s.Class.Name,
                     ClassId = s.ClassId,
                     Grades = s.Grades
-                        .Where(g => !g.IsDeleted)
+                        .Where(g =>g.Course.TeacherId==teacher && !g.IsDeleted)
                         .Select(g => new GradeServiceViewModel
                         {
                             Id = g.Id,
@@ -140,7 +142,7 @@ namespace StudentManagementSystem.Core.Services
                         .OrderBy(g => g.CourseName)
                         .ToList(),
                     Absences = s.Аbsences
-                        .Where(a => !a.IsDeleted)
+                        .Where(a =>a.Course.TeacherId==teacher && !a.IsDeleted)
                         .Select(a => new AbsenceServiceViewModel
                         {
                             Id = a.Id,
@@ -150,7 +152,7 @@ namespace StudentManagementSystem.Core.Services
                         .OrderBy(a => a.CourseName)
                         .ToList(),
                     Remarks = s.Remarks
-                        .Where(r => !r.IsDeleted)
+                        .Where(r =>r.Course.TeacherId == teacher && !r.IsDeleted)
                         .Select(r => new RemarkServiceViewModel
                         {
                             Id = r.Id,
@@ -631,6 +633,89 @@ namespace StudentManagementSystem.Core.Services
             }
 
             return news;
+        }
+
+        public async Task<IEnumerable<StudentsViewModel>> GetStudentsByMainClassTeacherAsync(string userId)
+        {
+            var teacher = await GetTeacherEntityIdByUserIdAsync(userId);
+
+            var students = await repository.All<Student>()
+                .Where(s => s.Class.TeacherId == teacher && !s.IsDeleted)
+                .OrderBy(s => s.FirstName)
+                .Select(s => new StudentsViewModel
+                {
+                    Id = s.Id,
+                    Name = $"{s.FirstName} {s.MiddleName} {s.LastName}",
+                    ClassName = s.Class.Name
+                })
+                .ToListAsync();
+
+            if (!students.Any())
+            {
+                throw new ArgumentNullException(nameof(students), "Students not found");
+            }
+
+            return students;
+        }
+
+        public async Task<TeacherStudentDetailsViewModel> GetMainTeacherStudentDetailsAsync(int studentId)
+        {
+            var student = await repository.AllAsReadOnly<Student>()
+                 .Where(s => s.Id == studentId && !s.IsDeleted)
+                 .Include(s => s.Class)
+                 .Include(s => s.Grades.Where(g => !g.Course.IsDeleted && !g.IsDeleted))
+                 .Include(s => s.Аbsences.Where(a => !a.IsDeleted))
+                 .Include(s => s.Remarks.Where(r => !r.IsDeleted))
+                 .Select(s => new TeacherStudentDetailsViewModel
+                 {
+                     StudentId = s.Id,
+                     StudentName = $"{s.FirstName} {s.MiddleName} {s.LastName}",
+                     ClassName = s.Class.Name,
+                     ClassId = s.ClassId,
+                     Grades = s.Grades
+                         .Where(g => !g.IsDeleted)
+                         .Select(g => new GradeServiceViewModel
+                         {
+                             Id = g.Id,
+                             GradeScore = g.GradeScore.ToString("f2"),
+                             CourseName = g.Course.Name,
+                             GradeType = g.GradeType,
+                             TeacherId = g.Course.TeacherId
+                         })
+                         .OrderBy(g => g.CourseName)
+                         .ToList(),
+                     Absences = s.Аbsences
+                         .Where(a =>!a.IsDeleted)
+                         .Select(a => new AbsenceServiceViewModel
+                         {
+                             Id = a.Id,
+                             CourseName = a.Course.Name,
+                             Date = a.Date.ToString("dd/MM/yyyy"),
+                             TeacherId = a.Course.TeacherId
+                         })
+                         .OrderBy(a => a.CourseName)
+                         .ToList(),
+                     Remarks = s.Remarks
+                         .Where(r =>!r.IsDeleted)
+                         .Select(r => new RemarkServiceViewModel
+                         {
+                             Id = r.Id,
+                             CourseName = r.Course.Name,
+                             RemarkText = r.RemarkText,
+                             Date = r.Date.ToString("dd/MM/yyyy"),
+                             TeacherId = r.TeacherId
+                         })
+                         .OrderBy(r => r.CourseName)
+                         .ToList()
+                 })
+                 .FirstOrDefaultAsync();
+
+            if (student == null)
+            {
+                throw new ArgumentNullException(nameof(student), "Student not found");
+            }
+
+            return student;
         }
     }
 }

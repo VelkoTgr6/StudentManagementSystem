@@ -1,0 +1,45 @@
+﻿@model IEnumerable<StudentsViewModel>
+
+@{
+    ViewData["Title"] = "Students by Class Teacher";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (!Model.Any())
+{
+    <p>No students found for this teacher.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Class Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var index = 1;
+            }
+            @for (var i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@Model.ElementAt(i).Name</td>
+                    <td>@Model.ElementAt(i).ClassName</td>
+                    <td>
+                        <!-- Link to the StudentDetails Action -->
+                        <a class="btn btn-primary btn-sm"
+                           href="@Url.Action("StudentMainTeacherDetails", "Teacher", new { studentId = Model.ElementAt(i).Id })">
+                            Select
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

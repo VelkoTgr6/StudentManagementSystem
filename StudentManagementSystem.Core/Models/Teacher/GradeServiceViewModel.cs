@@ -6,5 +6,6 @@
         public string CourseName { get; set; } = string.Empty;
         public string GradeScore { get; set; } = string.Empty;
         public string GradeType { get; set; } = string.Empty;
+        public int? TeacherId { get; set; }
     }
 }

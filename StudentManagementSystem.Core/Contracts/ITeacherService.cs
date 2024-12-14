@@ -5,8 +5,10 @@ namespace StudentManagementSystem.Core.Contracts
     public interface ITeacherService
     {
         Task<IEnumerable<StudentsViewModel>> GetStudentsByTeacherAndClassAsync(int classId, string userId);
+        Task<IEnumerable<StudentsViewModel>> GetStudentsByMainClassTeacherAsync(string userId);
         Task<TeacherClassesViewModel> GetAllClassesByTeacher(string userId);
-        Task<TeacherStudentDetailsViewModel> GetStudentDetailsAsync(int studentId);
+        Task<TeacherStudentDetailsViewModel> GetStudentDetailsAsync(int studentId,string teacherId);
+        Task<TeacherStudentDetailsViewModel> GetMainTeacherStudentDetailsAsync(int studentId);
         Task<int> AddGradeToStudent(GradeFormModel model,int studentId);
         Task<IEnumerable<TeacherCourseServiceModel>> GetTeacherCourses(string teacherId);
         Task<int> AddAbsenceToStudentAsync(AbsenceFormViewModel model, int studentId);
