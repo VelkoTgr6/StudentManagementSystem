@@ -12,5 +12,6 @@
         public string ContactDetails { get; set; } = string.Empty;
         public string BirthDate { get; set; } = string.Empty;
         public string ProfilePicturePath { get; set; } = string.Empty;
+        public string ClassTeacher { get; set; } = string.Empty;
     }
 }

@@ -59,6 +59,11 @@ app.Use(async (context, next) =>
             context.Response.Redirect("/AdminHome/Index");
             return;
         }
+        if (context.User.IsInRole("Teacher"))
+        {
+            context.Response.Redirect("/Teacher/Index");
+            return;
+        }
         if (context.User.IsInRole("Student"))
         {
             context.Response.Redirect("/Student/Index");

@@ -50,20 +50,18 @@
                         }
                     </td>
                     <td>
-                        <div class="grades-container">
-                            @foreach (var grade in course.Grades.Select((value, index) => new { value, index }))
-                            {
-                                @if (grade.value.GradeType == "First Term Assessment")
+                        <div class="grades-container" style="justify-content:center">
+                            <div class="grade-item" title="First Term Assessment" style="justify-content:center">
+                                @foreach (var grade in course.Grades.Select((value, index) => new { value, index }))
                                 {
-                                    <div class="grade-item" title="@grade.value.GradeType">
-                                        <span class="grade-pill">@grade.value.GradeScore</span>
-                                        @if (grade.index < course.Grades.Count() - 1)
-                                        {
-                                            <div class="vertical-line"></div>
-                                        }
-                                    </div>
+                                    @if (grade.value.GradeType == "First Term Assessment")
+                                    {
+                                        <div class="grade-item" title="@grade.value.GradeType">
+                                            <span class="grade-pill">@grade.value.GradeScore</span>
+                                        </div>
+                                    }
                                 }
-                            }
+                            </div>
                         </div>
                     </td>
                     <td>
@@ -74,10 +72,6 @@
                                 {
                                     <div class="grade-item" title="@grade.value.GradeType">
                                         <span class="grade-pill">@grade.value.GradeScore</span>
-                                        @if (grade.index < course.Grades.Count() - 1)
-                                        {
-                                            <div class="vertical-line"></div>
-                                        }
                                     </div>
                                 }
                             }

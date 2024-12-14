@@ -1,4 +1,6 @@
-﻿<div class="student-details container">
+﻿@model StudentProfileViewModel
+
+<div class="student-details container">
     <div class="card" style="max-width: 40rem; margin: auto; background-color:#a8dced">
         <div class="card-body">
             <div class="row mb-2">
@@ -38,6 +40,10 @@
             <div class="row mb-2">
                 <div class="col-md-4 font-weight-bold">Class Name:</div>
                 <div class="col-md-8">@Model.ClassName</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4 font-weight-bold">Class Teacher:</div>
+                <div class="col-md-8">@Model.ClassTeacher</div>
             </div>
             <div class="row mb-2">
                 <div class="col-md-4 font-weight-bold">Email:</div>

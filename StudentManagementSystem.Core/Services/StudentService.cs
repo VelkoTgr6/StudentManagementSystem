@@ -81,7 +81,7 @@ namespace StudentManagementSystem.Core.Services
                         GradeType = g.GradeType,
                     })
                     .ToList(),
-                AverageGrade = grades.Average(g => g.GradeScore).ToString(),
+                AverageGrade = grades.Average(g => g.GradeScore).ToString("f2"),
                 StudentName = student.FirstName + " " + student.LastName
             }).ToList();
 
@@ -151,7 +151,7 @@ namespace StudentManagementSystem.Core.Services
                     ClassName = s.Class.Name,
                     ClassTeacher = s.Class.Teacher.Titles + " " + s.Class.Teacher.FirstName + " " + s.Class.Teacher.LastName,
                     AbsencesCount = s.Аbsences.Count().ToString(),
-                    AverageGrade = s.Grades.Average(g => g.GradeScore).ToString(),
+                    AverageGrade = s.Grades.Average(g => g.GradeScore).ToString("f2"),
                     GradesCount = s.Grades.Count().ToString(),
                     Remarks = s.Remarks.Count().ToString(),
                 })
@@ -198,7 +198,8 @@ namespace StudentManagementSystem.Core.Services
                     ClassName = s.Class.Name,
                     Email = s.Email,
                     ContactDetails = s.ContactDetails,
-                    ProfilePicturePath = s.ProfilePicturePath
+                    ProfilePicturePath = s.ProfilePicturePath,
+                    ClassTeacher = s.Class.Teacher.Titles + " " + s.Class.Teacher.FirstName + " " + s.Class.Teacher.LastName
                 })
                 .FirstOrDefaultAsync();
 

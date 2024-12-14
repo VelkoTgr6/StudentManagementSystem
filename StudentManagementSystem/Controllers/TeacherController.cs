@@ -15,9 +15,12 @@ namespace StudentManagementSystem.Controllers
         {
             teacherService = _teacherService;
         }
-        public IActionResult Index()
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var model = await teacherService.GetStudentsByMainClassTeacherAsync(User.GetId());
+            return View(model);
         }
 
         [HttpGet]
@@ -40,7 +43,17 @@ namespace StudentManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> StudentDetails(int studentId)
         {
-            var student = await teacherService.GetStudentDetailsAsync(studentId);
+            var student = await teacherService.GetStudentDetailsAsync(studentId,User.GetId());
+
+            return View(student);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> StudentMainTeacherDetails(int studentId)
+        {
+            var student = await teacherService.GetMainTeacherStudentDetailsAsync(studentId);
+
+            ViewBag.TeacherId = await teacherService.GetTeacherEntityIdByUserIdAsync(User.GetId());
 
             return View(student);
         }
