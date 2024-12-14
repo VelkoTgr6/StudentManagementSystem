@@ -53,6 +53,55 @@
                                 <a class="nav-link" asp-area="" asp-controller="Student" asp-action="Profile">Profile</a>
                             </li>
                         }
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Create
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminStudent" asp-action="CreateStudent">Student</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminTeacher" asp-action="CreateTeacher">Teacher</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminCourse" asp-action="CreateCourse">Course</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminClass" asp-action="CreateClass">Class</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminSchedule" asp-action="Add">Schedule</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Manage
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminStudent" asp-action="AllStudents">Students</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminTeacher" asp-action="AllTeachers">Teachers</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminCourse" asp-action="AllCourses">Courses</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminClass" asp-action="AllClasses">Classes</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminSchedule" asp-action="Index">Schedules</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Roles
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminUserManage" asp-action="CreateRole">Create</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminUserManage" asp-action="EditRole">Edit</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminUserManage" asp-action="AddUserToRole">Add User</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="AdminUserManage" asp-action="RemoveUserFromRole">Remove User</a>
+                                </div>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav">
                         <partial name="_LoginPartial" />
