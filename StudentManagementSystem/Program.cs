@@ -36,6 +36,7 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+    app.UseStatusCodePagesWithRedirects("/ErrorPage/{0}");
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }

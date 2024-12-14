@@ -65,6 +65,11 @@ namespace StudentManagementSystem.Core.Services
                 .Include(g => g.Course)
                 .ToListAsync();
 
+            if (!grades.Any())
+            {
+                return new List<StudentGradesViewModel>();
+            }
+
             var courseGrades = courses.Select(course => new StudentGradesViewModel
             {
                 CourseName = course.Name,

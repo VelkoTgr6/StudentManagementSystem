@@ -48,6 +48,10 @@ namespace StudentManagementSystem.Controllers
         {
             var studentId = await studentService.GetStudentIdAsync(User.GetId());
             var grades = await studentService.GetAllGradesAsync(studentId);
+            if (!grades.Any())
+            {
+                return View("Error");
+            }
             return View(grades);
         }
 
