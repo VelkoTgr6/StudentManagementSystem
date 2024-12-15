@@ -4,8 +4,9 @@ using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Models.Admin.Course;
 using System.Security.Claims;
 
-namespace StudentManagementSystem.Controllers
+namespace StudentManagementSystem.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     [Authorize(Roles = "Administrator")]
     public class AdminCourseController : Controller
     {

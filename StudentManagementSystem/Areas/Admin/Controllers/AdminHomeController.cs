@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace StudentManagementSystem.Controllers
+namespace StudentManagementSystem.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles ="Administrator")]
     public class AdminHomeController : Controller
     {
-        [Authorize(Roles = "Administrator")]
         public IActionResult Index()
         {
             return View();

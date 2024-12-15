@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagementSystem.Models;
 
-namespace StudentManagementSystem.Controllers
+namespace StudentManagementSystem.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     [Authorize(Roles = "Administrator")]
     public class AdminUserManageController : Controller
     {

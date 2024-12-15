@@ -6,8 +6,9 @@ using StudentManagementSystem.Core.Models.Admin.Student;
 using StudentManagementSystem.Infrastructure.Data.Models;
 using static StudentManagementSystem.Core.Constants.ErrorMessageConstants;
 
-namespace StudentManagementSystem.Controllers
+namespace StudentManagementSystem.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     [Authorize(Roles = "Administrator")]
     public class AdminStudentController : Controller
     {

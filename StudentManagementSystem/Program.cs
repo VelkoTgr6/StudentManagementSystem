@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using StudentManagementSystem.Infrastructure.Services.EmailSender;
 
@@ -24,9 +25,10 @@ builder.Services.AddSingleton<IEmailSender>(serviceProvider =>
     );
 });
 
-builder.Services.AddControllersWithViews();
-
-
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+});
 
 var app = builder.Build();
 
@@ -46,6 +48,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.MapControllerRoute(
+    name: "admin",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -56,7 +66,7 @@ app.Use(async (context, next) =>
     {
         if (context.User.IsInRole("Administrator"))
         {
-            context.Response.Redirect("/AdminHome/Index");
+            context.Response.Redirect("Admin/AdminHome/Index");
             return;
         }
         if (context.User.IsInRole("Teacher"))
@@ -73,7 +83,6 @@ app.Use(async (context, next) =>
     await next();
 });
 
-app.MapDefaultControllerRoute();
 app.MapRazorPages();
 
 app.Run();

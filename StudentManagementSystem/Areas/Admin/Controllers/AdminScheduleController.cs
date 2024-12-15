@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Models.Admin.Schedule;
 
-namespace StudentManagementSystem.Controllers
+namespace StudentManagementSystem.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     [Authorize(Roles = "Administrator")]
     public class AdminScheduleController : Controller
     {
@@ -13,7 +14,7 @@ namespace StudentManagementSystem.Controllers
         private readonly IAdminClassService adminClassService;
 
         public AdminScheduleController(
-            IAdminScheduleService _scheduleService, 
+            IAdminScheduleService _scheduleService,
             IAdminCourseService _adminCourseService,
             IAdminClassService _adminClassService)
         {
@@ -53,7 +54,7 @@ namespace StudentManagementSystem.Controllers
             if (ModelState.IsValid)
             {
                 await scheduleService.AddCourseScheduleAsync(model);
-                return RedirectToAction("Index","AdminHome");
+                return RedirectToAction("Index", "AdminHome");
             }
             return View(model);
         }

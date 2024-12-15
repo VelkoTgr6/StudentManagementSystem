@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    @inherits Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StudentManagementSystem</title>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/favicon.ico" alt="Icon" style="width: 30px; height: 30px; margin-right: 5px; vertical-align:top" />
+                    Web<span style="color: dodgerblue; font-weight: 600;">Score</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mr-auto">
+                        @if (User.IsInRole("Teacher"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Teacher" asp-action="AllClasses">Classes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Teacher" asp-action="AllNews">Add News</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Student"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Student" asp-action="AllNews">News</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Student" asp-action="AllGrades">Grades</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Student" asp-action="AllRemarks">Remarks</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Student" asp-action="AllAbsences">Absences</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Student" asp-action="Schedule">Courses Schedule</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Student" asp-action="Profile">Profile</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Create
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminStudent" asp-action="CreateStudent">Student</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminTeacher" asp-action="CreateTeacher">Teacher</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminCourse" asp-action="CreateCourse">Course</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminClass" asp-action="CreateClass">Class</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminSchedule" asp-action="Add">Schedule</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Manage
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminStudent" asp-action="AllStudents">Students</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminTeacher" asp-action="AllTeachers">Teachers</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminCourse" asp-action="AllCourses">Courses</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminClass" asp-action="AllClasses">Classes</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminSchedule" asp-action="Index">Schedules</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Roles
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminUserManage" asp-action="CreateRole">Create</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminUserManage" asp-action="EditRole">Edit</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminUserManage" asp-action="AddUserToRole">Add User</a>
+                                    <div class="dropdown-divider" style="margin:0 1rem "></div>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminUserManage" asp-action="RemoveUserFromRole">Remove User</a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        <partial name="_LoginPartial" />
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer text-muted">
+        <div class="container">
+            &copy; @DateTime.Today.Year - StudentManagementSystem
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script> *@
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
