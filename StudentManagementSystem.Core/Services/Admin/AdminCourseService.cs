@@ -139,9 +139,16 @@ namespace StudentManagementSystem.Core.Services.Admin
                 .ToListAsync();
         }
 
-        public Task<CourseServiceModel> GetCourseByIdAsync(int id)
+        public async Task<CourseServiceModel> GetCourseByIdAsync(int id)
         {
-            return repository.GetByIdAsync<CourseServiceModel>(id);
+            var course = await repository.GetByIdAsync<CourseServiceModel>(id);
+
+            if (course == null)
+            {
+                throw new ArgumentException($"Course with ID {id} not found.");
+            }
+
+            return course;
         }
 
         public async Task<CourseDetailsViewModel> GetCourseDetailsModelByIdAsync(int id)
