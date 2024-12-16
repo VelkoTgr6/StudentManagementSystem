@@ -136,7 +136,6 @@ namespace StudentManagementSystem.Core.Services.Admin
             }
 
             
-
             await repository.SaveChangesAsync();
         }
         private async Task<string> SaveProfilePictureAsync(IFormFile file)
@@ -255,11 +254,6 @@ namespace StudentManagementSystem.Core.Services.Admin
             }
 
             return teacher;
-        }
-
-        public Task<TeacherServiceModel> GetTeacherByIdAsync(int id)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<TeacherFormViewModel> GetTeacherFormModelByIdAsync(int id)

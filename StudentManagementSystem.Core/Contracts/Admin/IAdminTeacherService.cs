@@ -11,7 +11,6 @@ namespace StudentManagementSystem.Core.Contracts.Admin
         Task DeleteTeacherAsync(int id);
         Task<IEnumerable<TeacherServiceModel>> GetAllTeachersAsync();
         Task<IEnumerable<TeacherServiceModel>> GetFreeTeachersAsync();
-        Task<TeacherServiceModel> GetTeacherByIdAsync(int id);
         Task<TeacherQueryServiceModel> AllAsync(string? course = null,
             string? searchTerm = null,
             TeacherSorting sorting = TeacherSorting.Name,

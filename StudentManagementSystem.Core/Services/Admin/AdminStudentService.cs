@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Student;
@@ -74,8 +73,6 @@ namespace StudentManagementSystem.Core.Services.Admin
                 Students = students
             };
         }
-
-
 
         public async Task<int> CreateStudentAsync(StudentFormViewModel model, IFormFile? profilePictureFile)
         {

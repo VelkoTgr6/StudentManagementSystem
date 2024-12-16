@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts.Admin;
-using StudentManagementSystem.Core.Models.Admin.Class;
-using StudentManagementSystem.Core.Models.Admin.Course;
-using StudentManagementSystem.Core.Models.Admin.Student;
-using StudentManagementSystem.Core.Models.Admin.Teacher;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
 
@@ -17,7 +13,6 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             repository = _repository;
         }
-
 
         public async Task DeleteAsync<T>()
         {
