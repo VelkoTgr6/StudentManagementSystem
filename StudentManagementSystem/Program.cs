@@ -57,9 +57,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.UseAuthentication();
-app.UseAuthorization();
 
-// Custom middleware to redirect based on role
 app.Use(async (context, next) =>
 {
     if (context.User.Identity.IsAuthenticated && context.Request.Path == "/")
@@ -82,6 +80,8 @@ app.Use(async (context, next) =>
     }
     await next();
 });
+
+app.UseAuthorization();
 
 app.MapRazorPages();
 

@@ -374,7 +374,8 @@ namespace StudentManagementSystem.Core.Services
                     StudentId = g.StudentId,
                     CourseId = g.CourseId,
                     GradeScore = g.GradeScore,
-                    CustomGradeType = g.GradeType,
+
+                    GradeType = g.GradeType,
                     SelectedCourseId = g.CourseId,
                     SelectedGrade = g.GradeScore.ToString(),
                     SelectedGradeType = g.GradeType
@@ -549,6 +550,10 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<IEnumerable<TeacherNewsServiceModel>> GetAllNewsByTeacherIdAsync(string teacherId)
         {
+            if (repository == null)
+            {
+                throw new InvalidOperationException("Repository is not initialized.");
+            }
             var teacherNews =await repository.AllAsReadOnly<News>()
                 .Where(tn => tn.Publisher.Id == teacherId && tn.IsDeleted == false && 
                         tn.Title != "New Grade!" && tn.Title != "New Absence!" && tn.Title != "New Remark!")
