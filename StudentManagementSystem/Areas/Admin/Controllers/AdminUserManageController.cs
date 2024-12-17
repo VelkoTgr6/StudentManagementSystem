@@ -88,7 +88,6 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> AddUserToRole(UserRoleFormViewModel model)
         {
@@ -104,6 +103,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                      .Select(r => r.Name)
                      .OrderBy(r => r)
                      .ToList();
+
                 return View(model);
             }
 
@@ -162,7 +162,6 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 return View(model);
             }
 
-            // Find the role using its original name
             var selectedRole = await roleManager.FindByNameAsync(model.SelectedRoleName);
 
             if (selectedRole == null)
@@ -177,7 +176,6 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 return View(model);
             }
 
-            // Update the role's name
             selectedRole.Name = model.NewRoleName;
             selectedRole.NormalizedName = model.NewRoleName.ToUpperInvariant();
 
@@ -246,14 +244,26 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                     var userRoles = await userManager.GetRolesAsync(user);
                     if (!userRoles.Contains(model.RoleName))
                     {
-                        return BadRequest();
+                        ModelState.AddModelError("", "The selected user does not have the selected role.");
+                        var users = model.Users = userManager.Users
+                            .Where(u => !string.IsNullOrEmpty(u.UserName))
+                            .Select(u => u.UserName)
+                            .OrderBy(u => u)
+                            .ToList();
+
+                        var roles = model.Roles = roleManager.Roles
+                             .Select(r => r.Name)
+                             .OrderBy(r => r)
+                             .ToList();
+
+                        return View(model);
                     }
                     await userManager.RemoveFromRoleAsync(user, model.RoleName);
 
                     return RedirectToAction("Index", "AdminHome");
                 }
             }
-            return BadRequest();
+            return NotFound();
         }
 
 

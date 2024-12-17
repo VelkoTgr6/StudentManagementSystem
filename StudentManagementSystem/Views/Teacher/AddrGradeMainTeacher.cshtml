@@ -1,0 +1,65 @@
+﻿@model GradeFormModel
+
+<div class="container mt-5">
+    <h2 class="text-center">Add Grade to Student</h2>
+    <hr />
+
+    <form method="post" asp-action="AddGradeToStudent" class="mt-4">
+        <!-- Hidden field for StudentId -->
+        <input type="hidden" asp-for="StudentId" />
+
+        <!-- Course Selection -->
+        <div class="form-group">
+            <label for="CourseId">Select Course</label>
+            <select id="CourseId" name="CourseId" class="form-control" required>
+                <option value="">-- Select Course --</option>
+                @foreach (var course in Model.Courses)
+                {
+                    <option value="@course.Id">@course.Name</option>
+                }
+            </select>
+        </div>
+
+        <!-- Grade Selection (Dropdown) -->
+        <div class="form-group mt-3">
+            <label for="GradeScore">Select Grade</label>
+            <select id="GradeScore" name="GradeScore" class="form-control" required>
+                <option value="">-- Select Grade --</option>
+                @foreach (var grade in Model.Grades)
+                {
+                    <option value="@grade">@grade</option>
+                }
+            </select>
+        </div>
+
+        @* <!-- Custom Grade Score Input -->
+        <div class="form-group mt-3">
+            <label for="GradeScore">Custom Grade Score (optional)</label>
+            <input type="number" id="GradeScore" name="GradeScore" class="form-control" step="0.01" min="0" max="100" placeholder="Enter custom grade score if needed" />
+        </div> *@
+
+        <!-- Grade Type Selection -->
+        <div class="form-group mt-3">
+            <label for="GradeType">Grade Type</label>
+            <select id="GradeType" name="GradeType" class="form-control" required>
+                <option value="Assignment" selected>Assignment</option>
+                <option value="First Term Assessment">First Term Assessment</option>
+                <option value="Second Term Assessment">Second Term Assessment</option>
+                <option value="Final">Final</option>
+                <option value="Project">Project</option>
+                <option value="Test">Test</option>
+                <option value="Individual">Individual</option>
+            </select>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="GradeType">Custom Grade Type (optional)</label>
+            <input id="GradeType" name="CustomGradeType" class="form-control" step="0.01" min="0" max="100" placeholder="Enter custom grade type if needed" />
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary" asp-action="AddGrade">Add Grade</button>
+            <a href="@Url.Action("StudentMainTeacherDetails", "Teacher", new { studentId = Model.StudentId })" class="btn btn-secondary">Back to Student</a>
+        </div>
+    </form>
+</div>

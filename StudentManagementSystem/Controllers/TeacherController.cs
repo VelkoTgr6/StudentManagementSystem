@@ -84,6 +84,31 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> AddGradeMainTeacher(int studentId)
+        {
+            var model = new GradeFormModel
+            {
+                StudentId = studentId,
+                Courses = await teacherService.GetTeacherCourses(User.GetId()),
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddGradeMainTeacher(GradeFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+                return View(model);
+            }
+            await teacherService.AddGradeToStudent(model, model.StudentId);
+            await teacherService.AddGradeNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId, model.GradeScore.ToString());
+
+            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
+        }
+
+        [HttpGet]
         public async Task<IActionResult> EditGrade(int gradeId)
         {
             var model = await teacherService.GetGradeByIdAsync(gradeId);
@@ -107,6 +132,29 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> EditGradeMainTeacher(int gradeId)
+        {
+            var model = await teacherService.GetGradeByIdAsync(gradeId);
+
+            model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditGradeMainTeacher(int gradeId, GradeFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+                return View(model);
+            }
+            await teacherService.EditGradeAsync(gradeId, model);
+            await teacherService.AddGradeNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId, model.GradeScore.ToString());
+
+            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
+        }
+
+        [HttpGet]
         public async Task<IActionResult> DeleteGrade(int gradeId)
         {
             var grade = await teacherService.GetGradeByIdAsync(gradeId);
@@ -115,6 +163,17 @@ namespace StudentManagementSystem.Controllers
 
             return RedirectToAction(nameof(StudentDetails), new { studentId = grade.StudentId });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteGradeMainTeacher(int gradeId)
+        {
+            var grade = await teacherService.GetGradeByIdAsync(gradeId);
+
+            await teacherService.DeleteGradeAsync(gradeId);
+
+            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = grade.StudentId });
+        }
+
         [HttpGet]
         public async Task<IActionResult> AddAbsence(int studentId)
         {
@@ -137,6 +196,31 @@ namespace StudentManagementSystem.Controllers
             await teacherService.AddAbsenceToStudentAsync(model, model.StudentId);
             await teacherService.AddAbsenceNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddAbsenceMainTeacher(int studentId)
+        {
+            var model = new AbsenceFormViewModel
+            {
+                StudentId = studentId,
+                Courses = await teacherService.GetTeacherCourses(User.GetId()),
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAbsenceMainTeacher(AbsenceFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+                return View(model);
+            }
+            await teacherService.AddAbsenceToStudentAsync(model, model.StudentId);
+            await teacherService.AddAbsenceNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
+            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
 
         }
 
@@ -164,11 +248,42 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> EditAbsenceMainTeacher(int id)
+        {
+            var absence = await teacherService.GetAbsenceByIdAsync(id);
+            absence.Courses = await teacherService.GetTeacherCourses(User.GetId());
+
+            return View(absence);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAbsenceMainTeacher(int id, AbsenceFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+                return View(model);
+            }
+            await teacherService.EditAbsenceAsync(id, model);
+            await teacherService.AddAbsenceNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
+
+            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
+        }
+
+        [HttpGet]
         public async Task<IActionResult> DeleteAbsence(int id)
         {
             var absence = await teacherService.GetAbsenceByIdAsync(id);
             await teacherService.DeleteAbsenceAsync(id);
             return RedirectToAction(nameof(StudentDetails), new { studentId = absence.StudentId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteAbsenceMainTeacher(int id)
+        {
+            var absence = await teacherService.GetAbsenceByIdAsync(id);
+            await teacherService.DeleteAbsenceAsync(id);
+            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = absence.StudentId });
         }
 
         [HttpGet]
@@ -210,6 +325,44 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> AddRemarkMainTeacher(int studentId)
+        {
+            var model = new RemarkFormViewModel
+            {
+                StudentId = studentId,
+                TeacherId = await teacherService.GetTeacherEntityIdByUserIdAsync(User.GetId()),
+                Courses = await teacherService.GetTeacherCourses(User.GetId()),
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRemarkMainTeacher(RemarkFormViewModel model)
+        {
+            if (await teacherService.RemarkOfStudentExists(model.StudentId, model.RemarkText, model.CourseId))
+            {
+                ModelState.AddModelError(nameof(model.RemarkText),
+                    $"This '{model.RemarkText}' remark already exists for the current student int this course ,please try again!");
+                model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+                return View(model);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+                return View(model);
+            }
+
+            await teacherService.AddRemarkToStudentAsync(model, model.StudentId);
+            await teacherService.AddRemarkNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
+
+            model.CourseName = await teacherService.GetCourseNameById(model.CourseId);
+
+            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
+        }
+
+        [HttpGet]
         public async Task<IActionResult> EditRemark(int remarkId)
         {
             var remark = await teacherService.GetRemarkByIdAsync(remarkId);
@@ -233,11 +386,41 @@ namespace StudentManagementSystem.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> EditRemarkMainTeacher(int remarkId)
+        {
+            var remark = await teacherService.GetRemarkByIdAsync(remarkId);
+            remark.Courses = await teacherService.GetTeacherCourses(User.GetId());
+            return View(remark);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRemarkMainTeacher(int id, RemarkFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+                return View(model);
+            }
+            await teacherService.EditRemarkASync(id, model);
+            await teacherService.AddRemarkNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
+
+            model.CourseName = await teacherService.GetCourseNameById(model.CourseId);
+            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
+        }
+        [HttpGet]
         public async Task<IActionResult> DeleteRemark(int remarkId)
         {
             var remark = await teacherService.GetRemarkByIdAsync(remarkId);
             await teacherService.DeleteRemarkAsync(remarkId);
             return RedirectToAction(nameof(StudentDetails), new { studentId = remark.StudentId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteRemarkMainTeacher(int remarkId)
+        {
+            var remark = await teacherService.GetRemarkByIdAsync(remarkId);
+            await teacherService.DeleteRemarkAsync(remarkId);
+            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = remark.StudentId });
         }
 
         [HttpGet]

@@ -186,7 +186,7 @@ namespace StudentManagementSystem.Core.Services
         public async Task<IEnumerable<StudentRemarksViewModel>> GetAllRemarksAsync(int studentId)
         {
             var remarks =await repository.AllAsReadOnly<Remark>()
-                .Where(r => r.StudentId == studentId)
+                .Where(r => r.StudentId == studentId && r.IsDeleted == false)
                 .Select(r => new StudentRemarksViewModel
                 {
                     Content = r.RemarkText,

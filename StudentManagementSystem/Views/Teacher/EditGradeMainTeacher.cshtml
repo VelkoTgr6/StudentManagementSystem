@@ -1,0 +1,67 @@
+﻿@model GradeFormModel
+
+<div class="container mt-5">
+    <h2 class="text-center">Edit Grade of Student</h2>
+    <hr />
+
+    <form method="post" asp-action="AddGradeToStudent" class="mt-4">
+        <!-- Hidden field for StudentId -->
+        <input type="hidden" asp-for="StudentId" />
+        <input type="hidden" asp-for="GradeId" value="@Model.GradeId" />
+
+        <!-- Course Selection -->
+        <div class="form-group">
+            <label for="CourseId">Select Course</label>
+            <select id="CourseId" name="CourseId" class="form-control" required>
+                <option value="">-- Select Course --</option>
+                @foreach (var course in Model.Courses)
+                {
+                    <option value="@course.Id" selected="@(course.Id == Model.SelectedCourseId)">@course.Name</option>
+                }
+            </select>
+        </div>
+
+        <!-- Grade Selection (Dropdown) -->
+        <div class="form-group mt-3">
+            <label for="GradeScore">Select Grade</label>
+            <select id="GradeScore" name="GradeScore" class="form-control" required>
+                <option value="">-- Select Grade --</option>
+                @foreach (var grade in Model.Grades)
+                {
+                    <option value="@grade" selected="@(grade == Model.SelectedGrade)">@grade</option>
+                }
+            </select>
+        </div>
+
+        <!-- Grade Type Selection -->
+        <div class="form-group mt-3">
+            <label for="GradeType">Grade Type</label>
+            <select id="GradeType" name="GradeType" class="form-control" required>
+                <option value="Assignment" selected="@(Model.SelectedGradeType == "Assignment")">Assignment</option>
+                <option value="First Term Assessment" selected="@(Model.SelectedGradeType == "First Term Assessment")">First Term Assessment</option>
+                <option value="Second Term Assessment" selected="@(Model.SelectedGradeType == "Second Term Assessment")">Second Term Assessment</option>
+                <option value="Final" selected="@(Model.SelectedGradeType == "Final")">Final</option>
+                <option value="Project" selected="@(Model.SelectedGradeType == "Project")">Project</option>
+                <option value="Test" selected="@(Model.SelectedGradeType == "Test")">Test</option>
+                <option value="Individual" selected="@(Model.SelectedGradeType == "Individual")">Individual</option>
+
+                @* <option value="Assignment" selected="@(Model.SelectedGradeType == "Assignment")">Assignment</option>  
+               <option value="Midterm" selected="@(Model.SelectedGradeType == "Midterm")">Midterm</option>  
+               <option value="Final" selected="@(Model.SelectedGradeType == "Final")">Final</option>  
+               <option value="Project" selected="@(Model.SelectedGradeType == "Project")">Project</option>  
+               <option value="Test" selected="@(Model.SelectedGradeType == "Test")">Test</option>  
+               <option value="Individual" selected="@(Model.SelectedGradeType == "Individual")">Individual</option>   *@
+            </select>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="GradeType">Custom Grade Type (optional)</label>
+            <input id="GradeType" name="CustomGradeType" class="form-control" step="0.01" min="0" max="100" placeholder="Enter custom grade type if needed" />
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary" asp-action="EditGradeMainTeacher">Edit Grade</button>
+            <a href="@Url.Action("StudentMainTeacherDetails", "Teacher", new { studentId = Model.StudentId })" class="btn btn-secondary">Back to Student</a>
+        </div>
+    </form>
+</div>

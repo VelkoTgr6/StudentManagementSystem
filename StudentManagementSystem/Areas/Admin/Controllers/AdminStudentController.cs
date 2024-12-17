@@ -58,7 +58,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
 
             var students = await adminService.GetAllAsync<Student>();
 
-            if (students.Any(s => s.PersonalId == model.PersonalId || s.IsDeleted == false))
+            if (students.Any(s => s.PersonalId == model.PersonalId && s.IsDeleted == false))
             {
                 ModelState.AddModelError(nameof(model.PersonalId), "Student with this Personal Id already exists!");
             }

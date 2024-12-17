@@ -21,7 +21,7 @@
                             var rowNumber = 1;
                             foreach (var absence in Model)
                             {
-                                <tr>
+                                <tr class="@(absence.ExcusedAbsences > 0 ? "table-success" : "")">
                                     <td>@rowNumber</td>
                                     <td>@absence.CourseName</td>
                                     <td>@absence.Date</td>
