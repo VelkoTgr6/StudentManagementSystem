@@ -4,7 +4,37 @@
     ViewData["Title"] = "Register confirmation";
 }
 
-<h1>@ViewData["Title"]</h1>
-<p> Please check your email to confirm your account.</p>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">@ViewData["Title"]</h1>
+        </div>
+        <div class="card-body">
+            <p class="card-text">Please check your email to confirm your account.</p>
+        </div>
+    </div>
+</div>
 
-
+<style>
+    .container {
+        max-width: 600px;
+    }
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .card-title {
+        margin: 0;
+    }
+    .card-body {
+        padding: 20px;
+    }
+    .card-text {
+        font-size: 1.1em;
+    }
+</style>
