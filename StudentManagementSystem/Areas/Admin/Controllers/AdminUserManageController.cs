@@ -201,8 +201,6 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             return RedirectToAction("Index", "AdminHome");
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> RemoveUserFromRole()
         {
@@ -257,5 +255,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             }
             return BadRequest();
         }
+
+
     }
 }

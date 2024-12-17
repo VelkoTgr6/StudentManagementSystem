@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StudentManagementSystem.Core\StudentManagementSystem.Core.csproj" />
+    <ProjectReference Include="..\StudentManagementSystem\StudentManagementSystem.csproj" />
   </ItemGroup>
 
   <ItemGroup>

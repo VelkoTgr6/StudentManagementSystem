@@ -384,6 +384,11 @@ namespace StudentManagementSystem.Core.Services.Admin
             var remark =await repository.All<Remark>()
                 .FirstOrDefaultAsync(r => r.Id == remarkId && r.IsDeleted == false);
 
+            if (remark == null)
+            {
+                throw new ArgumentException("Remark not found.");
+            }
+
             remark.RemarkText = model.RemarkText;
             remark.CourseId = model.CourseId;
 
