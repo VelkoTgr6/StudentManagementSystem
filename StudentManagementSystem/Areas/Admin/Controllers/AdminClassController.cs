@@ -47,7 +47,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                model.Teachers = await adminTeacherService.GetFreeTeachersAsync();
+                model.Teachers = await adminTeacherService.GetAllTeachersAsync();
                 model.AvailableCourses = await adminCourseService.GetAllCoursesAsync();
                 return View(model);
             }

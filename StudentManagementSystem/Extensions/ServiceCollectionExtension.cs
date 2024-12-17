@@ -48,8 +48,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false;
-                options.Password.RequireDigit = false;
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequireDigit = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             })
