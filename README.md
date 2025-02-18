@@ -16,21 +16,21 @@ Setup Instructions
 5.	Run the application
 
 Usage
-•	Manage student information through the provided interface.
+- Manage student information through the provided interface.
 
 Dependencies
-•	MailKit (4.8.0)
-•	Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore (8.0.10)
-•	Microsoft.AspNetCore.Identity.EntityFrameworkCore (8.0.11)
-•	Microsoft.AspNetCore.Identity.UI (8.0.11)
-•	Microsoft.EntityFrameworkCore.Sqlite (8.0.11)
-•	Microsoft.EntityFrameworkCore.SqlServer (8.0.11)
-•	Microsoft.EntityFrameworkCore.Tools (8.0.11)
-•	Microsoft.VisualStudio.Web.CodeGeneration.Design (8.0.7)
+-	MailKit (4.8.0)
+-	Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore (8.0.10)
+-	Microsoft.AspNetCore.Identity.EntityFrameworkCore (8.0.11)
+-	Microsoft.AspNetCore.Identity.UI (8.0.11)
+-	Microsoft.EntityFrameworkCore.Sqlite (8.0.11)
+-	Microsoft.EntityFrameworkCore.SqlServer (8.0.11)
+-	Microsoft.EntityFrameworkCore.Tools (8.0.11)
+-	Microsoft.VisualStudio.Web.CodeGeneration.Design (8.0.7)
 
 Project Structure
-•	StudentManagementSystem: Main Blazor project.
-•	StudentManagementSystem.Core: Core project containing business logic and models.
+-	StudentManagementSystem: Main Blazor project.
+-	StudentManagementSystem.Core: Core project containing business logic and models.
 
 License
 This project is licensed under the MIT License. See the LICENSE file for more details.
