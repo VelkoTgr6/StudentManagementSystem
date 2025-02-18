@@ -361,3 +361,13 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore all files in the profiles directory
+wwwroot/images/profiles/*
+
+# Exclude the default.jpg file
+!wwwroot/images/profiles/default.jpg
+
+# Ignore all bin and obj directories
+**/bin/
+**/obj/
