@@ -84,7 +84,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                 TeacherId = model.TeacherId,
                 PublisherId = publisherId
             };
-
+            
             await repository.AddAsync(entity);
             await repository.SaveChangesAsync();
 
