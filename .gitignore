@@ -363,7 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Ignore all files in the profiles directory
- StudentManagementSystem/wwwroot/images/profiles/*
+StudentManagementSystem/wwwroot/images/profiles/*
 
 # Exclude the default.jpg file
 !StudentManagementSystem/wwwroot/images/profiles/default.jpg
