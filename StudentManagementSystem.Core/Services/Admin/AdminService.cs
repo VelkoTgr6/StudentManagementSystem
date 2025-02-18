@@ -56,5 +56,17 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             return await repository.EmailExistAsync(email);
         }
+
+        public async Task<bool> GetEmailInUseAsync(string email)
+        {
+            var id = await repository.GetIdByEmailAsync(email);
+
+            if (id == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

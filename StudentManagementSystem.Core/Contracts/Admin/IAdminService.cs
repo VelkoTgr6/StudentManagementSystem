@@ -12,6 +12,7 @@
         Task<IEnumerable<T>> GetAllAsync<T>() where T : class;
         Task<T> GetByIdAsync<T>() where T : class;
         Task<bool> EmailExistAsync(string email);
+        Task<bool> GetEmailInUseAsync(string email);
         //Task<IEnumerable<ClassServiceModel>> AllClassesAsync();
         //Task<IEnumerable<TeacherServiceModel>> AllTeachersAsync();
         //Task<bool> CourseExistAsync(int id);

@@ -93,16 +93,17 @@ namespace StudentManagementSystem.Core.Services.Admin
                 Titles = model.Titles,
                 Email = model.Email,
                 UserId = userId,
-                ProfilePicturePath = model.ProfilePicturePath,
+                ProfilePicturePath = profilePicturePath,
                 SchoolId = 1
             };
 
-            foreach (var course in model.SelectedCourseIds)
+            foreach (var courseId in model.SelectedCourseIds)
             {
-                entity.Courses.Add(new Course
+                var course = await repository.GetByIdAsync<Course>(courseId);
+                if (course != null)
                 {
-                    Id = course
-                });
+                    entity.Courses.Add(course);
+                }
             }
 
             await repository.AddAsync(entity);
@@ -170,7 +171,6 @@ namespace StudentManagementSystem.Core.Services.Admin
                 teacher.ContactDetails = model.ContactDetails;
                 teacher.Titles = model.Titles;
                 teacher.Email = model.Email;
-                teacher.ProfilePicturePath = model.ProfilePicturePath;
 
                 var selectedCourseIds = model.SelectedCourseIds.ToHashSet();
                 var existingCourseIds = teacher.Courses.Select(c => c.Id).ToHashSet();

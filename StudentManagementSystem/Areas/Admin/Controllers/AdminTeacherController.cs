@@ -43,6 +43,11 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 ModelState.AddModelError(nameof(model.Email), InvalidEmailMessage);
             }
 
+            else if (await adminService.GetEmailInUseAsync(model.Email) == true)
+            {
+                ModelState.AddModelError(nameof(model.Email), EmailAlreadyInUseMessage);
+            }
+
             if (!ModelState.IsValid)
             {
                 model.AvailableCourses = await adminCourseService.GetAllCoursesAsync();

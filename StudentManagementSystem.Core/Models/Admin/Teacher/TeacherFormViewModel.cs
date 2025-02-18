@@ -58,7 +58,7 @@ namespace StudentManagementSystem.Core.Models.Admin.Teacher
 
         [Comment("Teacher Profile Picture Path")]
         [Display(Name = "Profile Picture")]
-        public string ProfilePicturePath { get; set; } = "images/profiles/default.png";
+        public string ProfilePicturePath { get; set; } = "images/profiles/default.jpg";
 
         /// <summary>
         /// Teacher course id
