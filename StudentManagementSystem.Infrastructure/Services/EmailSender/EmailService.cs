@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace StudentManagementSystem.Infrastructure.Services.EmailSender
 {
-    public class EmailService
+    public class EmailService : IEmailSender
     {
         private readonly string _smtpServer;
         private readonly int _smtpPort;
@@ -34,13 +34,14 @@ namespace StudentManagementSystem.Infrastructure.Services.EmailSender
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(_smtpServer, _smtpPort, true);
+                await client.ConnectAsync(_smtpServer, _smtpPort, MailKit.Security.SecureSocketOptions.SslOnConnect);
                 await client.AuthenticateAsync(_smtpUser, _smtpPass);
 
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
         }
+
         public static string GenerateTemporaryPassword(int length = 8)
         {
             const string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

@@ -17,7 +17,7 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddSingleton<IEmailSender>(serviceProvider =>
 {
     var emailSettings = serviceProvider.GetRequiredService<IOptions<EmailSettings>>().Value;
-    return new EmailSender(
+    return new EmailService(
         emailSettings.SmtpServer,
         emailSettings.SmtpPort,
         emailSettings.SmtpUser,
