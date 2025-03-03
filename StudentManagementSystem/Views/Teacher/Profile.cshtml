@@ -1,0 +1,43 @@
+﻿@model TeacherProfileViewModel
+
+<div class="student-details container">
+    <div class="card" style="max-width: 40rem; margin: auto; background-color:#a8dced">
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <img src="@(Url.Content(Model.ProfilePicturePath.StartsWith("/") ? Model.ProfilePicturePath : "/" + Model.ProfilePicturePath))"
+                         alt="@Model.FirstName @Model.LastName"
+                         class="img-thumbnail"
+                         style="width: 130px; height: 180px; object-fit: cover;" />
+                </div>
+                <div class="col-md-9">
+                    <div class="row mb-2">
+                        <div class="col-md-4 font-weight-bold">Name:</div>
+                        <div class="col-md-8">@Model.Titles @Model.FirstName</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4 font-weight-bold">Last Name:</div>
+                        <div class="col-md-8">@Model.LastName</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4 font-weight-bold">School Name:</div>
+                <div class="col-md-8">@Model.SchoolName</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4 font-weight-bold">Main Class Name:</div>
+                <div class="col-md-8">@Model.ClassName</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4 font-weight-bold">Email:</div>
+                <div class="col-md-8">@Model.Email</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4 font-weight-bold">Contact Details:</div>
+                <div class="col-md-8">@Model.ContactDetails</div>
+            </div>
+        </div>
+    </div>
+</div>
+

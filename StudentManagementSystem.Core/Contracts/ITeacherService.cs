@@ -28,6 +28,8 @@ namespace StudentManagementSystem.Core.Contracts
         Task<IEnumerable<TeacherNewsServiceModel>> GetAllNewsByTeacherIdAsync(string teacherId);
         Task<int> AddNewsToTeacherAsync(TeacherNewsFormViewModel model);
         Task<int> EditNewsAsync(int newsId, TeacherNewsFormViewModel model);
+        Task<int> GetTeacherByIdAsync(string userId);
+        Task<TeacherProfileViewModel> GetTeacherProfileAsync(int teacherId);
         Task DeleteNewsAsync(int newsId);
         Task<TeacherNewsFormViewModel> GetNewsByIdAsync(int newsId);
         Task<int> AddGradeNewsToStudentAsync(string teacherId, int studentId, int courseId, string grade);

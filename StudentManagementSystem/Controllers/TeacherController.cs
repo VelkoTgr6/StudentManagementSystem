@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StudentManagementSystem.Core.Contracts;
 using StudentManagementSystem.Core.Models.Teacher;
+using StudentManagementSystem.Core.Services;
 using System.Security.Claims;
 
 namespace StudentManagementSystem.Controllers
@@ -429,6 +430,14 @@ namespace StudentManagementSystem.Controllers
             var model = await teacherService.GetAllNewsByTeacherIdAsync(User.GetId());
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Profile(int id)
+        {
+            var teacherId = await teacherService.GetTeacherByIdAsync(User.GetId());
+            var student = await teacherService.GetTeacherProfileAsync(teacherId);
+            return View(student);
         }
 
         [HttpGet]

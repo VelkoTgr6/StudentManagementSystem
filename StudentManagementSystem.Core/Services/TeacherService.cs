@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Core.Contracts;
+using StudentManagementSystem.Core.Models.Student;
 using StudentManagementSystem.Core.Models.Teacher;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
@@ -803,6 +804,40 @@ namespace StudentManagementSystem.Core.Services
             await repository.SaveChangesAsync();
 
             return news.Id;
+        }
+
+        public async Task<int> GetTeacherByIdAsync(string userId)
+        {
+            return await repository.AllAsReadOnly<Teacher>()
+                .Where(t => t.UserId == userId && !t.IsDeleted)
+                .Select(t => t.Id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<TeacherProfileViewModel> GetTeacherProfileAsync(int teacherId)
+        {
+            var teacher = await repository.AllAsReadOnly<Teacher>()
+                .Where(s => s.Id == teacherId && !s.IsDeleted)
+                .Select(s => new TeacherProfileViewModel
+                {
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    Email = s.Email,
+                    ProfilePicturePath = s.ProfilePicturePath,
+                    ContactDetails = s.ContactDetails,
+                    SchoolName = s.School.Name,
+                    ClassName = s.Classes.Where(c=>c.TeacherId == teacherId).Select(c => c.Name).FirstOrDefault() ?? "No Class",
+                    Titles = s.Titles
+                })
+                .FirstOrDefaultAsync();
+
+
+            if (teacher == null)
+            {
+                throw new ArgumentException();
+            }
+
+            return teacher;
         }
     }
 }
