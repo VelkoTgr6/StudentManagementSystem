@@ -2,9 +2,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudentManagementSystem.Infrastructure;
 
 #nullable disable
@@ -12,8 +12,8 @@ using StudentManagementSystem.Infrastructure;
 namespace StudentManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(StudentManagementDbContext))]
-    [Migration("20241213010821_AddedAllUsersToRoles")]
-    partial class AddedAllUsersToRoles
+    [Migration("20250715212717_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,54 +21,73 @@ namespace StudentManagementSystem.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.11")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<string>", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            Name = "Teacher",
+                            NormalizedName = "TEACHER"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            Name = "Student",
+                            NormalizedName = "STUDENT"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -80,59 +99,59 @@ namespace StudentManagementSystem.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
+                        .HasColumnType("character varying(21)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
@@ -141,8 +160,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
 
@@ -155,15 +173,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "aa7d01c6-9499-4ed4-a38e-3d0afa2b707c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e897b050-b02e-48c4-bd73-0646af9bef77",
+                            ConcurrencyStamp = "07f66757-e878-4dbd-bfe3-3c2671179a32",
                             Email = "ivan414@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "IVAN414@GMAIL.COM",
                             NormalizedUserName = "IVAN414@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEC6NI5TtPwjz7/eSRJgrbnYpddAmT/2a518iqVeBsi5fsvs9Xin/YtxS1kRSdl1LUw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBRL0j2dtknYsTBJSG+WiknXM8RyXa+6wx5P+yv48Yfcg8JUYkZ0azdC5PAjWRLpZA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "002094be-1705-4dc7-89b3-ff5bbd67ce3f",
+                            SecurityStamp = "a5c12553-92da-40ac-9809-ef25ea2d71b1",
                             TwoFactorEnabled = false,
                             UserName = "ivan414@gmail.com"
                         },
@@ -171,15 +189,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "f2875100-0cf1-4b1d-ba91-1dfa38690f84",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "851b7a93-4ab1-45c1-9a11-cad9da913a6b",
+                            ConcurrencyStamp = "cd74b7ed-de99-4c39-8b99-1b5a55f1c5aa",
                             Email = "maria270@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MARIA270@GMAIL.COM",
                             NormalizedUserName = "MARIA270@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEASu0NXJXF+FQ7tlQY51TCWoA5F49ETOInLU9RfF2hqjEHxzG1Vk/P098CIuEHxnqA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEXMcycgafVqXDzo3xwPDmFdSkIop3YXPK1A9Yr3i9R8KhBcrkj4alDPVygFrvaRyA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a2090034-4969-40e6-820e-c4b52b1a1ad9",
+                            SecurityStamp = "5378ef2c-c5c8-4f80-962f-ddbb35c8e5af",
                             TwoFactorEnabled = false,
                             UserName = "maria270@gmail.com"
                         },
@@ -187,15 +205,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "b65e6163-1454-4164-9869-2ff822f9da98",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7b84028d-e88b-44da-aa01-f553392d0740",
+                            ConcurrencyStamp = "d05a8443-fedd-4118-802e-3374f0a6d239",
                             Email = "elena309@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ELENA309@GMAIL.COM",
                             NormalizedUserName = "ELENA309@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHVnxKn69HHEz+A1uBBiP4GaK4+vZYuOcmTVSIeTuC1y4HUr9fUQp8Scjw2m9rRAsA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBiPxYeobAfYoa4LtwS9FjmrDAD19FytPVGi5TP54qlhT6aJok1W//9aYIMUX39wnA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d9fd8a82-0d98-48d2-b56d-bdfc6c862a92",
+                            SecurityStamp = "46e0ec46-9082-4ebd-8fe0-3505ad943e42",
                             TwoFactorEnabled = false,
                             UserName = "elena309@gmail.com"
                         },
@@ -203,15 +221,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "c5d7d80f-08d5-41ec-892c-30833098c047",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f041ee9f-0533-4888-be76-b234357b8361",
+                            ConcurrencyStamp = "f547726e-ba34-4e8f-9e02-1c8c84e7ac29",
                             Email = "viktor725@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "VIKTOR725@GMAIL.COM",
                             NormalizedUserName = "VIKTOR725@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMTtk7l8tjz577MXc3XKRasBBEfGm5gJ+0swFSA7YA75NYjEAEuLJfokC5aP/RsWEA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ3XTe8NgUNjU987Jk5pNqd3xRhKHxyq2DcdlFn5ywHDv9MVFrVtaVFwTrQ6Z8G5tg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ae11acf6-6796-483a-affc-539687a17ab1",
+                            SecurityStamp = "af25370c-5343-4bbd-a803-17551441a13b",
                             TwoFactorEnabled = false,
                             UserName = "viktor725@gmail.com"
                         },
@@ -219,15 +237,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "217e3e65-026d-4a8e-97af-a4fb30dfab30",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f5509d13-214a-4fb4-8f2e-3b6fc444fcd8",
+                            ConcurrencyStamp = "42ef50bc-fc6a-4e57-bdd5-dd18008ae1aa",
                             Email = "pesho278@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PESHO278@GMAIL.COM",
                             NormalizedUserName = "PESHO278@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDoSU51I96tTVVJ/mGUw0M02uYNCjUQ3DeN46PvRLSBu3RYeTOtuVcKZK4kMoBV3tg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJqwEFCsg7Y8LgHl+fCYFYJzVHnorEWbwKTukvdmSXMTfGlCxtypStT2kdqLL3YsCQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "40dac1c7-2039-4b09-b3e0-9ba45c8d71b6",
+                            SecurityStamp = "f053cf2c-7161-4047-8d40-8b1572187465",
                             TwoFactorEnabled = false,
                             UserName = "pesho278@gmail.com"
                         },
@@ -235,15 +253,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "8f7bca8f-059f-4750-8bfe-7def13ef37e8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d2feec87-721c-475a-9f0b-3d0cbc2c8f92",
+                            ConcurrencyStamp = "5a7ae014-fff9-42b0-bf5c-317810046f30",
                             Email = "nina.borisova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "NINA.BORISOVA@GMAIL.COM",
                             NormalizedUserName = "NINA.BORISOVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELapdXp4jY2/kNF92Cw6v35MCT73VaUpK9mj569JZXqyYv6D8O6ikACPAjK/A+PeYA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBf6JAgMnwXi1Ix0IV+nmVgWjCmrIcMgkiZBrqw/l1L006CE6ZSxEG9Anwvbnzpkjg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f33dca15-d29d-4931-8e1e-e35a048440d3",
+                            SecurityStamp = "3431f198-ea13-4903-b16b-5c7b46318480",
                             TwoFactorEnabled = false,
                             UserName = "nina.borisova@gmail.com"
                         },
@@ -251,15 +269,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "1a688e82-f609-47af-a359-d8bcdd62b5e9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9f88b4b6-7735-4528-b401-ad094d4c9380",
+                            ConcurrencyStamp = "d5e7bddb-ecba-4a0c-93f0-7e98b5ecee6d",
                             Email = "ivo.pavlov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "IVO.PAVLOV@GMAIL.COM",
                             NormalizedUserName = "IVO.PAVLOV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEICjM5lQuO1kg1r5rLaHKdUPlwRw8OfDfqTCluMVQywSVSa+kd/4kBaEJk7Iw2IiYg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELLjXCH8oBnMjCtnn1pjQwGRkEEtHiJc0Lq6Nx5n5ueg1ybtBFQ00w10BqK4z+/13Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ae03b779-09a9-4ee7-a34b-3c13c59a7e7f",
+                            SecurityStamp = "ee3ff679-72e0-4128-9d86-fb7fc9467a28",
                             TwoFactorEnabled = false,
                             UserName = "ivo.pavlov@gmail.com"
                         },
@@ -267,15 +285,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "01185cf1-525d-478a-ad05-b9629573333a",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f808fb82-3223-457a-9bf6-d741b032a0ba",
+                            ConcurrencyStamp = "85319641-ee07-4466-a443-f47879dd9013",
                             Email = "katerina.gancheva@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KATERINA.GANCHEVA@GMAIL.COM",
                             NormalizedUserName = "KATERINA.GANCHEVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPfN7cVrwiBk2XAUB0HKDutS6UlHxNThzhpTWCuEXO3XSLEbb9R4G5+njJJV1hkpcQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJmZg2fRXXxhEy1JpyFQnGT1NzWsGQ2M1HHPBcUT/WVMERjQRpKVVnF4AOAekTW8gg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5261b14e-86f4-40fc-93ad-f1ca0ce59940",
+                            SecurityStamp = "d3d9e29f-e644-4029-8013-b3fc253b269e",
                             TwoFactorEnabled = false,
                             UserName = "katerina.gancheva@gmail.com"
                         },
@@ -283,15 +301,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "cab3584a-da3f-4858-a65a-3f7bde9e553f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "befe0c14-db70-4119-8c3f-49580df44ac1",
+                            ConcurrencyStamp = "7b4f7aa1-54b1-4662-b186-a67b097b5e7f",
                             Email = "dimitar.mihailov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "DIMITAR.MIHAILOV@GMAIL.COM",
                             NormalizedUserName = "DIMITAR.MIHAILOV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ0JJtVE6rERA/IgEjRdmFzfvVltjGPeYkHQIHoAMJiLXtk2NrcM4AX15Ozd4OrOcQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMMIJvMpDkn+lWRYVl8p5FQ5jQMZcCph+YibGhYbko8XGyv3okpubWZW57+Qtl0U7w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "869e5787-10dd-470d-820c-278df141a188",
+                            SecurityStamp = "87cdd141-f969-4ae8-b78d-c369359df055",
                             TwoFactorEnabled = false,
                             UserName = "dimitar.mihailov@gmail.com"
                         },
@@ -299,15 +317,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "325092c7-9882-40d9-854b-32326c2bd43b",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "04c389df-8310-4c01-8105-5cc22e049889",
+                            ConcurrencyStamp = "ef7847f5-e55b-4c6a-9705-6d195265a3de",
                             Email = "stefan.yordanov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "STEFAN.YORDANOV@GMAIL.COM",
                             NormalizedUserName = "STEFAN.YORDANOV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMQhj1UUhIfYR2eQ2MRPj3JcSHLGyXF3QXSz5i+hRhdSQNY8aJDPHwA4ryyJ2hMzMA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHIUd/5A0aCan5/zv5+ttbvpSvRyBaIXrecMNPjS9MzL7fUDOLfnQMLH7C3VwXhN5w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "051fb213-b976-4d97-b75a-cdbce8c72861",
+                            SecurityStamp = "1d6f87d4-06cc-4c1b-b0b0-84cf3c20a895",
                             TwoFactorEnabled = false,
                             UserName = "stefan.yordanov@gmail.com"
                         },
@@ -315,15 +333,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "2e830c43-2ce2-462d-9880-be8aa1e71696",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2ed77a03-4da4-48d6-9e77-9a526a6e8001",
+                            ConcurrencyStamp = "b42d4e53-9357-4570-a210-89e9466c041e",
                             Email = "diana.ruseva@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "DIANA.RUSEVA@GMAIL.COM",
                             NormalizedUserName = "DIANA.RUSEVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH8TKoA75cEjD0Mcex3DDNWa99KrbzsosCcbOPC6+lcH/yo2RjTpC9QJbgr5CvlSew==",
+                            PasswordHash = "AQAAAAIAAYagAAAAED3cGvDyv4g30Ca8XjNX4VlZG5xGiIZqDifvtqgmw1vHDA4BeZxTHOCO+Atw4fVqig==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "34aa9694-07b7-4feb-a294-a42280bbdbc5",
+                            SecurityStamp = "a6144ebc-c0e1-41d7-86a3-36ec8131fa53",
                             TwoFactorEnabled = false,
                             UserName = "diana.ruseva@gmail.com"
                         },
@@ -331,15 +349,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "c64af0f1-3716-4e30-b5f7-b0c5153e2b01",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "23836fad-34ff-4420-8a2f-a00b68b607e8",
+                            ConcurrencyStamp = "02915589-bf33-499d-a346-de6d1c07b4d6",
                             Email = "petar.georgiev@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PETAR.GEORGIEV@GMAIL.COM",
                             NormalizedUserName = "PETAR.GEORGIEV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECJKkEdfJGght0eLaAnDRs5hng0W2gga/HZcFFoXfgyLdtRcePotsotvrlp18YFXcw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEt06IheEGnyAyIONnSe6nXce4/m6jUM15aKVy+gpYaGoaUN8AnWyDs9H4HRnWoZPw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "95c844c0-bc02-4e49-a165-fdb7113332fb",
+                            SecurityStamp = "39ea0f2d-76d9-49a8-b689-d508437fc59b",
                             TwoFactorEnabled = false,
                             UserName = "petar.georgiev@gmail.com"
                         },
@@ -347,15 +365,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "ab696b9f-f5d2-45a0-8495-96e2d2a01acc",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4a364784-1948-45c2-892e-1060d3f2164b",
+                            ConcurrencyStamp = "feeb8449-2e7f-4896-b5f3-cbb13184c123",
                             Email = "tanya.ivanova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "TANYA.IVANOVA@GMAIL.COM",
                             NormalizedUserName = "TANYA.IVANOVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDWlwD8MU5d0KsSuxQ9TZCRkoelFIiQsj1OrlHuFQF5AkpFKB3wZcCh28xH02WnIrA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPY/eEFotiL98insqbW2xY6IQfeW0jAB3gBWnA5qdFm+oL2zInEFr6XoUM4VJAO+/g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2e05681c-385c-41ca-a31b-2772aa912272",
+                            SecurityStamp = "49764c7c-7ecf-4f04-9947-2afbb23287d2",
                             TwoFactorEnabled = false,
                             UserName = "tanya.ivanova@gmail.com"
                         },
@@ -363,15 +381,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "8eb86d7d-02f7-477d-8e6f-539d7c155930",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "84c7d331-8f0b-4235-9b9d-af813ae093e9",
+                            ConcurrencyStamp = "55dd143f-207a-4861-989b-ba5acc066068",
                             Email = "aleksandar.pavlov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ALEKSANDAR.PAVLOV@GMAIL.COM",
                             NormalizedUserName = "ALEKSANDAR.PAVLOV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIrPuGccfADT8fEo6Xb2Pqqf4VkzblLQXRN6K+Ebmgebh9/oB9gnSQsKDIaQbn4Bbg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMzWJzKgeu6tnHF4kLoPamaPjcwyz3fvsMPHeUdKu35VcZcEST+EFbcfpzgZAN/i7Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ada8121f-a12d-426e-9633-cf4a0e34b77c",
+                            SecurityStamp = "841f483d-81aa-4a78-a1b8-d3660bde332a",
                             TwoFactorEnabled = false,
                             UserName = "aleksandar.pavlov@gmail.com"
                         },
@@ -379,15 +397,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "3034c6c5-e1f5-4655-9baf-079f41605550",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a48c4078-5a9e-435a-af6d-b49586063b03",
+                            ConcurrencyStamp = "b299beb2-ffbf-41e8-ac03-18f33a1e84af",
                             Email = "julia.dimitrova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "JULIA.DIMITROVA@GMAIL.COM",
                             NormalizedUserName = "JULIA.DIMITROVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKfioD3gtb4S858LKagBxTZS9ARx+8SbnypZXIyqRgEa3G+c6YcJ0Wn93xFUPSuLfw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAehzqwKXQP10IqgKl4FZwbTD1iaG0K/UvHHKW7aHBHmYgX6obFXwObX4enpPPZlKg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "154c550d-443c-4a9f-aa11-4045a5279371",
+                            SecurityStamp = "a25472ce-d234-4ac4-837c-77f7534edd88",
                             TwoFactorEnabled = false,
                             UserName = "julia.dimitrova@gmail.com"
                         },
@@ -395,15 +413,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "e8264a26-ea76-44c4-a013-12759599a081",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6261ca3e-286c-4323-8ae2-78be1d63db30",
+                            ConcurrencyStamp = "f5dc2a18-f91b-4b56-80a1-c7295211fdf1",
                             Email = "kiril.kolarov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KIRIL.KOLAROV@GMAIL.COM",
                             NormalizedUserName = "KIRIL.KOLAROV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKii4byiBjmE8zuF8hrPti2dJJB8f/uxwLI7Mkwh+ng/QdhMfEGpHgpi1ryDB3vA6Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDGCxtJGIOjdNzOkLDYdBD09VA0GgB68enDRiSRIxAqqFjEqagvLcmIn5UG1hYtCQA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "161a23f9-7c00-4098-ab99-bf84cc42b919",
+                            SecurityStamp = "2e9b12c5-c347-4e6d-9af1-f29fe2166eaf",
                             TwoFactorEnabled = false,
                             UserName = "kiril.kolarov@gmail.com"
                         },
@@ -411,15 +429,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "e0e396e6-53f2-40e9-8013-664b8a8dbd46",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "621e960f-770c-4a16-b231-a77314c8af35",
+                            ConcurrencyStamp = "fe59f3a7-50f0-40ca-bfde-2d44527a63a2",
                             Email = "daniela.todorova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "DANIELA.TODOROVA@GMAIL.COM",
                             NormalizedUserName = "DANIELA.TODOROVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIIyrS+wHUC0ZEIKP/xfGlODSO5zlfmvU3Ynnx9wpj7LW3RLWE0+FwOa0J0CUudFjQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOrfL65PSNY4iyTI1Ig7LGQFDPYv9A+/NZrk9lj9IOh9QWOl1r1mieTPLMcImJBYrg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9cc7f927-24f7-4d69-919a-85d735bf6ba0",
+                            SecurityStamp = "8b4994c5-699e-4ea2-9f1c-4474ba901fef",
                             TwoFactorEnabled = false,
                             UserName = "daniela.todorova@gmail.com"
                         },
@@ -427,15 +445,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "b8d81f44-f8a9-43e6-83fe-e62ab38f30cf",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "184a48c8-0597-4ded-8bcd-0cf304aafd46",
+                            ConcurrencyStamp = "8359a559-bf9d-4bcb-8cb5-4ad90c4ae0a1",
                             Email = "lazar.grigorov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "LAZAR.GRIGOROV@GMAIL.COM",
                             NormalizedUserName = "LAZAR.GRIGOROV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENWkd5ofzuQNoTj7hZ5ZUZ2/DGMfZE45kZgTfsjFZvOjdHsN+AYR3mRYfw3SN9jo7A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBHcvLG6lQdnVg4gRX1j1lNxLZX4qW37TWlIPucMwHyuSxOqzpm3Maj3HBP7PpQ7Ng==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "71d42bce-9733-4e98-acaa-f02f82993746",
+                            SecurityStamp = "656f41ec-caa1-4887-93a5-f8cde0aca79c",
                             TwoFactorEnabled = false,
                             UserName = "lazar.grigorov@gmail.com"
                         },
@@ -443,15 +461,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "0c4b8988-22f2-4ed5-8486-85e757a97e41",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "192768b5-3b7c-4bd6-8952-34af0356a8f7",
+                            ConcurrencyStamp = "4477223d-5baa-4d87-a7a8-7ac1aa754874",
                             Email = "ivanka.nikolova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "IVANKA.NIKOLOVA@GMAIL.COM",
                             NormalizedUserName = "IVANKA.NIKOLOVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH5TxruX/X1pwTUSMKZAXDOlpfW1Vp8PeJeto7fT8sU3zjMfROXGxI987rhj4M7eIA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKJlVflIDRac/6+alZkXaxlLhu8bTyynwkHLt2RwUrPsRDqA4lzoKpnGOzE97KA7zQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a208b3fc-1313-422d-839c-de6257ac6980",
+                            SecurityStamp = "f21fa442-df70-4056-85aa-240b2445bbb1",
                             TwoFactorEnabled = false,
                             UserName = "ivanka.nikolova@gmail.com"
                         },
@@ -459,15 +477,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "3a76fd9d-a1bb-48f2-9626-1122ecf2d797",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3e7cc7da-23c3-4214-9783-f7330d657cb0",
+                            ConcurrencyStamp = "2b43b93b-af5c-40e5-a884-6a402dc4005f",
                             Email = "gergana.georgieva@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "GERGANA.GEORGIEVA@GMAIL.COM",
                             NormalizedUserName = "GERGANA.GEORGIEVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDQk00RnB9yn1MSF1UmO/KudZ2iVy5PNrXALXsvkluhLq4TMLoKJ9Mt3aaqSVUmdlQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHVw6FSZBhi0XE+VTBpsTqHRBIxVMIrvzSYtv/p7LK36qyIttl1kubxZeHcVvXdvAg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "dc2efb8d-7899-4e5c-87a4-4b567dc2c17e",
+                            SecurityStamp = "57a3512a-c165-4ced-8de5-e49beb3242ad",
                             TwoFactorEnabled = false,
                             UserName = "gergana.georgieva@gmail.com"
                         },
@@ -475,13 +493,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "51065229-23b9-402f-a54d-00bb813d6b1c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b577bda6-63d6-446c-b3bf-c358a103dc45",
+                            ConcurrencyStamp = "8823ae15-7f60-491e-a9fc-baa4e0988a8b",
                             Email = "stan12@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "STAN12@GMAIL.COM",
                             NormalizedUserName = "STAN12@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKG4QOi5BU1x6hMiARWwbgu2k5XSWAMCivtBLorqAeBqPg+qzzymhQHgc5WB1JczVw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJCL8tHiUkAnLnMXL5aq42kgfF7saXx8oP8MQtuj6JAR0E3IUQ9KN5hm6BWj9eH07g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -491,13 +509,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "6b6433a7-3564-4cba-ace2-4a44afca4177",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5153d92e-0c1e-4dbf-9cfb-094026e24dc3",
+                            ConcurrencyStamp = "35ffa77a-a023-4736-ad7b-e5e04de92d88",
                             Email = "ivdra23@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "IVDRA23@GMAIL.COM",
                             NormalizedUserName = "IVDRA23@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPGJher4Bgaa2BmP1xToQlKeWb4EUEPLBvmRLlHiFYw7+i4UEOalKloMTCNcS6jQnQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELrYwvwvsH6myRn1fLN6tJLqdP/MVU5rGMxCxsrJMYZdeJzRVFDKthulhaXyW1pWjg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -507,13 +525,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "331d08d0-d407-4d61-af6e-1bb134ae7998",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d097740d-2718-4a63-b451-2912cd75b001",
+                            ConcurrencyStamp = "b1755bf8-cb69-4ad3-bdac-bed72a9dd321",
                             Email = "mariya.petrova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MARIYA.PETROVA@GMAIL.COM",
                             NormalizedUserName = "MARIYA.PETROVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEC+2YbwBuYgKsil95Ez7eKu8GoAs7tloPKb4TWKlbRK2oAMdjqaW2zNX+XnuaWHUWQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECEeO4R2rP1zpgxYDVGcjOfia+krH/w4txSP+Pk3D/2QJG6bJIWeJ43f59UvPYPwXQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -523,13 +541,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "030ddabd-7dcb-46ca-bab6-3feeae3492a8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "66d56365-8f79-4c42-a467-edab44ffe6db",
+                            ConcurrencyStamp = "4daae4ee-6816-4fa2-94ae-7d907eb5bf34",
                             Email = "nikolai.vasilev@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "NIKOLAI.VASILEV@GMAIL.COM",
                             NormalizedUserName = "NIKOLAI.VASILEV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKdMIdtfAcpGYG5pJHjUfPKmZKYHi5sO5yXcYtmjF9SFk3YDq5xR5a09cgMgUnRVZA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELN8NEttCprQch9iRbHsHJwXpG8IR2sSPilAFuMd/zV9TJX2YKhT16C/HPtPA1wWng==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -539,13 +557,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "291cc1a8-8f2c-4f48-a919-ff4d9692a859",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bb7fe41c-3bad-4556-ba71-d72407f266b5",
+                            ConcurrencyStamp = "15f53ab1-4f1a-4148-b70f-5a69851f1b94",
                             Email = "radoslav.ivanov@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "RADOSLAV.IVANOV@GMAIL.COM",
                             NormalizedUserName = "RADOSLAV.IVANOV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEKasCUNZ02pENYjDf/0BPFyRNDoVwA1wS9+I4H8XqjcnhBpyVwXk6ntBmwjkJWv5g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEF9m4fYKdmStKq5HBnBnj8aV0sNaItqXCB2EytEazARxA3mTgNxiirO2bHdv161baQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -555,13 +573,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "32739a60-8250-4178-a19c-96d90444ebd3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "16890940-1932-46d7-b2d6-1633a6dece90",
+                            ConcurrencyStamp = "3f801017-0170-4e6c-a939-f6a70d77452f",
                             Email = "katerina.dimitrova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KATERINA.DIMITROVA@GMAIL.COM",
                             NormalizedUserName = "KATERINA.DIMITROVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOru8/hrUlFnB7vGSJt2g4xBzkI9G9UdBAxDYBMcldGkJCKC1SDOpZdJzWPANW1xSQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGzTHDFvAZ+LXs3Zc4nxgML5L0/jaKPYGFDGXhN9W1BNMtRwWWcM/d++gi5XluFNzA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -571,13 +589,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "3647bea5-9ce4-4d8b-bf0f-7a5fbd3ea729",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f2c99f66-56ae-4125-9dfb-77eeb1d6738d",
+                            ConcurrencyStamp = "6d2aa81f-83b6-4575-8500-bfc410c7fee8",
                             Email = "gosho.georgiev@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "GOSHO.GEORGIEV@GMAIL.COM",
                             NormalizedUserName = "GOSHO.GEORGIEV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJFRA3GbpT0C7d+WvJMvK6+h9R9zpgAly4fgNi7eOKRdROCbeCXslLXJ9BB2Hn1Flg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMv9SKxYKz4jWWvfXhc7CuF4v1j9nAdq6eIRO0H6CrfwbgQW/wy45HWWWWq37RV0Vg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -587,13 +605,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "2ad410b1-c108-4b9c-99f1-0f68dbd6ad45",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b7b306d9-02df-4ba0-b448-0edeff00619d",
+                            ConcurrencyStamp = "03f2ee00-4cfb-4140-89ad-d32279f1dad3",
                             Email = "lidia.todorova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "LIDIA.TODOROVA@GMAIL.COM",
                             NormalizedUserName = "LIDIA.TODOROVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAYzd9YUWgaZC+MP8Fb4NAV0TUbLy0TRydeUMkIXbMVWdfa1W0pYHX6fKht0QF2aTQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECEJpLwlPVZuRRo0vHRgOLYULsm2yERsafmMY2zWVchMRKsNj3dceVXm0gVhcmPZ2Q==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -603,13 +621,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "04b6c6b1-5f9b-4c7a-9f42-86193c03d327",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a96bf2c4-c7ff-401e-a085-fe27177ad45f",
+                            ConcurrencyStamp = "c79c0cca-f8b1-40a2-960c-2fd4936288ea",
                             Email = "stefan.kovachev@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "STEFAN.KOVACHEV@GMAIL.COM",
                             NormalizedUserName = "STEFAN.KOVACHEV@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJv3whSvgBFNKvNDI6R7rcRvlwasFbfLmv+qNnGcwfcPfe4mq3Jlb4SQazgDwAv4Tg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAllgmc22HKiFIh0yeHwUC/uxlB+y50xokDTivT0qgwAFcqfy1btzlo0vO1bsKkb9w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -619,13 +637,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "9ab8c775-88c0-4dc3-b11d-178c3ca2129",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "49eb4218-4166-47a8-806a-feb23e7f4de5",
+                            ConcurrencyStamp = "95caa177-35db-45d4-93b9-92cb6ce7fe78",
                             Email = "valentina.nikolova@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "VALENTINA.NIKOLOVA@GMAIL.COM",
                             NormalizedUserName = "VALENTINA.NIKOLOVA@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFwALQVfVtDhephlVvP+BGhaiokFN/arFzQRJrag3MRpequEvAaz/1Z7rGoGecbVQQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE6jN2raZbh3uFu2Vp4jeG00ZygilZhUaamANtLIVBWaIaYaz5fmlOr5L0hhl3rGxg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -635,13 +653,13 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c5048e86-d246-4b30-a551-cb0e164f6873",
+                            ConcurrencyStamp = "91b32625-48ac-49df-b131-161214dee6b1",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJUdATb88aCB25zydjpGTh3hdFK7tHWcXSdVL0xy5o+xuReccaofs0iDIbPoEPEyqA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJM/HNK4i5GvD2p/M+SHBti0t8ebaYzx8Ao7dX2DWshftgnr5yoB0jivV6Vmt24gcg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -653,19 +671,19 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -677,17 +695,17 @@ namespace StudentManagementSystem.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -699,10 +717,10 @@ namespace StudentManagementSystem.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -769,11 +787,16 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             UserId = "aa7d01c6-9499-4ed4-a38e-3d0afa2b707c",
-                            RoleId = "3"
+                            RoleId = "2"
                         },
                         new
                         {
                             UserId = "f2875100-0cf1-4b1d-ba91-1dfa38690f84",
+                            RoleId = "3"
+                        },
+                        new
+                        {
+                            UserId = "51065229-23b9-402f-a54d-00bb813d6b1c",
                             RoleId = "3"
                         },
                         new
@@ -871,16 +894,16 @@ namespace StudentManagementSystem.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -891,25 +914,25 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Absence Identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CourseId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Course Identifier");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasComment("Date of Absence");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasComment("Shows if absence is Deleted");
 
                     b.Property<int>("StudentId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Student Identifier");
 
                     b.HasKey("Id");
@@ -925,7 +948,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 1,
                             CourseId = 1,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 1
                         },
@@ -933,7 +956,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 2,
                             CourseId = 1,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 1
                         },
@@ -941,7 +964,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 3,
                             CourseId = 1,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 2
                         },
@@ -949,7 +972,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 4,
                             CourseId = 2,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 2
                         },
@@ -957,7 +980,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 5,
                             CourseId = 2,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 3
                         },
@@ -965,7 +988,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 6,
                             CourseId = 2,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 3
                         },
@@ -973,7 +996,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 7,
                             CourseId = 3,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 4
                         },
@@ -981,7 +1004,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 8,
                             CourseId = 3,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 4
                         },
@@ -989,7 +1012,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 10,
                             CourseId = 4,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 5
                         },
@@ -997,7 +1020,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 11,
                             CourseId = 4,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 5
                         },
@@ -1005,7 +1028,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 12,
                             CourseId = 4,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 6
                         },
@@ -1013,7 +1036,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 13,
                             CourseId = 5,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 6
                         },
@@ -1021,7 +1044,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 14,
                             CourseId = 5,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 7
                         },
@@ -1029,7 +1052,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 15,
                             CourseId = 5,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 7
                         },
@@ -1037,7 +1060,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 16,
                             CourseId = 1,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 8
                         },
@@ -1045,7 +1068,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 17,
                             CourseId = 1,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 8
                         },
@@ -1053,7 +1076,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 18,
                             CourseId = 1,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 9
                         },
@@ -1061,7 +1084,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 20,
                             CourseId = 2,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 9
                         },
@@ -1069,7 +1092,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 21,
                             CourseId = 2,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 10
                         },
@@ -1077,7 +1100,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 22,
                             CourseId = 2,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 10
                         },
@@ -1085,7 +1108,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 23,
                             CourseId = 3,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 11
                         },
@@ -1093,7 +1116,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 24,
                             CourseId = 3,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 11
                         },
@@ -1101,7 +1124,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 25,
                             CourseId = 4,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 12
                         },
@@ -1109,7 +1132,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 26,
                             CourseId = 4,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 12
                         },
@@ -1117,7 +1140,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 27,
                             CourseId = 4,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 13
                         },
@@ -1125,7 +1148,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 28,
                             CourseId = 5,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 13
                         },
@@ -1133,7 +1156,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 29,
                             CourseId = 5,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 14
                         },
@@ -1141,7 +1164,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 30,
                             CourseId = 5,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 14
                         },
@@ -1149,7 +1172,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 31,
                             CourseId = 4,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 15
                         },
@@ -1157,7 +1180,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 32,
                             CourseId = 4,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 15
                         },
@@ -1165,7 +1188,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 33,
                             CourseId = 4,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 16
                         },
@@ -1173,7 +1196,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 34,
                             CourseId = 5,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 16
                         },
@@ -1181,7 +1204,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 35,
                             CourseId = 5,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 17
                         },
@@ -1189,7 +1212,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 36,
                             CourseId = 5,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 17
                         },
@@ -1197,7 +1220,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 37,
                             CourseId = 1,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 18
                         },
@@ -1205,7 +1228,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 38,
                             CourseId = 1,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 18
                         },
@@ -1213,7 +1236,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 39,
                             CourseId = 1,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 19
                         },
@@ -1221,7 +1244,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 40,
                             CourseId = 2,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 19
                         },
@@ -1229,7 +1252,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 41,
                             CourseId = 2,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 20
                         },
@@ -1237,7 +1260,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 42,
                             CourseId = 2,
-                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             StudentId = 20
                         });
@@ -1247,22 +1270,22 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasComment("Shows if class is Deleted");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasComment("The name of the class");
 
                     b.Property<int>("TeacherId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("The ID of the teacher for this class");
 
                     b.HasKey("Id");
@@ -1347,15 +1370,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
             modelBuilder.Entity("StudentManagementSystem.Infrastructure.Data.Models.ClassCourse", b =>
                 {
                     b.Property<int>("ClassId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Class Identifier");
 
                     b.Property<int>("CourseId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Course Identifier");
 
                     b.Property<DateTime>("EnrollmentDate")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasComment("Date of enrollment");
 
                     b.HasKey("ClassId", "CourseId");
@@ -1971,46 +1994,46 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Course Identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasComment("Course Description");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasComment("Course End Date");
 
                     b.Property<int>("EnrollmentCap")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Maximum number of students allowed");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasComment("Shows if course is Deleted");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasComment("Course Name");
 
                     b.Property<string>("PublisherId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("text")
                         .HasComment("Publisher Identification");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasComment("Course Start Date");
 
                     b.Property<int?>("TeacherId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Teacher of the Course");
 
                     b.HasKey("Id");
@@ -2148,29 +2171,29 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Course Schedule Identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClassId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Class Identifier");
 
                     b.Property<int>("CourseId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Course Identifier");
 
                     b.Property<int>("Day")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Day of the week");
 
                     b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time")
+                        .HasColumnType("interval")
                         .HasComment("End Time");
 
                     b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time")
+                        .HasColumnType("interval")
                         .HasComment("Start Time");
 
                     b.HasKey("Id");
@@ -2186,7 +2209,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 1,
                             ClassId = 1,
-                            CourseId = 2,
+                            CourseId = 1,
                             Day = 1,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
@@ -2204,7 +2227,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 3,
                             ClassId = 1,
-                            CourseId = 8,
+                            CourseId = 3,
                             Day = 1,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
@@ -2213,7 +2236,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 4,
                             ClassId = 1,
-                            CourseId = 8,
+                            CourseId = 4,
                             Day = 1,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
@@ -2222,7 +2245,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 5,
                             ClassId = 1,
-                            CourseId = 7,
+                            CourseId = 5,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
@@ -2231,7 +2254,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 6,
                             ClassId = 1,
-                            CourseId = 3,
+                            CourseId = 6,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
@@ -2240,7 +2263,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 7,
                             ClassId = 1,
-                            CourseId = 10,
+                            CourseId = 7,
                             Day = 2,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
@@ -2249,7 +2272,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 8,
                             ClassId = 1,
-                            CourseId = 5,
+                            CourseId = 8,
                             Day = 2,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
@@ -2258,7 +2281,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 9,
                             ClassId = 1,
-                            CourseId = 8,
+                            CourseId = 9,
                             Day = 2,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
@@ -2267,7 +2290,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 10,
                             ClassId = 1,
-                            CourseId = 2,
+                            CourseId = 10,
                             Day = 2,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
@@ -2276,8 +2299,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 11,
                             ClassId = 1,
-                            CourseId = 7,
-                            Day = 2,
+                            CourseId = 1,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
@@ -2285,393 +2308,366 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 12,
                             ClassId = 1,
-                            CourseId = 10,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            CourseId = 2,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 13,
                             ClassId = 1,
-                            CourseId = 7,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 3,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 14,
                             ClassId = 1,
-                            CourseId = 2,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            CourseId = 4,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 15,
                             ClassId = 1,
-                            CourseId = 9,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            CourseId = 5,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 16,
                             ClassId = 1,
-                            CourseId = 5,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            CourseId = 6,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 17,
                             ClassId = 1,
-                            CourseId = 1,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 7,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 18,
                             ClassId = 1,
-                            CourseId = 1,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            CourseId = 8,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 19,
                             ClassId = 1,
-                            CourseId = 5,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 9,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 20,
                             ClassId = 1,
-                            CourseId = 5,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            CourseId = 10,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 21,
                             ClassId = 1,
-                            CourseId = 7,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            CourseId = 1,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 22,
                             ClassId = 1,
-                            CourseId = 6,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            CourseId = 2,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 23,
                             ClassId = 1,
-                            CourseId = 2,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 3,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 24,
                             ClassId = 1,
-                            CourseId = 10,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            CourseId = 4,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 25,
                             ClassId = 1,
-                            CourseId = 7,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 5,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 26,
                             ClassId = 1,
-                            CourseId = 2,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            CourseId = 6,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 27,
                             ClassId = 1,
-                            CourseId = 9,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            CourseId = 7,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 28,
                             ClassId = 1,
-                            CourseId = 5,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            CourseId = 8,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 29,
                             ClassId = 1,
-                            CourseId = 1,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 9,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 30,
-                            ClassId = 2,
-                            CourseId = 6,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            ClassId = 1,
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 31,
                             ClassId = 2,
-                            CourseId = 10,
+                            CourseId = 1,
                             Day = 1,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 32,
                             ClassId = 2,
-                            CourseId = 1,
+                            CourseId = 2,
                             Day = 1,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 33,
                             ClassId = 2,
-                            CourseId = 8,
+                            CourseId = 3,
                             Day = 1,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 34,
                             ClassId = 2,
-                            CourseId = 7,
+                            CourseId = 4,
                             Day = 1,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 35,
                             ClassId = 2,
-                            CourseId = 1,
+                            CourseId = 5,
                             Day = 1,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 36,
                             ClassId = 2,
-                            CourseId = 5,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            CourseId = 6,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 37,
                             ClassId = 2,
-                            CourseId = 1,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 7,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 38,
                             ClassId = 2,
-                            CourseId = 1,
+                            CourseId = 8,
                             Day = 2,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 39,
                             ClassId = 2,
-                            CourseId = 5,
+                            CourseId = 9,
                             Day = 2,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 40,
                             ClassId = 2,
-                            CourseId = 2,
+                            CourseId = 10,
                             Day = 2,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 41,
                             ClassId = 2,
-                            CourseId = 9,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            CourseId = 1,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 42,
                             ClassId = 2,
-                            CourseId = 3,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 2,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 43,
                             ClassId = 2,
-                            CourseId = 9,
+                            CourseId = 3,
                             Day = 3,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 44,
                             ClassId = 2,
-                            CourseId = 2,
+                            CourseId = 4,
                             Day = 3,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 45,
                             ClassId = 2,
-                            CourseId = 8,
+                            CourseId = 5,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 46,
+                            ClassId = 2,
+                            CourseId = 6,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 47,
+                            ClassId = 2,
+                            CourseId = 7,
                             Day = 3,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 46,
+                            Id = 48,
                             ClassId = 2,
-                            CourseId = 3,
+                            CourseId = 8,
                             Day = 3,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 47,
-                            ClassId = 2,
-                            CourseId = 4,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 48,
-                            ClassId = 2,
-                            CourseId = 9,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
                             Id = 49,
                             ClassId = 2,
-                            CourseId = 4,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            CourseId = 9,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 50,
                             ClassId = 2,
-                            CourseId = 7,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 51,
-                            ClassId = 2,
-                            CourseId = 5,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 52,
-                            ClassId = 3,
                             CourseId = 10,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 53,
-                            ClassId = 3,
-                            CourseId = 3,
                             Day = 1,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 54,
-                            ClassId = 3,
-                            CourseId = 9,
+                            Id = 51,
+                            ClassId = 2,
+                            CourseId = 1,
                             Day = 1,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 55,
-                            ClassId = 3,
+                            Id = 52,
+                            ClassId = 2,
                             CourseId = 2,
                             Day = 1,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
@@ -2679,557 +2675,305 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 56,
-                            ClassId = 3,
-                            CourseId = 4,
+                            Id = 53,
+                            ClassId = 2,
+                            CourseId = 3,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 57,
-                            ClassId = 3,
-                            CourseId = 1,
+                            Id = 54,
+                            ClassId = 2,
+                            CourseId = 4,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 58,
-                            ClassId = 3,
-                            CourseId = 6,
+                            Id = 55,
+                            ClassId = 2,
+                            CourseId = 5,
                             Day = 2,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 59,
-                            ClassId = 3,
-                            CourseId = 10,
+                            Id = 56,
+                            ClassId = 2,
+                            CourseId = 6,
                             Day = 2,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 60,
-                            ClassId = 3,
-                            CourseId = 1,
+                            Id = 57,
+                            ClassId = 2,
+                            CourseId = 7,
                             Day = 2,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 61,
-                            ClassId = 3,
-                            CourseId = 3,
+                            Id = 58,
+                            ClassId = 2,
+                            CourseId = 8,
                             Day = 2,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 62,
-                            ClassId = 3,
-                            CourseId = 4,
+                            Id = 59,
+                            ClassId = 2,
+                            CourseId = 9,
                             Day = 2,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 63,
+                            Id = 60,
                             ClassId = 3,
                             CourseId = 10,
-                            Day = 3,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 61,
+                            ClassId = 3,
+                            CourseId = 1,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 62,
+                            ClassId = 3,
+                            CourseId = 2,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 63,
+                            ClassId = 3,
+                            CourseId = 3,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 64,
                             ClassId = 3,
                             CourseId = 4,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 65,
                             ClassId = 3,
-                            CourseId = 6,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            CourseId = 5,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 66,
                             ClassId = 3,
                             CourseId = 6,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 67,
                             ClassId = 3,
                             CourseId = 7,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 68,
                             ClassId = 3,
-                            CourseId = 5,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 8,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 69,
                             ClassId = 3,
                             CourseId = 9,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 70,
                             ClassId = 3,
-                            CourseId = 1,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 71,
                             ClassId = 3,
                             CourseId = 1,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 72,
                             ClassId = 3,
-                            CourseId = 6,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 73,
-                            ClassId = 3,
-                            CourseId = 9,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 74,
-                            ClassId = 3,
-                            CourseId = 5,
-                            Day = 4,
+                            CourseId = 2,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 75,
+                            Id = 73,
                             ClassId = 3,
                             CourseId = 3,
-                            Day = 5,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 76,
+                            Id = 74,
                             ClassId = 3,
-                            CourseId = 1,
-                            Day = 5,
+                            CourseId = 4,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 77,
+                            Id = 75,
                             ClassId = 3,
-                            CourseId = 4,
-                            Day = 5,
+                            CourseId = 5,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 78,
+                            Id = 76,
                             ClassId = 3,
-                            CourseId = 9,
-                            Day = 5,
+                            CourseId = 6,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 79,
+                            Id = 77,
                             ClassId = 3,
                             CourseId = 7,
-                            Day = 5,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 78,
+                            ClassId = 3,
+                            CourseId = 8,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 79,
+                            ClassId = 3,
+                            CourseId = 9,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 80,
                             ClassId = 3,
                             CourseId = 10,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 81,
-                            ClassId = 4,
-                            CourseId = 2,
+                            ClassId = 3,
+                            CourseId = 1,
                             Day = 1,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 82,
-                            ClassId = 4,
-                            CourseId = 9,
+                            ClassId = 3,
+                            CourseId = 2,
                             Day = 1,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 83,
-                            ClassId = 4,
-                            CourseId = 4,
+                            ClassId = 3,
+                            CourseId = 3,
                             Day = 1,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 84,
-                            ClassId = 4,
-                            CourseId = 5,
+                            ClassId = 3,
+                            CourseId = 4,
                             Day = 1,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 85,
-                            ClassId = 4,
-                            CourseId = 10,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            ClassId = 3,
+                            CourseId = 5,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 86,
-                            ClassId = 4,
-                            CourseId = 9,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 87,
-                            ClassId = 4,
-                            CourseId = 1,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 88,
-                            ClassId = 4,
-                            CourseId = 1,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 89,
-                            ClassId = 4,
-                            CourseId = 7,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 90,
-                            ClassId = 4,
-                            CourseId = 4,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 91,
-                            ClassId = 4,
-                            CourseId = 8,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 92,
-                            ClassId = 4,
-                            CourseId = 4,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 93,
-                            ClassId = 4,
-                            CourseId = 4,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 94,
-                            ClassId = 4,
-                            CourseId = 9,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 95,
-                            ClassId = 4,
-                            CourseId = 8,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 96,
-                            ClassId = 4,
-                            CourseId = 8,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 97,
-                            ClassId = 4,
-                            CourseId = 8,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 98,
-                            ClassId = 4,
-                            CourseId = 3,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 99,
-                            ClassId = 4,
-                            CourseId = 5,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 100,
-                            ClassId = 4,
-                            CourseId = 1,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 101,
-                            ClassId = 4,
-                            CourseId = 10,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 102,
-                            ClassId = 4,
-                            CourseId = 1,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 103,
-                            ClassId = 4,
-                            CourseId = 3,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 104,
-                            ClassId = 4,
-                            CourseId = 1,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 105,
-                            ClassId = 4,
-                            CourseId = 8,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 106,
-                            ClassId = 4,
-                            CourseId = 2,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 107,
-                            ClassId = 4,
-                            CourseId = 7,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 108,
-                            ClassId = 4,
-                            CourseId = 8,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 109,
-                            ClassId = 4,
-                            CourseId = 8,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 110,
-                            ClassId = 5,
-                            CourseId = 1,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 111,
-                            ClassId = 5,
-                            CourseId = 8,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 112,
-                            ClassId = 5,
-                            CourseId = 2,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 113,
-                            ClassId = 5,
-                            CourseId = 10,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 114,
-                            ClassId = 5,
-                            CourseId = 10,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 115,
-                            ClassId = 5,
-                            CourseId = 8,
-                            Day = 1,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 116,
-                            ClassId = 5,
-                            CourseId = 3,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 117,
-                            ClassId = 5,
+                            ClassId = 3,
                             CourseId = 6,
                             Day = 2,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
@@ -3237,37 +2981,316 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 118,
-                            ClassId = 5,
-                            CourseId = 3,
+                            Id = 87,
+                            ClassId = 3,
+                            CourseId = 7,
                             Day = 2,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 119,
-                            ClassId = 5,
-                            CourseId = 3,
+                            Id = 88,
+                            ClassId = 3,
+                            CourseId = 8,
                             Day = 2,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 120,
-                            ClassId = 5,
-                            CourseId = 8,
+                            Id = 89,
+                            ClassId = 3,
+                            CourseId = 9,
                             Day = 2,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 121,
-                            ClassId = 5,
+                            Id = 90,
+                            ClassId = 3,
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 91,
+                            ClassId = 4,
+                            CourseId = 1,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 92,
+                            ClassId = 4,
+                            CourseId = 2,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 93,
+                            ClassId = 4,
+                            CourseId = 3,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 94,
+                            ClassId = 4,
+                            CourseId = 4,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 95,
+                            ClassId = 4,
+                            CourseId = 5,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 96,
+                            ClassId = 4,
+                            CourseId = 6,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 97,
+                            ClassId = 4,
+                            CourseId = 7,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 98,
+                            ClassId = 4,
+                            CourseId = 8,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 99,
+                            ClassId = 4,
+                            CourseId = 9,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 100,
+                            ClassId = 4,
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 101,
+                            ClassId = 4,
+                            CourseId = 1,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 102,
+                            ClassId = 4,
+                            CourseId = 2,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 103,
+                            ClassId = 4,
+                            CourseId = 3,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 104,
+                            ClassId = 4,
                             CourseId = 4,
                             Day = 3,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 105,
+                            ClassId = 4,
+                            CourseId = 5,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 106,
+                            ClassId = 4,
+                            CourseId = 6,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 107,
+                            ClassId = 4,
+                            CourseId = 7,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 108,
+                            ClassId = 4,
+                            CourseId = 8,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 109,
+                            ClassId = 4,
+                            CourseId = 9,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 110,
+                            ClassId = 4,
+                            CourseId = 10,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 111,
+                            ClassId = 4,
+                            CourseId = 1,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 112,
+                            ClassId = 4,
+                            CourseId = 2,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 113,
+                            ClassId = 4,
+                            CourseId = 3,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 114,
+                            ClassId = 4,
+                            CourseId = 4,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 115,
+                            ClassId = 4,
+                            CourseId = 5,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 116,
+                            ClassId = 4,
+                            CourseId = 6,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 117,
+                            ClassId = 4,
+                            CourseId = 7,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 118,
+                            ClassId = 4,
+                            CourseId = 8,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 119,
+                            ClassId = 4,
+                            CourseId = 9,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 120,
+                            ClassId = 4,
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 121,
+                            ClassId = 4,
+                            CourseId = 1,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
@@ -3275,8 +3298,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 122,
                             ClassId = 5,
-                            CourseId = 7,
-                            Day = 3,
+                            CourseId = 2,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
@@ -3284,8 +3307,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 123,
                             ClassId = 5,
-                            CourseId = 9,
-                            Day = 3,
+                            CourseId = 3,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
@@ -3293,8 +3316,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 124,
                             ClassId = 5,
-                            CourseId = 7,
-                            Day = 3,
+                            CourseId = 4,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
@@ -3302,8 +3325,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 125,
                             ClassId = 5,
-                            CourseId = 3,
-                            Day = 3,
+                            CourseId = 5,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
@@ -3311,8 +3334,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 126,
                             ClassId = 5,
-                            CourseId = 2,
-                            Day = 3,
+                            CourseId = 6,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
@@ -3320,8 +3343,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 127,
                             ClassId = 5,
-                            CourseId = 6,
-                            Day = 4,
+                            CourseId = 7,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
@@ -3329,8 +3352,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 128,
                             ClassId = 5,
-                            CourseId = 6,
-                            Day = 4,
+                            CourseId = 8,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
@@ -3338,8 +3361,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 129,
                             ClassId = 5,
-                            CourseId = 10,
-                            Day = 4,
+                            CourseId = 9,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
@@ -3347,8 +3370,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 130,
                             ClassId = 5,
-                            CourseId = 5,
-                            Day = 4,
+                            CourseId = 10,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
@@ -3357,7 +3380,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 131,
                             ClassId = 5,
                             CourseId = 1,
-                            Day = 4,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
@@ -3365,8 +3388,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 132,
                             ClassId = 5,
-                            CourseId = 4,
-                            Day = 4,
+                            CourseId = 2,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
@@ -3374,8 +3397,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 133,
                             ClassId = 5,
-                            CourseId = 6,
-                            Day = 5,
+                            CourseId = 3,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
@@ -3383,8 +3406,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 134,
                             ClassId = 5,
-                            CourseId = 8,
-                            Day = 5,
+                            CourseId = 4,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
@@ -3392,8 +3415,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 135,
                             ClassId = 5,
-                            CourseId = 8,
-                            Day = 5,
+                            CourseId = 5,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
@@ -3401,8 +3424,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 136,
                             ClassId = 5,
-                            CourseId = 4,
-                            Day = 5,
+                            CourseId = 6,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
@@ -3410,8 +3433,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 137,
                             ClassId = 5,
-                            CourseId = 9,
-                            Day = 5,
+                            CourseId = 7,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
@@ -3420,15 +3443,24 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 138,
                             ClassId = 5,
                             CourseId = 8,
-                            Day = 5,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
+                            Id = 139,
+                            ClassId = 5,
+                            CourseId = 9,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
                             Id = 140,
-                            ClassId = 6,
-                            CourseId = 7,
+                            ClassId = 5,
+                            CourseId = 10,
                             Day = 1,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
@@ -3436,8 +3468,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 141,
-                            ClassId = 6,
-                            CourseId = 8,
+                            ClassId = 5,
+                            CourseId = 1,
                             Day = 1,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
@@ -3445,8 +3477,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 142,
-                            ClassId = 6,
-                            CourseId = 8,
+                            ClassId = 5,
+                            CourseId = 2,
                             Day = 1,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
@@ -3454,8 +3486,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 143,
-                            ClassId = 6,
-                            CourseId = 9,
+                            ClassId = 5,
+                            CourseId = 3,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
@@ -3463,8 +3495,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 144,
-                            ClassId = 6,
-                            CourseId = 1,
+                            ClassId = 5,
+                            CourseId = 4,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
@@ -3472,8 +3504,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 145,
-                            ClassId = 6,
-                            CourseId = 10,
+                            ClassId = 5,
+                            CourseId = 5,
                             Day = 2,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
@@ -3481,8 +3513,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 146,
-                            ClassId = 6,
-                            CourseId = 3,
+                            ClassId = 5,
+                            CourseId = 6,
                             Day = 2,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
@@ -3490,8 +3522,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 147,
-                            ClassId = 6,
-                            CourseId = 4,
+                            ClassId = 5,
+                            CourseId = 7,
                             Day = 2,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
@@ -3499,8 +3531,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 148,
-                            ClassId = 6,
-                            CourseId = 2,
+                            ClassId = 5,
+                            CourseId = 8,
                             Day = 2,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
@@ -3508,8 +3540,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 149,
-                            ClassId = 6,
-                            CourseId = 7,
+                            ClassId = 5,
+                            CourseId = 9,
                             Day = 2,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
@@ -3517,187 +3549,196 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 150,
-                            ClassId = 6,
-                            CourseId = 1,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            ClassId = 5,
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 151,
                             ClassId = 6,
-                            CourseId = 6,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 1,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 152,
                             ClassId = 6,
                             CourseId = 2,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 153,
                             ClassId = 6,
-                            CourseId = 10,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            CourseId = 3,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 154,
                             ClassId = 6,
-                            CourseId = 3,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            CourseId = 4,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 155,
                             ClassId = 6,
-                            CourseId = 9,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 156,
-                            ClassId = 6,
-                            CourseId = 4,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 157,
-                            ClassId = 6,
-                            CourseId = 9,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 158,
-                            ClassId = 6,
-                            CourseId = 6,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 159,
-                            ClassId = 6,
-                            CourseId = 7,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 160,
-                            ClassId = 6,
                             CourseId = 5,
-                            Day = 4,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 161,
+                            Id = 156,
                             ClassId = 6,
-                            CourseId = 10,
-                            Day = 4,
+                            CourseId = 6,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 162,
+                            Id = 157,
                             ClassId = 6,
                             CourseId = 7,
-                            Day = 5,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 163,
+                            Id = 158,
                             ClassId = 6,
                             CourseId = 8,
-                            Day = 5,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 164,
+                            Id = 159,
                             ClassId = 6,
-                            CourseId = 2,
-                            Day = 5,
+                            CourseId = 9,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 165,
+                            Id = 160,
                             ClassId = 6,
-                            CourseId = 8,
-                            Day = 5,
+                            CourseId = 10,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 161,
+                            ClassId = 6,
+                            CourseId = 1,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 162,
+                            ClassId = 6,
+                            CourseId = 2,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 163,
+                            ClassId = 6,
+                            CourseId = 3,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 164,
+                            ClassId = 6,
+                            CourseId = 4,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 165,
+                            ClassId = 6,
+                            CourseId = 5,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 166,
                             ClassId = 6,
                             CourseId = 6,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 167,
                             ClassId = 6,
-                            CourseId = 1,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 7,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 168,
-                            ClassId = 7,
+                            ClassId = 6,
                             CourseId = 8,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 169,
+                            ClassId = 6,
+                            CourseId = 9,
                             Day = 1,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 169,
-                            ClassId = 7,
-                            CourseId = 9,
+                            Id = 170,
+                            ClassId = 6,
+                            CourseId = 10,
                             Day = 1,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 170,
-                            ClassId = 7,
+                            Id = 171,
+                            ClassId = 6,
                             CourseId = 1,
                             Day = 1,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
@@ -3705,521 +3746,539 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 171,
-                            ClassId = 7,
-                            CourseId = 6,
+                            Id = 172,
+                            ClassId = 6,
+                            CourseId = 2,
                             Day = 1,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 172,
-                            ClassId = 7,
-                            CourseId = 9,
+                            Id = 173,
+                            ClassId = 6,
+                            CourseId = 3,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 173,
-                            ClassId = 7,
-                            CourseId = 5,
+                            Id = 174,
+                            ClassId = 6,
+                            CourseId = 4,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 174,
-                            ClassId = 7,
-                            CourseId = 1,
+                            Id = 175,
+                            ClassId = 6,
+                            CourseId = 5,
                             Day = 2,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 175,
-                            ClassId = 7,
-                            CourseId = 7,
+                            Id = 176,
+                            ClassId = 6,
+                            CourseId = 6,
                             Day = 2,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 176,
-                            ClassId = 7,
-                            CourseId = 5,
+                            Id = 177,
+                            ClassId = 6,
+                            CourseId = 7,
                             Day = 2,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 177,
-                            ClassId = 7,
-                            CourseId = 6,
+                            Id = 178,
+                            ClassId = 6,
+                            CourseId = 8,
                             Day = 2,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 178,
-                            ClassId = 7,
-                            CourseId = 4,
+                            Id = 179,
+                            ClassId = 6,
+                            CourseId = 9,
                             Day = 2,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 179,
-                            ClassId = 7,
-                            CourseId = 6,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 180,
                             ClassId = 7,
-                            CourseId = 7,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 181,
                             ClassId = 7,
                             CourseId = 1,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 182,
                             ClassId = 7,
-                            CourseId = 5,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            CourseId = 2,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 183,
                             ClassId = 7,
                             CourseId = 3,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 184,
                             ClassId = 7,
-                            CourseId = 1,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 4,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 185,
                             ClassId = 7,
-                            CourseId = 4,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 186,
-                            ClassId = 7,
-                            CourseId = 9,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 187,
-                            ClassId = 7,
                             CourseId = 5,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 188,
-                            ClassId = 7,
-                            CourseId = 6,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 189,
-                            ClassId = 7,
-                            CourseId = 1,
-                            Day = 4,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 190,
+                            Id = 186,
                             ClassId = 7,
-                            CourseId = 9,
-                            Day = 4,
+                            CourseId = 6,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 191,
+                            Id = 187,
                             ClassId = 7,
-                            CourseId = 6,
-                            Day = 5,
+                            CourseId = 7,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 192,
+                            Id = 188,
                             ClassId = 7,
-                            CourseId = 9,
-                            Day = 5,
+                            CourseId = 8,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 193,
+                            Id = 189,
                             ClassId = 7,
-                            CourseId = 7,
-                            Day = 5,
+                            CourseId = 9,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 194,
+                            Id = 190,
                             ClassId = 7,
-                            CourseId = 1,
-                            Day = 5,
+                            CourseId = 10,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 191,
+                            ClassId = 7,
+                            CourseId = 1,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 192,
+                            ClassId = 7,
+                            CourseId = 2,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 193,
+                            ClassId = 7,
+                            CourseId = 3,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 194,
+                            ClassId = 7,
+                            CourseId = 4,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 195,
                             ClassId = 7,
                             CourseId = 5,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 196,
                             ClassId = 7,
-                            CourseId = 9,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 6,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 197,
-                            ClassId = 8,
-                            CourseId = 4,
+                            ClassId = 7,
+                            CourseId = 7,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 198,
+                            ClassId = 7,
+                            CourseId = 8,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 199,
+                            ClassId = 7,
+                            CourseId = 9,
                             Day = 1,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 198,
-                            ClassId = 8,
-                            CourseId = 9,
+                            Id = 200,
+                            ClassId = 7,
+                            CourseId = 10,
                             Day = 1,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 199,
-                            ClassId = 8,
-                            CourseId = 9,
+                            Id = 201,
+                            ClassId = 7,
+                            CourseId = 1,
                             Day = 1,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 200,
-                            ClassId = 8,
-                            CourseId = 4,
+                            Id = 202,
+                            ClassId = 7,
+                            CourseId = 2,
                             Day = 1,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 201,
-                            ClassId = 8,
-                            CourseId = 4,
+                            Id = 203,
+                            ClassId = 7,
+                            CourseId = 3,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 202,
-                            ClassId = 8,
-                            CourseId = 10,
+                            Id = 204,
+                            ClassId = 7,
+                            CourseId = 4,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 203,
-                            ClassId = 8,
-                            CourseId = 9,
+                            Id = 205,
+                            ClassId = 7,
+                            CourseId = 5,
                             Day = 2,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 204,
-                            ClassId = 8,
-                            CourseId = 8,
+                            Id = 206,
+                            ClassId = 7,
+                            CourseId = 6,
                             Day = 2,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 205,
-                            ClassId = 8,
-                            CourseId = 2,
+                            Id = 207,
+                            ClassId = 7,
+                            CourseId = 7,
                             Day = 2,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 206,
-                            ClassId = 8,
+                            Id = 208,
+                            ClassId = 7,
                             CourseId = 8,
                             Day = 2,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 207,
-                            ClassId = 8,
-                            CourseId = 10,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 208,
-                            ClassId = 8,
-                            CourseId = 4,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 209,
                             ClassId = 8,
-                            CourseId = 4,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 210,
-                            ClassId = 8,
-                            CourseId = 3,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 211,
-                            ClassId = 8,
-                            CourseId = 7,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 212,
-                            ClassId = 8,
-                            CourseId = 10,
-                            Day = 3,
+                            CourseId = 9,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 213,
+                            Id = 210,
                             ClassId = 8,
-                            CourseId = 2,
-                            Day = 3,
+                            CourseId = 10,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 214,
+                            Id = 211,
                             ClassId = 8,
-                            CourseId = 2,
-                            Day = 4,
+                            CourseId = 1,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 215,
+                            Id = 212,
                             ClassId = 8,
-                            CourseId = 1,
-                            Day = 4,
+                            CourseId = 2,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 213,
+                            ClassId = 8,
+                            CourseId = 3,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 214,
+                            ClassId = 8,
+                            CourseId = 4,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 215,
+                            ClassId = 8,
+                            CourseId = 5,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 216,
                             ClassId = 8,
                             CourseId = 6,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 217,
                             ClassId = 8,
-                            CourseId = 5,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            CourseId = 7,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 218,
                             ClassId = 8,
-                            CourseId = 5,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            CourseId = 8,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 219,
                             ClassId = 8,
                             CourseId = 9,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 220,
                             ClassId = 8,
-                            CourseId = 9,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 221,
                             ClassId = 8,
-                            CourseId = 5,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 1,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 222,
                             ClassId = 8,
-                            CourseId = 6,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            CourseId = 2,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 223,
                             ClassId = 8,
-                            CourseId = 8,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            CourseId = 3,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 224,
                             ClassId = 8,
-                            CourseId = 6,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            CourseId = 4,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 225,
                             ClassId = 8,
-                            CourseId = 4,
-                            Day = 5,
+                            CourseId = 5,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 226,
+                            ClassId = 8,
+                            CourseId = 6,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 227,
+                            ClassId = 8,
+                            CourseId = 7,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 228,
+                            ClassId = 8,
+                            CourseId = 8,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 226,
-                            ClassId = 9,
-                            CourseId = 2,
+                            Id = 229,
+                            ClassId = 8,
+                            CourseId = 9,
                             Day = 1,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 227,
-                            ClassId = 9,
-                            CourseId = 4,
+                            Id = 230,
+                            ClassId = 8,
+                            CourseId = 10,
                             Day = 1,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 228,
-                            ClassId = 9,
+                            Id = 231,
+                            ClassId = 8,
                             CourseId = 1,
                             Day = 1,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
@@ -4227,471 +4286,444 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 229,
-                            ClassId = 9,
-                            CourseId = 9,
+                            Id = 232,
+                            ClassId = 8,
+                            CourseId = 2,
                             Day = 1,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 230,
-                            ClassId = 9,
-                            CourseId = 4,
+                            Id = 233,
+                            ClassId = 8,
+                            CourseId = 3,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 231,
-                            ClassId = 9,
-                            CourseId = 2,
+                            Id = 234,
+                            ClassId = 8,
+                            CourseId = 4,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 232,
-                            ClassId = 9,
-                            CourseId = 3,
+                            Id = 235,
+                            ClassId = 8,
+                            CourseId = 5,
                             Day = 2,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 233,
-                            ClassId = 9,
-                            CourseId = 2,
+                            Id = 236,
+                            ClassId = 8,
+                            CourseId = 6,
                             Day = 2,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 234,
-                            ClassId = 9,
-                            CourseId = 6,
+                            Id = 237,
+                            ClassId = 8,
+                            CourseId = 7,
                             Day = 2,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 235,
-                            ClassId = 9,
-                            CourseId = 5,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 236,
-                            ClassId = 9,
-                            CourseId = 6,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 237,
-                            ClassId = 9,
-                            CourseId = 4,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 238,
                             ClassId = 9,
-                            CourseId = 5,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 8,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 239,
                             ClassId = 9,
-                            CourseId = 8,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            CourseId = 9,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 240,
                             ClassId = 9,
-                            CourseId = 2,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 241,
                             ClassId = 9,
-                            CourseId = 6,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            CourseId = 1,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 242,
                             ClassId = 9,
-                            CourseId = 7,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 2,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 243,
                             ClassId = 9,
-                            CourseId = 2,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            CourseId = 3,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 244,
                             ClassId = 9,
-                            CourseId = 7,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 4,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 245,
                             ClassId = 9,
-                            CourseId = 4,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
+                            CourseId = 5,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
                             Id = 246,
                             ClassId = 9,
-                            CourseId = 9,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            CourseId = 6,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
                             Id = 247,
                             ClassId = 9,
-                            CourseId = 4,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            CourseId = 7,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
                             Id = 248,
                             ClassId = 9,
-                            CourseId = 7,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 8,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 249,
                             ClassId = 9,
-                            CourseId = 7,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                            CourseId = 9,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 250,
                             ClassId = 9,
-                            CourseId = 9,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 251,
                             ClassId = 9,
+                            CourseId = 1,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 252,
+                            ClassId = 9,
+                            CourseId = 2,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 253,
+                            ClassId = 9,
+                            CourseId = 3,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 254,
+                            ClassId = 9,
                             CourseId = 4,
-                            Day = 5,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 255,
+                            ClassId = 9,
+                            CourseId = 5,
+                            Day = 3,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 252,
-                            ClassId = 10,
-                            CourseId = 3,
+                            Id = 256,
+                            ClassId = 9,
+                            CourseId = 6,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 257,
+                            ClassId = 9,
+                            CourseId = 7,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 258,
+                            ClassId = 9,
+                            CourseId = 8,
+                            Day = 3,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 259,
+                            ClassId = 9,
+                            CourseId = 9,
                             Day = 1,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 253,
-                            ClassId = 10,
-                            CourseId = 5,
+                            Id = 260,
+                            ClassId = 9,
+                            CourseId = 10,
                             Day = 1,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 254,
-                            ClassId = 10,
-                            CourseId = 3,
+                            Id = 261,
+                            ClassId = 9,
+                            CourseId = 1,
                             Day = 1,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 255,
-                            ClassId = 10,
-                            CourseId = 7,
+                            Id = 262,
+                            ClassId = 9,
+                            CourseId = 2,
                             Day = 1,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 256,
-                            ClassId = 10,
-                            CourseId = 5,
+                            Id = 263,
+                            ClassId = 9,
+                            CourseId = 3,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 257,
-                            ClassId = 10,
-                            CourseId = 10,
+                            Id = 264,
+                            ClassId = 9,
+                            CourseId = 4,
                             Day = 1,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 258,
-                            ClassId = 10,
-                            CourseId = 1,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 259,
-                            ClassId = 10,
-                            CourseId = 10,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 260,
-                            ClassId = 10,
-                            CourseId = 7,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 261,
-                            ClassId = 10,
-                            CourseId = 8,
-                            Day = 2,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 262,
-                            ClassId = 10,
+                            Id = 265,
+                            ClassId = 9,
                             CourseId = 5,
                             Day = 2,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 263,
-                            ClassId = 10,
-                            CourseId = 3,
-                            Day = 3,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 264,
-                            ClassId = 10,
-                            CourseId = 3,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 265,
-                            ClassId = 10,
-                            CourseId = 3,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 266,
-                            ClassId = 10,
-                            CourseId = 4,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                            ClassId = 9,
+                            CourseId = 6,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 267,
                             ClassId = 10,
-                            CourseId = 10,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            CourseId = 7,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 268,
                             ClassId = 10,
-                            CourseId = 3,
-                            Day = 3,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 8,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         },
                         new
                         {
                             Id = 269,
                             ClassId = 10,
-                            CourseId = 7,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 270,
-                            ClassId = 10,
-                            CourseId = 8,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 271,
-                            ClassId = 10,
-                            CourseId = 5,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 272,
-                            ClassId = 10,
-                            CourseId = 8,
-                            Day = 4,
-                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
-                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = 273,
-                            ClassId = 10,
-                            CourseId = 10,
-                            Day = 4,
+                            CourseId = 9,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 13, 0, 0, 0),
                             StartTime = new TimeSpan(0, 12, 15, 0, 0)
                         },
                         new
                         {
-                            Id = 274,
+                            Id = 270,
                             ClassId = 10,
-                            CourseId = 5,
-                            Day = 4,
+                            CourseId = 10,
+                            Day = 2,
                             EndTime = new TimeSpan(0, 13, 50, 0, 0),
                             StartTime = new TimeSpan(0, 13, 5, 0, 0)
                         },
                         new
                         {
-                            Id = 275,
+                            Id = 271,
                             ClassId = 10,
-                            CourseId = 4,
-                            Day = 5,
+                            CourseId = 1,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 8, 45, 0, 0),
                             StartTime = new TimeSpan(0, 8, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 276,
+                            Id = 272,
                             ClassId = 10,
-                            CourseId = 8,
-                            Day = 5,
+                            CourseId = 2,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 9, 45, 0, 0),
                             StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 277,
+                            Id = 273,
                             ClassId = 10,
-                            CourseId = 9,
-                            Day = 5,
+                            CourseId = 3,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 10, 45, 0, 0),
                             StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 278,
+                            Id = 274,
                             ClassId = 10,
-                            CourseId = 1,
-                            Day = 5,
+                            CourseId = 4,
+                            Day = 1,
                             EndTime = new TimeSpan(0, 11, 45, 0, 0),
                             StartTime = new TimeSpan(0, 11, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 275,
+                            ClassId = 10,
+                            CourseId = 5,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
+                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 276,
+                            ClassId = 10,
+                            CourseId = 6,
+                            Day = 1,
+                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
+                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 277,
+                            ClassId = 10,
+                            CourseId = 7,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 8, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 278,
+                            ClassId = 10,
+                            CourseId = 8,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 9, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0)
                         },
                         new
                         {
                             Id = 279,
                             ClassId = 10,
                             CourseId = 9,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 0, 0, 0),
-                            StartTime = new TimeSpan(0, 12, 15, 0, 0)
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 10, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
                             Id = 280,
                             ClassId = 10,
-                            CourseId = 2,
-                            Day = 5,
-                            EndTime = new TimeSpan(0, 13, 50, 0, 0),
-                            StartTime = new TimeSpan(0, 13, 5, 0, 0)
+                            CourseId = 10,
+                            Day = 2,
+                            EndTime = new TimeSpan(0, 11, 45, 0, 0),
+                            StartTime = new TimeSpan(0, 11, 0, 0, 0)
                         });
                 });
 
@@ -4699,35 +4731,35 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Unique Identifier for the Grade entry");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CourseId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Identifier of the Course");
 
                     b.Property<DateTime>("GradeAssignedDate")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasComment("Date when the grade was assigned");
 
                     b.Property<double>("GradeScore")
-                        .HasColumnType("float")
+                        .HasColumnType("double precision")
                         .HasComment("Grade received by the student for a specific course assessment");
 
                     b.Property<string>("GradeType")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Description or type of the grade (e.g., Midterm, Final, Homework)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasComment("Shows if grade is Deleted");
 
                     b.Property<int>("StudentId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Identifier of the Student");
 
                     b.HasKey("Id");
@@ -4742,8 +4774,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4117),
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 6.0,
                             GradeType = "Final",
                             IsDeleted = false,
@@ -4752,9 +4784,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4163),
-                            GradeScore = 6.0,
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
                             GradeType = "Midterm",
                             IsDeleted = false,
                             StudentId = 1
@@ -4762,9 +4794,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4170),
-                            GradeScore = 5.0,
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
                             GradeType = "Homework",
                             IsDeleted = false,
                             StudentId = 1
@@ -4772,9 +4804,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4179),
-                            GradeScore = 6.0,
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
                             StudentId = 1
@@ -4782,9 +4814,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4184),
-                            GradeScore = 5.0,
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
                             GradeType = "Project",
                             IsDeleted = false,
                             StudentId = 1
@@ -4793,8 +4825,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 6,
                             CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4193),
-                            GradeScore = 3.0,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
                             GradeType = "Second Term Assessment",
                             IsDeleted = false,
                             StudentId = 1
@@ -4802,9 +4834,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 7,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4198),
-                            GradeScore = 2.0,
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
                             GradeType = "First Term Assessment",
                             IsDeleted = false,
                             StudentId = 1
@@ -4812,9 +4844,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 8,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4206),
-                            GradeScore = 1.0,
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
                             GradeType = "Homework",
                             IsDeleted = false,
                             StudentId = 1
@@ -4822,9 +4854,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 9,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4212),
-                            GradeScore = 5.0,
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
                             StudentId = 1
@@ -4832,8 +4864,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4244),
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 2.0,
                             GradeType = "Project",
                             IsDeleted = false,
@@ -4842,9 +4874,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 11,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4445),
-                            GradeScore = 5.0,
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
                             GradeType = "Final",
                             IsDeleted = false,
                             StudentId = 2
@@ -4852,9 +4884,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 12,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4454),
-                            GradeScore = 1.0,
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
                             GradeType = "Midterm",
                             IsDeleted = false,
                             StudentId = 2
@@ -4862,9 +4894,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 13,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4459),
-                            GradeScore = 2.0,
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
                             GradeType = "Homework",
                             IsDeleted = false,
                             StudentId = 2
@@ -4872,9 +4904,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 14,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4466),
-                            GradeScore = 5.0,
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
                             StudentId = 2
@@ -4882,9 +4914,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 15,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4471),
-                            GradeScore = 5.0,
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
                             GradeType = "Project",
                             IsDeleted = false,
                             StudentId = 2
@@ -4892,9 +4924,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 16,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4479),
-                            GradeScore = 5.0,
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
                             GradeType = "Second Term Assessment",
                             IsDeleted = false,
                             StudentId = 2
@@ -4902,9 +4934,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 17,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4484),
-                            GradeScore = 5.0,
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
                             GradeType = "First Term Assessment",
                             IsDeleted = false,
                             StudentId = 2
@@ -4912,9 +4944,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 18,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4491),
-                            GradeScore = 4.0,
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
                             GradeType = "Homework",
                             IsDeleted = false,
                             StudentId = 2
@@ -4922,9 +4954,9 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 19,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4496),
-                            GradeScore = 1.0,
+                            CourseId = 10,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
                             StudentId = 2
@@ -4932,18 +4964,8 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 20,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4504),
-                            GradeScore = 4.0,
-                            GradeType = "Project",
-                            IsDeleted = false,
-                            StudentId = 2
-                        },
-                        new
-                        {
-                            Id = 31,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4509),
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 2.0,
                             GradeType = "Final",
                             IsDeleted = false,
@@ -4951,319 +4973,369 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 32,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4516),
-                            GradeScore = 2.0,
+                            Id = 21,
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
                             GradeType = "Midterm",
                             IsDeleted = false,
                             StudentId = 3
                         },
                         new
                         {
-                            Id = 33,
+                            Id = 22,
                             CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4521),
-                            GradeScore = 3.0,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
                             GradeType = "Homework",
                             IsDeleted = false,
                             StudentId = 3
                         },
                         new
                         {
-                            Id = 34,
+                            Id = 23,
                             CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4529),
-                            GradeScore = 1.0,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
                             StudentId = 3
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
+                            IsDeleted = false,
+                            StudentId = 3
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
+                            IsDeleted = false,
+                            StudentId = 3
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
+                            IsDeleted = false,
+                            StudentId = 3
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
+                            IsDeleted = false,
+                            StudentId = 3
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
+                            IsDeleted = false,
+                            StudentId = 3
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
+                            IsDeleted = false,
+                            StudentId = 4
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
+                            IsDeleted = false,
+                            StudentId = 4
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
+                            IsDeleted = false,
+                            StudentId = 4
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
+                            IsDeleted = false,
+                            StudentId = 4
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
+                            IsDeleted = false,
+                            StudentId = 4
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
+                            IsDeleted = false,
+                            StudentId = 4
                         },
                         new
                         {
                             Id = 35,
                             CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4534),
-                            GradeScore = 2.0,
-                            GradeType = "Project",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 3
+                            StudentId = 4
                         },
                         new
                         {
                             Id = 36,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4541),
-                            GradeScore = 6.0,
-                            GradeType = "Second Term Assessment",
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 3
+                            StudentId = 4
                         },
                         new
                         {
                             Id = 37,
                             CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4546),
-                            GradeScore = 2.0,
-                            GradeType = "First Term Assessment",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 3
+                            StudentId = 4
                         },
                         new
                         {
                             Id = 38,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4554),
-                            GradeScore = 1.0,
-                            GradeType = "Homework",
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 3
+                            StudentId = 5
                         },
                         new
                         {
                             Id = 39,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4559),
-                            GradeScore = 5.0,
-                            GradeType = "Quiz",
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 3
+                            StudentId = 5
                         },
                         new
                         {
                             Id = 40,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4566),
-                            GradeScore = 5.0,
-                            GradeType = "Project",
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 3
+                            StudentId = 5
                         },
                         new
                         {
                             Id = 41,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4571),
-                            GradeScore = 6.0,
-                            GradeType = "Final",
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 4
+                            StudentId = 5
                         },
                         new
                         {
                             Id = 42,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4648),
-                            GradeScore = 2.0,
-                            GradeType = "Midterm",
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 4
+                            StudentId = 5
                         },
                         new
                         {
                             Id = 43,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4653),
-                            GradeScore = 6.0,
-                            GradeType = "Homework",
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 4
+                            StudentId = 5
                         },
                         new
                         {
                             Id = 44,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4676),
-                            GradeScore = 6.0,
-                            GradeType = "Quiz",
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 4
+                            StudentId = 5
                         },
                         new
                         {
                             Id = 45,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4681),
-                            GradeScore = 1.0,
-                            GradeType = "Project",
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 4
+                            StudentId = 5
                         },
                         new
                         {
                             Id = 46,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4689),
-                            GradeScore = 6.0,
-                            GradeType = "Second Term Assessment",
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 4
+                            StudentId = 5
                         },
                         new
                         {
                             Id = 47,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4695),
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 2.0,
-                            GradeType = "First Term Assessment",
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 4
+                            StudentId = 6
                         },
                         new
                         {
                             Id = 48,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4702),
-                            GradeScore = 2.0,
-                            GradeType = "Homework",
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 4
+                            StudentId = 6
                         },
                         new
                         {
                             Id = 49,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4707),
-                            GradeScore = 5.0,
-                            GradeType = "Quiz",
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 4
+                            StudentId = 6
                         },
                         new
                         {
                             Id = 50,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4714),
-                            GradeScore = 1.0,
-                            GradeType = "Project",
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 4
+                            StudentId = 6
                         },
                         new
                         {
                             Id = 51,
                             CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4720),
-                            GradeScore = 3.0,
-                            GradeType = "Final",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 5
+                            StudentId = 6
                         },
                         new
                         {
                             Id = 52,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4727),
-                            GradeScore = 4.0,
-                            GradeType = "Midterm",
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 5
+                            StudentId = 6
                         },
                         new
                         {
                             Id = 53,
                             CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4732),
-                            GradeScore = 2.0,
-                            GradeType = "Homework",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 5
+                            StudentId = 6
                         },
                         new
                         {
                             Id = 54,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4739),
-                            GradeScore = 3.0,
-                            GradeType = "Quiz",
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 5
+                            StudentId = 6
                         },
                         new
                         {
                             Id = 55,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4745),
-                            GradeScore = 3.0,
-                            GradeType = "Project",
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 5
+                            StudentId = 6
                         },
                         new
                         {
                             Id = 56,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4752),
-                            GradeScore = 3.0,
-                            GradeType = "Second Term Assessment",
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 5
+                            StudentId = 7
                         },
                         new
                         {
                             Id = 57,
                             CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4757),
-                            GradeScore = 5.0,
-                            GradeType = "First Term Assessment",
-                            IsDeleted = false,
-                            StudentId = 5
-                        },
-                        new
-                        {
-                            Id = 58,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4764),
-                            GradeScore = 3.0,
-                            GradeType = "Homework",
-                            IsDeleted = false,
-                            StudentId = 5
-                        },
-                        new
-                        {
-                            Id = 59,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4779),
-                            GradeScore = 4.0,
-                            GradeType = "Quiz",
-                            IsDeleted = false,
-                            StudentId = 5
-                        },
-                        new
-                        {
-                            Id = 60,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4787),
-                            GradeScore = 1.0,
-                            GradeType = "Project",
-                            IsDeleted = false,
-                            StudentId = 5
-                        },
-                        new
-                        {
-                            Id = 70,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4792),
-                            GradeScore = 6.0,
-                            GradeType = "Project",
-                            IsDeleted = false,
-                            StudentId = 7
-                        },
-                        new
-                        {
-                            Id = 71,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4799),
-                            GradeScore = 5.0,
-                            GradeType = "Final",
-                            IsDeleted = false,
-                            StudentId = 7
-                        },
-                        new
-                        {
-                            Id = 72,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4804),
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 3.0,
                             GradeType = "Midterm",
                             IsDeleted = false,
@@ -5271,49 +5343,49 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 73,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4811),
-                            GradeScore = 3.0,
+                            Id = 58,
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
                             GradeType = "Homework",
                             IsDeleted = false,
                             StudentId = 7
                         },
                         new
                         {
-                            Id = 74,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4816),
-                            GradeScore = 3.0,
+                            Id = 59,
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
                             StudentId = 7
                         },
                         new
                         {
-                            Id = 75,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4823),
-                            GradeScore = 1.0,
+                            Id = 60,
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
                             GradeType = "Project",
                             IsDeleted = false,
                             StudentId = 7
                         },
                         new
                         {
-                            Id = 76,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4828),
-                            GradeScore = 3.0,
+                            Id = 61,
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
                             GradeType = "Second Term Assessment",
                             IsDeleted = false,
                             StudentId = 7
                         },
                         new
                         {
-                            Id = 77,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4836),
+                            Id = 62,
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 3.0,
                             GradeType = "First Term Assessment",
                             IsDeleted = false,
@@ -5321,1261 +5393,1191 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 78,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4841),
-                            GradeScore = 6.0,
+                            Id = 63,
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
                             GradeType = "Homework",
                             IsDeleted = false,
                             StudentId = 7
                         },
                         new
                         {
-                            Id = 79,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4848),
-                            GradeScore = 4.0,
+                            Id = 64,
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
                             StudentId = 7
                         },
                         new
                         {
-                            Id = 80,
+                            Id = 65,
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
+                            IsDeleted = false,
+                            StudentId = 8
+                        },
+                        new
+                        {
+                            Id = 66,
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
+                            IsDeleted = false,
+                            StudentId = 8
+                        },
+                        new
+                        {
+                            Id = 67,
                             CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4863),
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 4.0,
+                            GradeType = "Homework",
+                            IsDeleted = false,
+                            StudentId = 8
+                        },
+                        new
+                        {
+                            Id = 68,
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
+                            IsDeleted = false,
+                            StudentId = 8
+                        },
+                        new
+                        {
+                            Id = 69,
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
                             GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 7
+                            StudentId = 8
+                        },
+                        new
+                        {
+                            Id = 70,
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
+                            IsDeleted = false,
+                            StudentId = 8
+                        },
+                        new
+                        {
+                            Id = 71,
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
+                            IsDeleted = false,
+                            StudentId = 8
+                        },
+                        new
+                        {
+                            Id = 72,
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
+                            IsDeleted = false,
+                            StudentId = 8
+                        },
+                        new
+                        {
+                            Id = 73,
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
+                            IsDeleted = false,
+                            StudentId = 8
+                        },
+                        new
+                        {
+                            Id = 74,
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
+                            IsDeleted = false,
+                            StudentId = 9
+                        },
+                        new
+                        {
+                            Id = 75,
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
+                            IsDeleted = false,
+                            StudentId = 9
+                        },
+                        new
+                        {
+                            Id = 76,
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
+                            IsDeleted = false,
+                            StudentId = 9
+                        },
+                        new
+                        {
+                            Id = 77,
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
+                            IsDeleted = false,
+                            StudentId = 9
+                        },
+                        new
+                        {
+                            Id = 78,
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
+                            IsDeleted = false,
+                            StudentId = 9
+                        },
+                        new
+                        {
+                            Id = 79,
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
+                            IsDeleted = false,
+                            StudentId = 9
+                        },
+                        new
+                        {
+                            Id = 80,
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
+                            IsDeleted = false,
+                            StudentId = 9
+                        },
+                        new
+                        {
+                            Id = 81,
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
+                            IsDeleted = false,
+                            StudentId = 9
+                        },
+                        new
+                        {
+                            Id = 82,
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
+                            IsDeleted = false,
+                            StudentId = 9
+                        },
+                        new
+                        {
+                            Id = 83,
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
+                            IsDeleted = false,
+                            StudentId = 10
+                        },
+                        new
+                        {
+                            Id = 84,
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
+                            IsDeleted = false,
+                            StudentId = 10
+                        },
+                        new
+                        {
+                            Id = 85,
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
+                            IsDeleted = false,
+                            StudentId = 10
+                        },
+                        new
+                        {
+                            Id = 86,
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
+                            IsDeleted = false,
+                            StudentId = 10
+                        },
+                        new
+                        {
+                            Id = 87,
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
+                            IsDeleted = false,
+                            StudentId = 10
+                        },
+                        new
+                        {
+                            Id = 88,
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
+                            IsDeleted = false,
+                            StudentId = 10
+                        },
+                        new
+                        {
+                            Id = 89,
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
+                            IsDeleted = false,
+                            StudentId = 10
+                        },
+                        new
+                        {
+                            Id = 90,
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
+                            IsDeleted = false,
+                            StudentId = 10
                         },
                         new
                         {
                             Id = 91,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4872),
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 5.0,
-                            GradeType = "Final",
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 8
+                            StudentId = 10
                         },
                         new
                         {
                             Id = 92,
                             CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4877),
-                            GradeScore = 4.0,
-                            GradeType = "Midterm",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 8
+                            StudentId = 11
                         },
                         new
                         {
                             Id = 93,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4884),
-                            GradeScore = 1.0,
-                            GradeType = "Homework",
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 8
+                            StudentId = 11
                         },
                         new
                         {
                             Id = 94,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4889),
-                            GradeScore = 1.0,
-                            GradeType = "Quiz",
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 8
+                            StudentId = 11
                         },
                         new
                         {
                             Id = 95,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4897),
-                            GradeScore = 1.0,
-                            GradeType = "Project",
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 8
+                            StudentId = 11
                         },
                         new
                         {
                             Id = 96,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4902),
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 6.0,
-                            GradeType = "Second Term Assessment",
+                            GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 8
+                            StudentId = 11
                         },
                         new
                         {
                             Id = 97,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4909),
-                            GradeScore = 1.0,
-                            GradeType = "First Term Assessment",
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 8
+                            StudentId = 11
                         },
                         new
                         {
                             Id = 98,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4914),
-                            GradeScore = 1.0,
-                            GradeType = "Homework",
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 8
+                            StudentId = 11
                         },
                         new
                         {
                             Id = 99,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4991),
-                            GradeScore = 3.0,
-                            GradeType = "Quiz",
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 8
+                            StudentId = 11
                         },
                         new
                         {
                             Id = 100,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(4997),
-                            GradeScore = 4.0,
-                            GradeType = "Project",
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 8
+                            StudentId = 11
                         },
                         new
                         {
                             Id = 101,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5004),
-                            GradeScore = 6.0,
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
                             GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 9
+                            StudentId = 12
                         },
                         new
                         {
                             Id = 102,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5009),
-                            GradeScore = 1.0,
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
                             GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 9
+                            StudentId = 12
                         },
                         new
                         {
                             Id = 103,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5018),
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 4.0,
                             GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 9
+                            StudentId = 12
                         },
                         new
                         {
                             Id = 104,
                             CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5023),
-                            GradeScore = 3.0,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 9
+                            StudentId = 12
                         },
                         new
                         {
                             Id = 105,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5030),
-                            GradeScore = 2.0,
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
                             GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 9
+                            StudentId = 12
                         },
                         new
                         {
                             Id = 106,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5035),
-                            GradeScore = 6.0,
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
                             GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 9
+                            StudentId = 12
                         },
                         new
                         {
                             Id = 107,
                             CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5042),
-                            GradeScore = 5.0,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
                             GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 9
+                            StudentId = 12
                         },
                         new
                         {
                             Id = 108,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5048),
-                            GradeScore = 3.0,
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
                             GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 9
+                            StudentId = 12
                         },
                         new
                         {
                             Id = 109,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5064),
-                            GradeScore = 4.0,
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 9
+                            StudentId = 12
                         },
                         new
                         {
                             Id = 110,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5069),
-                            GradeScore = 4.0,
-                            GradeType = "Project",
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 9
+                            StudentId = 13
                         },
                         new
                         {
                             Id = 111,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5077),
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 3.0,
-                            GradeType = "Final",
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 10
+                            StudentId = 13
                         },
                         new
                         {
                             Id = 112,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5082),
-                            GradeScore = 2.0,
-                            GradeType = "Midterm",
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 10
+                            StudentId = 13
                         },
                         new
                         {
                             Id = 113,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5089),
-                            GradeScore = 6.0,
-                            GradeType = "Homework",
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 10
+                            StudentId = 13
                         },
                         new
                         {
                             Id = 114,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5094),
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 6.0,
-                            GradeType = "Quiz",
+                            GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 10
+                            StudentId = 13
                         },
                         new
                         {
                             Id = 115,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5102),
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 2.0,
-                            GradeType = "Project",
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 10
+                            StudentId = 13
                         },
                         new
                         {
                             Id = 116,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5107),
-                            GradeScore = 2.0,
-                            GradeType = "Second Term Assessment",
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 10
+                            StudentId = 13
                         },
                         new
                         {
                             Id = 117,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5114),
-                            GradeScore = 3.0,
-                            GradeType = "First Term Assessment",
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 10
+                            StudentId = 13
                         },
                         new
                         {
                             Id = 118,
                             CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5120),
-                            GradeScore = 6.0,
-                            GradeType = "Homework",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 10
+                            StudentId = 13
                         },
                         new
                         {
                             Id = 119,
                             CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5127),
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 2.0,
-                            GradeType = "Quiz",
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 10
+                            StudentId = 14
                         },
                         new
                         {
                             Id = 120,
                             CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5132),
-                            GradeScore = 6.0,
-                            GradeType = "Project",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 10
+                            StudentId = 14
                         },
                         new
                         {
                             Id = 121,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5150),
-                            GradeScore = 5.0,
-                            GradeType = "Final",
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 11
+                            StudentId = 14
                         },
                         new
                         {
                             Id = 122,
                             CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5165),
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 5.0,
-                            GradeType = "Midterm",
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 11
+                            StudentId = 14
                         },
                         new
                         {
                             Id = 123,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5173),
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 6.0,
-                            GradeType = "Homework",
+                            GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 11
+                            StudentId = 14
                         },
                         new
                         {
                             Id = 124,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5178),
-                            GradeScore = 5.0,
-                            GradeType = "Quiz",
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 11
+                            StudentId = 14
                         },
                         new
                         {
                             Id = 125,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5185),
-                            GradeScore = 6.0,
-                            GradeType = "Project",
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 11
+                            StudentId = 14
                         },
                         new
                         {
                             Id = 126,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5191),
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 4.0,
-                            GradeType = "Second Term Assessment",
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 11
+                            StudentId = 14
                         },
                         new
                         {
                             Id = 127,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5199),
-                            GradeScore = 1.0,
-                            GradeType = "First Term Assessment",
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 11
+                            StudentId = 14
                         },
                         new
                         {
                             Id = 128,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5204),
-                            GradeScore = 5.0,
-                            GradeType = "Homework",
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 11
+                            StudentId = 15
                         },
                         new
                         {
                             Id = 129,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5211),
-                            GradeScore = 5.0,
-                            GradeType = "Quiz",
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 11
+                            StudentId = 15
                         },
                         new
                         {
                             Id = 130,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5216),
-                            GradeScore = 6.0,
-                            GradeType = "Project",
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 15
                         },
                         new
                         {
                             Id = 131,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5223),
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 5.0,
-                            GradeType = "Final",
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 15
                         },
                         new
                         {
                             Id = 132,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5228),
-                            GradeScore = 4.0,
-                            GradeType = "Midterm",
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 15
                         },
                         new
                         {
                             Id = 133,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5236),
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 2.0,
-                            GradeType = "Homework",
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 15
                         },
                         new
                         {
                             Id = 134,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5257),
-                            GradeScore = 4.0,
-                            GradeType = "Quiz",
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 15
                         },
                         new
                         {
                             Id = 135,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5264),
-                            GradeScore = 6.0,
-                            GradeType = "Project",
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 15
                         },
                         new
                         {
                             Id = 136,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5269),
-                            GradeScore = 3.0,
-                            GradeType = "Second Term Assessment",
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 15
                         },
                         new
                         {
                             Id = 137,
                             CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5344),
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 2.0,
-                            GradeType = "First Term Assessment",
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 16
                         },
                         new
                         {
                             Id = 138,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5349),
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 3.0,
-                            GradeType = "Homework",
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 16
                         },
                         new
                         {
                             Id = 139,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5358),
-                            GradeScore = 5.0,
-                            GradeType = "Quiz",
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 16
                         },
                         new
                         {
                             Id = 140,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5363),
-                            GradeScore = 1.0,
-                            GradeType = "Project",
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 12
+                            StudentId = 16
                         },
                         new
                         {
                             Id = 141,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5370),
-                            GradeScore = 5.0,
-                            GradeType = "Final",
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 13
+                            StudentId = 16
                         },
                         new
                         {
                             Id = 142,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5375),
-                            GradeScore = 3.0,
-                            GradeType = "Midterm",
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 13
+                            StudentId = 16
                         },
                         new
                         {
                             Id = 143,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5382),
-                            GradeScore = 6.0,
-                            GradeType = "Homework",
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 13
+                            StudentId = 16
                         },
                         new
                         {
                             Id = 144,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5387),
-                            GradeScore = 6.0,
-                            GradeType = "Quiz",
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 13
+                            StudentId = 16
                         },
                         new
                         {
                             Id = 145,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5395),
-                            GradeScore = 1.0,
-                            GradeType = "Project",
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 13
+                            StudentId = 16
                         },
                         new
                         {
                             Id = 146,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5400),
-                            GradeScore = 3.0,
-                            GradeType = "Second Term Assessment",
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 13
+                            StudentId = 17
                         },
                         new
                         {
                             Id = 147,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5407),
-                            GradeScore = 2.0,
-                            GradeType = "First Term Assessment",
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 13
+                            StudentId = 17
                         },
                         new
                         {
                             Id = 148,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5412),
-                            GradeScore = 6.0,
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
                             GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 13
+                            StudentId = 17
                         },
                         new
                         {
                             Id = 149,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5429),
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 5.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 13
+                            StudentId = 17
                         },
                         new
                         {
                             Id = 150,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5434),
-                            GradeScore = 3.0,
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
                             GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 13
+                            StudentId = 17
                         },
                         new
                         {
                             Id = 151,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5442),
-                            GradeScore = 1.0,
-                            GradeType = "Final",
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 14
+                            StudentId = 17
                         },
                         new
                         {
                             Id = 152,
                             CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5448),
-                            GradeScore = 1.0,
-                            GradeType = "Midterm",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 14
+                            StudentId = 17
                         },
                         new
                         {
                             Id = 153,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5455),
-                            GradeScore = 2.0,
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
                             GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 14
+                            StudentId = 17
                         },
                         new
                         {
                             Id = 154,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5460),
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 5.0,
                             GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 14
+                            StudentId = 17
                         },
                         new
                         {
                             Id = 155,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5467),
-                            GradeScore = 4.0,
-                            GradeType = "Project",
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 14
+                            StudentId = 18
                         },
                         new
                         {
                             Id = 156,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5472),
-                            GradeScore = 4.0,
-                            GradeType = "Second Term Assessment",
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 14
+                            StudentId = 18
                         },
                         new
                         {
                             Id = 157,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5480),
-                            GradeScore = 5.0,
-                            GradeType = "First Term Assessment",
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 14
+                            StudentId = 18
                         },
                         new
                         {
                             Id = 158,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5485),
-                            GradeScore = 2.0,
-                            GradeType = "Homework",
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 14
+                            StudentId = 18
                         },
                         new
                         {
                             Id = 159,
                             CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5502),
-                            GradeScore = 5.0,
-                            GradeType = "Quiz",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 14
+                            StudentId = 18
                         },
                         new
                         {
                             Id = 160,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5507),
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 2.0,
-                            GradeType = "Project",
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 14
+                            StudentId = 18
                         },
                         new
                         {
                             Id = 161,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5515),
-                            GradeScore = 2.0,
-                            GradeType = "Final",
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 15
+                            StudentId = 18
                         },
                         new
                         {
                             Id = 162,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5520),
-                            GradeScore = 5.0,
-                            GradeType = "Midterm",
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 15
+                            StudentId = 18
                         },
                         new
                         {
                             Id = 163,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5528),
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 5.0,
-                            GradeType = "Homework",
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 15
+                            StudentId = 18
                         },
                         new
                         {
                             Id = 164,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5533),
-                            GradeScore = 4.0,
-                            GradeType = "Quiz",
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 15
+                            StudentId = 19
                         },
                         new
                         {
                             Id = 165,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5540),
-                            GradeScore = 2.0,
-                            GradeType = "Project",
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 15
+                            StudentId = 19
                         },
                         new
                         {
                             Id = 166,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5545),
-                            GradeScore = 5.0,
-                            GradeType = "Second Term Assessment",
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 15
+                            StudentId = 19
                         },
                         new
                         {
                             Id = 167,
                             CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5552),
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 5.0,
-                            GradeType = "First Term Assessment",
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 15
+                            StudentId = 19
                         },
                         new
                         {
                             Id = 168,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5557),
-                            GradeScore = 1.0,
-                            GradeType = "Homework",
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 15
+                            StudentId = 19
                         },
                         new
                         {
                             Id = 169,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5565),
-                            GradeScore = 3.0,
-                            GradeType = "Quiz",
+                            CourseId = 6,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 15
+                            StudentId = 19
                         },
                         new
                         {
                             Id = 170,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5570),
-                            GradeScore = 1.0,
-                            GradeType = "Project",
+                            CourseId = 7,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 15
+                            StudentId = 19
                         },
                         new
                         {
                             Id = 171,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5577),
-                            GradeScore = 1.0,
-                            GradeType = "Final",
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 16
+                            StudentId = 19
                         },
                         new
                         {
                             Id = 172,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5582),
+                            CourseId = 9,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 5.0,
-                            GradeType = "Midterm",
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 16
+                            StudentId = 19
                         },
                         new
                         {
                             Id = 173,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5590),
-                            GradeScore = 6.0,
-                            GradeType = "Homework",
+                            CourseId = 1,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Final",
                             IsDeleted = false,
-                            StudentId = 16
+                            StudentId = 20
                         },
                         new
                         {
                             Id = 174,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5604),
-                            GradeScore = 1.0,
-                            GradeType = "Quiz",
+                            CourseId = 2,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "Midterm",
                             IsDeleted = false,
-                            StudentId = 16
+                            StudentId = 20
                         },
                         new
                         {
                             Id = 175,
-                            CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5653),
-                            GradeScore = 1.0,
-                            GradeType = "Project",
+                            CourseId = 3,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 16
+                            StudentId = 20
                         },
                         new
                         {
                             Id = 176,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5658),
-                            GradeScore = 6.0,
-                            GradeType = "Second Term Assessment",
+                            CourseId = 4,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 5.0,
+                            GradeType = "Quiz",
                             IsDeleted = false,
-                            StudentId = 16
+                            StudentId = 20
                         },
                         new
                         {
                             Id = 177,
-                            CourseId = 8,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5666),
-                            GradeScore = 2.0,
-                            GradeType = "First Term Assessment",
+                            CourseId = 5,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 6.0,
+                            GradeType = "Project",
                             IsDeleted = false,
-                            StudentId = 16
+                            StudentId = 20
                         },
                         new
                         {
                             Id = 178,
                             CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5672),
-                            GradeScore = 1.0,
-                            GradeType = "Homework",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 2.0,
+                            GradeType = "Second Term Assessment",
                             IsDeleted = false,
-                            StudentId = 16
+                            StudentId = 20
                         },
                         new
                         {
                             Id = 179,
                             CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5689),
-                            GradeScore = 6.0,
-                            GradeType = "Quiz",
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 3.0,
+                            GradeType = "First Term Assessment",
                             IsDeleted = false,
-                            StudentId = 16
+                            StudentId = 20
                         },
                         new
                         {
                             Id = 180,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5694),
-                            GradeScore = 5.0,
-                            GradeType = "Project",
+                            CourseId = 8,
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            GradeScore = 4.0,
+                            GradeType = "Homework",
                             IsDeleted = false,
-                            StudentId = 16
+                            StudentId = 20
                         },
                         new
                         {
                             Id = 181,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5701),
-                            GradeScore = 2.0,
-                            GradeType = "Final",
-                            IsDeleted = false,
-                            StudentId = 17
-                        },
-                        new
-                        {
-                            Id = 182,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5706),
-                            GradeScore = 1.0,
-                            GradeType = "Midterm",
-                            IsDeleted = false,
-                            StudentId = 17
-                        },
-                        new
-                        {
-                            Id = 183,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5713),
-                            GradeScore = 5.0,
-                            GradeType = "Homework",
-                            IsDeleted = false,
-                            StudentId = 17
-                        },
-                        new
-                        {
-                            Id = 184,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5719),
-                            GradeScore = 2.0,
-                            GradeType = "Quiz",
-                            IsDeleted = false,
-                            StudentId = 17
-                        },
-                        new
-                        {
-                            Id = 185,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5726),
-                            GradeScore = 1.0,
-                            GradeType = "Project",
-                            IsDeleted = false,
-                            StudentId = 17
-                        },
-                        new
-                        {
-                            Id = 186,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5731),
-                            GradeScore = 2.0,
-                            GradeType = "Second Term Assessment",
-                            IsDeleted = false,
-                            StudentId = 17
-                        },
-                        new
-                        {
-                            Id = 187,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5739),
-                            GradeScore = 1.0,
-                            GradeType = "First Term Assessment",
-                            IsDeleted = false,
-                            StudentId = 17
-                        },
-                        new
-                        {
-                            Id = 188,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5744),
-                            GradeScore = 6.0,
-                            GradeType = "Homework",
-                            IsDeleted = false,
-                            StudentId = 17
-                        },
-                        new
-                        {
-                            Id = 189,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5751),
-                            GradeScore = 3.0,
-                            GradeType = "Quiz",
-                            IsDeleted = false,
-                            StudentId = 17
-                        },
-                        new
-                        {
-                            Id = 190,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5756),
-                            GradeScore = 4.0,
-                            GradeType = "Project",
-                            IsDeleted = false,
-                            StudentId = 17
-                        },
-                        new
-                        {
-                            Id = 191,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5774),
-                            GradeScore = 3.0,
-                            GradeType = "Final",
-                            IsDeleted = false,
-                            StudentId = 18
-                        },
-                        new
-                        {
-                            Id = 192,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5788),
-                            GradeScore = 6.0,
-                            GradeType = "Midterm",
-                            IsDeleted = false,
-                            StudentId = 18
-                        },
-                        new
-                        {
-                            Id = 193,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5796),
-                            GradeScore = 5.0,
-                            GradeType = "Homework",
-                            IsDeleted = false,
-                            StudentId = 18
-                        },
-                        new
-                        {
-                            Id = 194,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5801),
-                            GradeScore = 1.0,
-                            GradeType = "Quiz",
-                            IsDeleted = false,
-                            StudentId = 18
-                        },
-                        new
-                        {
-                            Id = 195,
                             CourseId = 9,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5808),
-                            GradeScore = 5.0,
-                            GradeType = "Project",
-                            IsDeleted = false,
-                            StudentId = 18
-                        },
-                        new
-                        {
-                            Id = 196,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5814),
-                            GradeScore = 1.0,
-                            GradeType = "Second Term Assessment",
-                            IsDeleted = false,
-                            StudentId = 18
-                        },
-                        new
-                        {
-                            Id = 197,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5821),
-                            GradeScore = 4.0,
-                            GradeType = "First Term Assessment",
-                            IsDeleted = false,
-                            StudentId = 18
-                        },
-                        new
-                        {
-                            Id = 198,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5826),
-                            GradeScore = 3.0,
-                            GradeType = "Homework",
-                            IsDeleted = false,
-                            StudentId = 18
-                        },
-                        new
-                        {
-                            Id = 199,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5834),
-                            GradeScore = 3.0,
-                            GradeType = "Quiz",
-                            IsDeleted = false,
-                            StudentId = 18
-                        },
-                        new
-                        {
-                            Id = 200,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5839),
-                            GradeScore = 6.0,
-                            GradeType = "Project",
-                            IsDeleted = false,
-                            StudentId = 18
-                        },
-                        new
-                        {
-                            Id = 201,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5846),
-                            GradeScore = 6.0,
-                            GradeType = "Final",
-                            IsDeleted = false,
-                            StudentId = 19
-                        },
-                        new
-                        {
-                            Id = 202,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5851),
-                            GradeScore = 4.0,
-                            GradeType = "Midterm",
-                            IsDeleted = false,
-                            StudentId = 19
-                        },
-                        new
-                        {
-                            Id = 203,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5858),
-                            GradeScore = 1.0,
-                            GradeType = "Homework",
-                            IsDeleted = false,
-                            StudentId = 19
-                        },
-                        new
-                        {
-                            Id = 204,
-                            CourseId = 5,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5873),
+                            GradeAssignedDate = new DateTime(2021, 10, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             GradeScore = 5.0,
                             GradeType = "Quiz",
-                            IsDeleted = false,
-                            StudentId = 19
-                        },
-                        new
-                        {
-                            Id = 205,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5880),
-                            GradeScore = 4.0,
-                            GradeType = "Project",
-                            IsDeleted = false,
-                            StudentId = 19
-                        },
-                        new
-                        {
-                            Id = 206,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5885),
-                            GradeScore = 3.0,
-                            GradeType = "Second Term Assessment",
-                            IsDeleted = false,
-                            StudentId = 19
-                        },
-                        new
-                        {
-                            Id = 207,
-                            CourseId = 10,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5893),
-                            GradeScore = 1.0,
-                            GradeType = "First Term Assessment",
-                            IsDeleted = false,
-                            StudentId = 19
-                        },
-                        new
-                        {
-                            Id = 208,
-                            CourseId = 3,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5898),
-                            GradeScore = 1.0,
-                            GradeType = "Homework",
-                            IsDeleted = false,
-                            StudentId = 19
-                        },
-                        new
-                        {
-                            Id = 209,
-                            CourseId = 4,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5905),
-                            GradeScore = 6.0,
-                            GradeType = "Quiz",
-                            IsDeleted = false,
-                            StudentId = 19
-                        },
-                        new
-                        {
-                            Id = 210,
-                            CourseId = 6,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5910),
-                            GradeScore = 1.0,
-                            GradeType = "Project",
-                            IsDeleted = false,
-                            StudentId = 19
-                        },
-                        new
-                        {
-                            Id = 211,
-                            CourseId = 1,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5917),
-                            GradeScore = 4.0,
-                            GradeType = "Final",
-                            IsDeleted = false,
-                            StudentId = 20
-                        },
-                        new
-                        {
-                            Id = 212,
-                            CourseId = 7,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5922),
-                            GradeScore = 4.0,
-                            GradeType = "Midterm",
-                            IsDeleted = false,
-                            StudentId = 20
-                        },
-                        new
-                        {
-                            Id = 213,
-                            CourseId = 2,
-                            GradeAssignedDate = new DateTime(2024, 12, 13, 3, 8, 19, 870, DateTimeKind.Local).AddTicks(5980),
-                            GradeScore = 3.0,
-                            GradeType = "Homework",
                             IsDeleted = false,
                             StudentId = 20
                         });
@@ -6585,34 +6587,34 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("News Identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
+                        .HasColumnType("character varying(1000)")
                         .HasComment("News Content");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasComment("News Date");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasComment("Shows if news is Deleted");
 
                     b.Property<string>("PublisherId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("text")
                         .HasComment("Publisher Identifier");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasComment("News Title");
 
                     b.HasKey("Id");
@@ -6626,7 +6628,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 1,
                             Content = "The new school year has officially begun. We are excited to welcome all students back to campus and look forward to a successful year ahead.",
-                            Date = new DateTime(2024, 1, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             PublisherId = "51065229-23b9-402f-a54d-00bb813d6b1c",
                             Title = "New School Year Begins"
@@ -6635,7 +6637,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 2,
                             Content = "The annual science fair will be held next month. Students are encouraged to participate and showcase their projects.",
-                            Date = new DateTime(2024, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             PublisherId = "51065229-23b9-402f-a54d-00bb813d6b1c",
                             Title = "Science Fair Announced"
@@ -6644,7 +6646,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 3,
                             Content = "Sports day is scheduled for the end of the semester. Students can participate in various sports activities.",
-                            Date = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             PublisherId = "51065229-23b9-402f-a54d-00bb813d6b1c",
                             Title = "Sports Day Scheduled"
@@ -6653,7 +6655,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 4,
                             Content = "An art exhibition will be held in the school auditorium. Students' artworks will be displayed.",
-                            Date = new DateTime(2024, 10, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 4, 25, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             PublisherId = "51065229-23b9-402f-a54d-00bb813d6b1c",
                             Title = "Art Exhibition"
@@ -6662,7 +6664,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 5,
                             Content = "A parent-teacher meeting is scheduled for next week. Parents are encouraged to attend and discuss their child's progress.",
-                            Date = new DateTime(2024, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 5, 30, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             PublisherId = "51065229-23b9-402f-a54d-00bb813d6b1c",
                             Title = "Parent-Teacher Meeting"
@@ -6671,7 +6673,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 6,
                             Content = "The school will be celebrating the upcoming holidays with various events and activities. Students are invited to participate.",
-                            Date = new DateTime(2024, 12, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 6, 5, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             PublisherId = "51065229-23b9-402f-a54d-00bb813d6b1c",
                             Title = "Holiday Celebration"
@@ -6682,35 +6684,35 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Remark Identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CourseId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Course Identifier");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasComment("Date of the remark");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasComment("Shows if remark is Deleted");
 
                     b.Property<string>("RemarkText")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
+                        .HasColumnType("character varying(500)")
                         .HasComment("Remark Text");
 
                     b.Property<int>("StudentId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Student Identifier");
 
                     b.Property<int>("TeacherId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Teacher Identifier");
 
                     b.HasKey("Id");
@@ -6726,19 +6728,19 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 3,
-                            CourseId = 8,
-                            Date = new DateTime(2024, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 1,
+                            CourseId = 2,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 1,
-                            TeacherId = 25
+                            TeacherId = 22
                         },
                         new
                         {
-                            Id = 4,
-                            CourseId = 6,
-                            Date = new DateTime(2024, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 2,
+                            CourseId = 3,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 1,
@@ -6746,19 +6748,39 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 5,
-                            CourseId = 6,
-                            Date = new DateTime(2024, 11, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 3,
+                            CourseId = 4,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 1,
-                            TeacherId = 30
+                            TeacherId = 24
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CourseId = 3,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 2,
+                            TeacherId = 23
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CourseId = 4,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 2,
+                            TeacherId = 24
                         },
                         new
                         {
                             Id = 6,
-                            CourseId = 6,
-                            Date = new DateTime(2024, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 5,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 2,
@@ -6768,27 +6790,27 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         {
                             Id = 7,
                             CourseId = 4,
-                            Date = new DateTime(2024, 8, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 2,
-                            TeacherId = 26
+                            StudentId = 3,
+                            TeacherId = 24
                         },
                         new
                         {
                             Id = 8,
                             CourseId = 5,
-                            Date = new DateTime(2024, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 2,
-                            TeacherId = 28
+                            StudentId = 3,
+                            TeacherId = 25
                         },
                         new
                         {
                             Id = 9,
-                            CourseId = 3,
-                            Date = new DateTime(2024, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 6,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 3,
@@ -6797,58 +6819,38 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            CourseId = 8,
-                            Date = new DateTime(2024, 6, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 5,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 3,
+                            StudentId = 4,
                             TeacherId = 25
                         },
                         new
                         {
                             Id = 11,
-                            CourseId = 7,
-                            Date = new DateTime(2024, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 6,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 3,
-                            TeacherId = 25
+                            StudentId = 4,
+                            TeacherId = 26
                         },
                         new
                         {
                             Id = 12,
-                            CourseId = 8,
-                            Date = new DateTime(2024, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 7,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 4,
-                            TeacherId = 22
+                            TeacherId = 27
                         },
                         new
                         {
                             Id = 13,
-                            CourseId = 5,
-                            Date = new DateTime(2024, 12, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 4,
-                            TeacherId = 23
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CourseId = 10,
-                            Date = new DateTime(2024, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 4,
-                            TeacherId = 28
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CourseId = 1,
-                            Date = new DateTime(2024, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 6,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 5,
@@ -6856,109 +6858,109 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 16,
-                            CourseId = 9,
-                            Date = new DateTime(2024, 11, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 14,
+                            CourseId = 7,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 5,
-                            TeacherId = 29
+                            TeacherId = 27
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CourseId = 8,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 5,
+                            TeacherId = 28
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CourseId = 7,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 6,
+                            TeacherId = 27
                         },
                         new
                         {
                             Id = 17,
-                            CourseId = 1,
-                            Date = new DateTime(2024, 12, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 8,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 5,
-                            TeacherId = 25
+                            StudentId = 6,
+                            TeacherId = 28
                         },
                         new
                         {
                             Id = 18,
-                            CourseId = 7,
-                            Date = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 9,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 6,
-                            TeacherId = 24
+                            TeacherId = 29
                         },
                         new
                         {
                             Id = 19,
-                            CourseId = 4,
-                            Date = new DateTime(2024, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 8,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 6,
-                            TeacherId = 21
+                            StudentId = 7,
+                            TeacherId = 28
                         },
                         new
                         {
                             Id = 20,
-                            CourseId = 3,
-                            Date = new DateTime(2024, 11, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 9,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 6,
-                            TeacherId = 24
+                            StudentId = 7,
+                            TeacherId = 29
                         },
                         new
                         {
                             Id = 21,
                             CourseId = 10,
-                            Date = new DateTime(2024, 6, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 7,
-                            TeacherId = 26
+                            TeacherId = 30
                         },
                         new
                         {
                             Id = 22,
-                            CourseId = 10,
-                            Date = new DateTime(2024, 8, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 9,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 7,
-                            TeacherId = 26
+                            StudentId = 8,
+                            TeacherId = 29
                         },
                         new
                         {
                             Id = 23,
-                            CourseId = 7,
-                            Date = new DateTime(2024, 2, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 10,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 7,
-                            TeacherId = 28
+                            StudentId = 8,
+                            TeacherId = 30
                         },
                         new
                         {
                             Id = 24,
-                            CourseId = 3,
-                            Date = new DateTime(2024, 3, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 8,
-                            TeacherId = 23
-                        },
-                        new
-                        {
-                            Id = 25,
                             CourseId = 1,
-                            Date = new DateTime(2024, 7, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 8,
-                            TeacherId = 23
-                        },
-                        new
-                        {
-                            Id = 26,
-                            CourseId = 4,
-                            Date = new DateTime(2024, 3, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 8,
@@ -6966,19 +6968,29 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 27,
-                            CourseId = 3,
-                            Date = new DateTime(2024, 9, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 25,
+                            CourseId = 10,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 9,
-                            TeacherId = 26
+                            TeacherId = 30
                         },
                         new
                         {
-                            Id = 28,
-                            CourseId = 6,
-                            Date = new DateTime(2024, 1, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 26,
+                            CourseId = 1,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 9,
+                            TeacherId = 21
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CourseId = 2,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 9,
@@ -6986,39 +6998,29 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 29,
-                            CourseId = 3,
-                            Date = new DateTime(2024, 11, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 28,
+                            CourseId = 1,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 9,
-                            TeacherId = 26
+                            StudentId = 10,
+                            TeacherId = 21
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CourseId = 2,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 10,
+                            TeacherId = 22
                         },
                         new
                         {
                             Id = 30,
-                            CourseId = 7,
-                            Date = new DateTime(2024, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 10,
-                            TeacherId = 25
-                        },
-                        new
-                        {
-                            Id = 31,
-                            CourseId = 10,
-                            Date = new DateTime(2024, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 10,
-                            TeacherId = 28
-                        },
-                        new
-                        {
-                            Id = 32,
-                            CourseId = 4,
-                            Date = new DateTime(2024, 8, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 3,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 10,
@@ -7026,39 +7028,49 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 33,
-                            CourseId = 3,
-                            Date = new DateTime(2024, 5, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 31,
+                            CourseId = 2,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 11,
-                            TeacherId = 27
+                            TeacherId = 22
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CourseId = 3,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 11,
+                            TeacherId = 23
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CourseId = 4,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 11,
+                            TeacherId = 24
                         },
                         new
                         {
                             Id = 34,
-                            CourseId = 6,
-                            Date = new DateTime(2024, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 3,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 11,
-                            TeacherId = 28
+                            StudentId = 12,
+                            TeacherId = 23
                         },
                         new
                         {
                             Id = 35,
-                            CourseId = 2,
-                            Date = new DateTime(2024, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 11,
-                            TeacherId = 21
-                        },
-                        new
-                        {
-                            Id = 36,
-                            CourseId = 8,
-                            Date = new DateTime(2024, 5, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 4,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 12,
@@ -7066,89 +7078,79 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 37,
-                            CourseId = 8,
-                            Date = new DateTime(2024, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 36,
+                            CourseId = 5,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 12,
+                            TeacherId = 25
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CourseId = 4,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 13,
                             TeacherId = 24
                         },
                         new
                         {
                             Id = 38,
                             CourseId = 5,
-                            Date = new DateTime(2024, 6, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 12,
-                            TeacherId = 28
+                            StudentId = 13,
+                            TeacherId = 25
                         },
                         new
                         {
                             Id = 39,
                             CourseId = 6,
-                            Date = new DateTime(2024, 1, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 13,
-                            TeacherId = 21
+                            TeacherId = 26
                         },
                         new
                         {
                             Id = 40,
-                            CourseId = 8,
-                            Date = new DateTime(2024, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 5,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 13,
-                            TeacherId = 22
+                            StudentId = 14,
+                            TeacherId = 25
                         },
                         new
                         {
                             Id = 41,
-                            CourseId = 8,
-                            Date = new DateTime(2024, 5, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 6,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 13,
-                            TeacherId = 29
+                            StudentId = 14,
+                            TeacherId = 26
                         },
                         new
                         {
                             Id = 42,
-                            CourseId = 10,
-                            Date = new DateTime(2024, 11, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 7,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 14,
-                            TeacherId = 21
+                            TeacherId = 27
                         },
                         new
                         {
                             Id = 43,
-                            CourseId = 9,
-                            Date = new DateTime(2024, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 14,
-                            TeacherId = 30
-                        },
-                        new
-                        {
-                            Id = 44,
-                            CourseId = 5,
-                            Date = new DateTime(2024, 2, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 14,
-                            TeacherId = 29
-                        },
-                        new
-                        {
-                            Id = 45,
-                            CourseId = 5,
-                            Date = new DateTime(2024, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 6,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 15,
@@ -7156,9 +7158,19 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 46,
-                            CourseId = 6,
-                            Date = new DateTime(2024, 5, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 44,
+                            CourseId = 7,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 15,
+                            TeacherId = 27
+                        },
+                        new
+                        {
+                            Id = 45,
+                            CourseId = 8,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 15,
@@ -7166,19 +7178,29 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 47,
-                            CourseId = 8,
-                            Date = new DateTime(2024, 10, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 46,
+                            CourseId = 7,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 15,
-                            TeacherId = 24
+                            StudentId = 16,
+                            TeacherId = 27
+                        },
+                        new
+                        {
+                            Id = 47,
+                            CourseId = 8,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 16,
+                            TeacherId = 28
                         },
                         new
                         {
                             Id = 48,
-                            CourseId = 6,
-                            Date = new DateTime(2024, 11, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 9,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 16,
@@ -7187,142 +7209,122 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 49,
-                            CourseId = 3,
-                            Date = new DateTime(2024, 11, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 8,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 16,
-                            TeacherId = 23
+                            StudentId = 17,
+                            TeacherId = 28
                         },
                         new
                         {
                             Id = 50,
-                            CourseId = 6,
-                            Date = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 9,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 16,
-                            TeacherId = 25
+                            StudentId = 17,
+                            TeacherId = 29
                         },
                         new
                         {
                             Id = 51,
-                            CourseId = 8,
-                            Date = new DateTime(2024, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 10,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 17,
-                            TeacherId = 25
+                            TeacherId = 30
                         },
                         new
                         {
                             Id = 52,
-                            CourseId = 3,
-                            Date = new DateTime(2024, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 9,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 17,
-                            TeacherId = 27
+                            StudentId = 18,
+                            TeacherId = 29
                         },
                         new
                         {
                             Id = 53,
-                            CourseId = 9,
-                            Date = new DateTime(2024, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 10,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 17,
-                            TeacherId = 27
+                            StudentId = 18,
+                            TeacherId = 30
                         },
                         new
                         {
                             Id = 54,
-                            CourseId = 8,
-                            Date = new DateTime(2024, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CourseId = 1,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 18,
-                            TeacherId = 30
+                            TeacherId = 21
                         },
                         new
                         {
                             Id = 55,
-                            CourseId = 7,
-                            Date = new DateTime(2024, 6, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 18,
-                            TeacherId = 23
-                        },
-                        new
-                        {
-                            Id = 56,
-                            CourseId = 7,
-                            Date = new DateTime(2024, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 18,
-                            TeacherId = 26
-                        },
-                        new
-                        {
-                            Id = 57,
-                            CourseId = 9,
-                            Date = new DateTime(2024, 9, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 19,
-                            TeacherId = 27
-                        },
-                        new
-                        {
-                            Id = 58,
-                            CourseId = 5,
-                            Date = new DateTime(2024, 10, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 19,
-                            TeacherId = 25
-                        },
-                        new
-                        {
-                            Id = 59,
-                            CourseId = 3,
-                            Date = new DateTime(2024, 5, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 19,
-                            TeacherId = 25
-                        },
-                        new
-                        {
-                            Id = 60,
                             CourseId = 10,
-                            Date = new DateTime(2024, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 20,
+                            StudentId = 19,
                             TeacherId = 30
                         },
                         new
                         {
-                            Id = 61,
-                            CourseId = 3,
-                            Date = new DateTime(2024, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 56,
+                            CourseId = 1,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                            StudentId = 20,
-                            TeacherId = 26
+                            StudentId = 19,
+                            TeacherId = 21
                         },
                         new
                         {
-                            Id = 62,
-                            CourseId = 7,
-                            Date = new DateTime(2024, 7, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = 57,
+                            CourseId = 2,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 19,
+                            TeacherId = 22
+                        },
+                        new
+                        {
+                            Id = 58,
+                            CourseId = 1,
+                            Date = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             IsDeleted = false,
                             RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                             StudentId = 20,
-                            TeacherId = 27
+                            TeacherId = 21
+                        },
+                        new
+                        {
+                            Id = 59,
+                            CourseId = 2,
+                            Date = new DateTime(2024, 2, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 20,
+                            TeacherId = 22
+                        },
+                        new
+                        {
+                            Id = 60,
+                            CourseId = 3,
+                            Date = new DateTime(2024, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsDeleted = false,
+                            RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                            StudentId = 20,
+                            TeacherId = 23
                         });
                 });
 
@@ -7330,15 +7332,15 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("School Identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasComment("School Name");
 
                     b.HasKey("Id");
@@ -7402,76 +7404,76 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Student Identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClassId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Class Identifier");
 
                     b.Property<string>("ContactDetails")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasComment("Student Contact Details");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasComment("Date of birth of Student");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasComment("Student Email Address");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Student First Name");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasComment("Shows if student is Deleted");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Student Last Name");
 
                     b.Property<string>("MiddleName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Student Middle Name");
 
                     b.Property<double>("Performance")
-                        .HasColumnType("float")
+                        .HasColumnType("double precision")
                         .HasComment("Student Performance");
 
                     b.Property<string>("PersonalId")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasColumnType("character varying(10)")
                         .HasComment("Student Personal Identification Number");
 
                     b.Property<string>("ProfilePicturePath")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasComment("Path to the profile picture of the student");
 
                     b.Property<int>("SchoolId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("School Identifier");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("text")
                         .HasComment("User Identifier");
 
                     b.HasKey("Id");
@@ -7490,7 +7492,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 1,
                             ClassId = 3,
                             ContactDetails = "GSM:882163890",
-                            DateOfBirth = new DateTime(2006, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9000),
+                            DateOfBirth = new DateTime(2007, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8654),
                             Email = "ivan414@gmail.com",
                             FirstName = "Ivan",
                             IsDeleted = false,
@@ -7507,7 +7509,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 2,
                             ClassId = 5,
                             ContactDetails = "GSM:889556992",
-                            DateOfBirth = new DateTime(2007, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9064),
+                            DateOfBirth = new DateTime(2008, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8666),
                             Email = "maria270@gmail.com",
                             FirstName = "Maria",
                             IsDeleted = false,
@@ -7524,7 +7526,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 3,
                             ClassId = 5,
                             ContactDetails = "GSM:883854732",
-                            DateOfBirth = new DateTime(2007, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9069),
+                            DateOfBirth = new DateTime(2008, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8670),
                             Email = "elena309@gmail.com",
                             FirstName = "Elena",
                             IsDeleted = false,
@@ -7541,7 +7543,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 4,
                             ClassId = 4,
                             ContactDetails = "GSM:886992374",
-                            DateOfBirth = new DateTime(2006, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9073),
+                            DateOfBirth = new DateTime(2007, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8672),
                             Email = "viktor725@gmail.com",
                             FirstName = "Viktor",
                             IsDeleted = false,
@@ -7558,7 +7560,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 5,
                             ClassId = 2,
                             ContactDetails = "GSM:884738222",
-                            DateOfBirth = new DateTime(2008, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9077),
+                            DateOfBirth = new DateTime(2009, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8675),
                             Email = "pesho278@gmail.com",
                             FirstName = "Pesho",
                             IsDeleted = false,
@@ -7575,7 +7577,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 6,
                             ClassId = 1,
                             ContactDetails = "GSM:888183734",
-                            DateOfBirth = new DateTime(2005, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9082),
+                            DateOfBirth = new DateTime(2006, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8678),
                             Email = "nina.borisova@gmail.com",
                             FirstName = "Nina",
                             IsDeleted = false,
@@ -7592,7 +7594,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 7,
                             ClassId = 1,
                             ContactDetails = "GSM:883764543",
-                            DateOfBirth = new DateTime(2004, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9120),
+                            DateOfBirth = new DateTime(2005, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8681),
                             Email = "ivo.pavlov@gmail.com",
                             FirstName = "Ivo",
                             IsDeleted = false,
@@ -7609,7 +7611,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 8,
                             ClassId = 3,
                             ContactDetails = "GSM:882847361",
-                            DateOfBirth = new DateTime(2003, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9125),
+                            DateOfBirth = new DateTime(2004, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8684),
                             Email = "katerina.gancheva@gmail.com",
                             FirstName = "Katerina",
                             IsDeleted = false,
@@ -7626,7 +7628,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 9,
                             ClassId = 4,
                             ContactDetails = "GSM:887654321",
-                            DateOfBirth = new DateTime(2002, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9134),
+                            DateOfBirth = new DateTime(2003, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8687),
                             Email = "dimitar.mihailov@gmail.com",
                             FirstName = "Dimitar",
                             IsDeleted = false,
@@ -7643,7 +7645,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 10,
                             ClassId = 5,
                             ContactDetails = "GSM:885676543",
-                            DateOfBirth = new DateTime(2001, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9138),
+                            DateOfBirth = new DateTime(2002, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8718),
                             Email = "stefan.yordanov@gmail.com",
                             FirstName = "Stefan",
                             IsDeleted = false,
@@ -7660,7 +7662,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 11,
                             ClassId = 2,
                             ContactDetails = "GSM:882364788",
-                            DateOfBirth = new DateTime(2004, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9145),
+                            DateOfBirth = new DateTime(2005, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8722),
                             Email = "diana.ruseva@gmail.com",
                             FirstName = "Diana",
                             IsDeleted = false,
@@ -7677,7 +7679,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 12,
                             ClassId = 3,
                             ContactDetails = "GSM:889276400",
-                            DateOfBirth = new DateTime(2003, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9149),
+                            DateOfBirth = new DateTime(2004, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8724),
                             Email = "petar.georgiev@gmail.com",
                             FirstName = "Petar",
                             IsDeleted = false,
@@ -7694,7 +7696,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 13,
                             ClassId = 4,
                             ContactDetails = "GSM:883712508",
-                            DateOfBirth = new DateTime(2005, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9154),
+                            DateOfBirth = new DateTime(2006, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8727),
                             Email = "tanya.ivanova@gmail.com",
                             FirstName = "Tanya",
                             IsDeleted = false,
@@ -7711,7 +7713,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 14,
                             ClassId = 2,
                             ContactDetails = "GSM:887327015",
-                            DateOfBirth = new DateTime(2006, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9158),
+                            DateOfBirth = new DateTime(2007, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8730),
                             Email = "aleksandar.pavlov@gmail.com",
                             FirstName = "Aleksandar",
                             IsDeleted = false,
@@ -7728,7 +7730,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 15,
                             ClassId = 5,
                             ContactDetails = "GSM:888014697",
-                            DateOfBirth = new DateTime(2004, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9162),
+                            DateOfBirth = new DateTime(2005, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8732),
                             Email = "julia.dimitrova@gmail.com",
                             FirstName = "Julia",
                             IsDeleted = false,
@@ -7745,7 +7747,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 16,
                             ClassId = 1,
                             ContactDetails = "GSM:884728672",
-                            DateOfBirth = new DateTime(2006, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9182),
+                            DateOfBirth = new DateTime(2007, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8735),
                             Email = "kiril.kolarov@gmail.com",
                             FirstName = "Kiril",
                             IsDeleted = false,
@@ -7762,7 +7764,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 17,
                             ClassId = 3,
                             ContactDetails = "GSM:889253738",
-                            DateOfBirth = new DateTime(2002, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9186),
+                            DateOfBirth = new DateTime(2003, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8738),
                             Email = "daniela.todorova@gmail.com",
                             FirstName = "Daniela",
                             IsDeleted = false,
@@ -7779,7 +7781,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 18,
                             ClassId = 4,
                             ContactDetails = "GSM:888107316",
-                            DateOfBirth = new DateTime(2003, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9190),
+                            DateOfBirth = new DateTime(2004, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8741),
                             Email = "lazar.grigorov@gmail.com",
                             FirstName = "Lazar",
                             IsDeleted = false,
@@ -7796,7 +7798,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 19,
                             ClassId = 2,
                             ContactDetails = "GSM:887726051",
-                            DateOfBirth = new DateTime(2008, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9194),
+                            DateOfBirth = new DateTime(2009, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8743),
                             Email = "ivanka.nikolova@gmail.com",
                             FirstName = "Ivanka",
                             IsDeleted = false,
@@ -7813,7 +7815,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                             Id = 20,
                             ClassId = 5,
                             ContactDetails = "GSM:883467150",
-                            DateOfBirth = new DateTime(2005, 12, 13, 3, 8, 19, 869, DateTimeKind.Local).AddTicks(9198),
+                            DateOfBirth = new DateTime(2006, 7, 15, 21, 27, 15, 205, DateTimeKind.Utc).AddTicks(8746),
                             Email = "gergana.georgieva@gmail.com",
                             FirstName = "Gergana",
                             IsDeleted = false,
@@ -7831,57 +7833,57 @@ namespace StudentManagementSystem.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Teacher Identifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ContactDetails")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
+                        .HasColumnType("character varying(200)")
                         .HasComment("Teacher Contact Details");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasComment("Student Email Address");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Teacher First Name");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasComment("Shows if teacher is Deleted");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Teacher Last Name");
 
                     b.Property<string>("ProfilePicturePath")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("character varying(255)")
                         .HasComment("Path to the profile picture of the student");
 
                     b.Property<int>("SchoolId")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("School Identifier");
 
                     b.Property<string>("Titles")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasComment("Teacher Titles");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("text")
                         .HasComment("User Identifier");
 
                     b.HasKey("Id");
@@ -8031,18 +8033,18 @@ namespace StudentManagementSystem.Infrastructure.Migrations
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("First name of the user.");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Last name of the user.");
 
                     b.Property<string>("PersonalId")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasColumnType("character varying(10)")
                         .HasComment("Personal ID is a unique identifier for each person.");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
@@ -8050,7 +8052,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -8077,7 +8079,7 @@ namespace StudentManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)

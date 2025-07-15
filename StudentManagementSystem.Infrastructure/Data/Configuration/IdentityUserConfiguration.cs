@@ -211,126 +211,126 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
         PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password1!")
     },
     new IdentityUser
-                {
-                    Id = "51065229-23b9-402f-a54d-00bb813d6b1c",
-                    UserName = "stan12@gmail.com",
-                    NormalizedUserName = "STAN12@GMAIL.COM",
-                    Email = "stan12@gmail.com",
-                    NormalizedEmail = "STAN12@GMAIL.COM",
+    {
+        Id = "51065229-23b9-402f-a54d-00bb813d6b1c",
+        UserName = "stan12@gmail.com",
+        NormalizedUserName = "STAN12@GMAIL.COM",
+        Email = "stan12@gmail.com",
+        NormalizedEmail = "STAN12@GMAIL.COM",
         EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                },
-                new IdentityUser
-                {
-                    Id = "6b6433a7-3564-4cba-ace2-4a44afca4177",
-                    UserName = "ivdra23@gmail.com",
-                    NormalizedUserName = "IVDRA23@GMAIL.COM",
-                    Email = "ivdra23@gmail.com",
-                    NormalizedEmail = "IVDRA23@GMAIL.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                },
-                new IdentityUser
-                {
-                    Id = "331d08d0-d407-4d61-af6e-1bb134ae7998",
-                    UserName = "mariya.petrova@gmail.com",
-                    NormalizedUserName = "MARIYA.PETROVA@GMAIL.COM",
-                    Email = "mariya.petrova@gmail.com",
-                    NormalizedEmail = "MARIYA.PETROVA@GMAIL.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                },
-                new IdentityUser
-                {
-                    Id = "030ddabd-7dcb-46ca-bab6-3feeae3492a8",
-                    UserName = "nikolai.vasilev@gmail.com",
-                    NormalizedUserName = "NIKOLAI.VASILEV@GMAIL.COM",
-                    Email = "nikolai.vasilev@gmail.com",
-                    NormalizedEmail = "NIKOLAI.VASILEV@GMAIL.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                },
-                new IdentityUser
-                {
-                    Id = "291cc1a8-8f2c-4f48-a919-ff4d9692a859",
-                    UserName = "radoslav.ivanov@gmail.com",
-                    NormalizedUserName = "RADOSLAV.IVANOV@GMAIL.COM",
-                    Email = "radoslav.ivanov@gmail.com",
-                    NormalizedEmail = "RADOSLAV.IVANOV@GMAIL.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                },
-                new IdentityUser
-                {
-                    Id = "32739a60-8250-4178-a19c-96d90444ebd3",
-                    UserName = "katerina.dimitrova@gmail.com",
-                    NormalizedUserName = "KATERINA.DIMITROVA@GMAIL.COM",
-                    Email = "katerina.dimitrova@gmail.com",
-                    NormalizedEmail = "KATERINA.DIMITROVA@GMAIL.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                },
-                new IdentityUser
-                {
-                    Id = "3647bea5-9ce4-4d8b-bf0f-7a5fbd3ea729",
-                    UserName = "gosho.georgiev@gmail.com",
-                    NormalizedUserName = "GOSHO.GEORGIEV@GMAIL.COM",
-                    Email = "gosho.georgiev@gmail.com",
-                    NormalizedEmail = "GOSHO.GEORGIEV@GMAIL.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                },
-                new IdentityUser
-                {
-                    Id = "2ad410b1-c108-4b9c-99f1-0f68dbd6ad45",
-                    UserName = "lidia.todorova@gmail.com",
-                    NormalizedUserName = "LIDIA.TODOROVA@GMAIL.COM",
-                    Email = "lidia.todorova@gmail.com",
-                    NormalizedEmail = "LIDIA.TODOROVA@GMAIL.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                },
-                new IdentityUser
-                {
-                    Id = "04b6c6b1-5f9b-4c7a-9f42-86193c03d327",
-                    UserName = "stefan.kovachev@gmail.com",
-                    NormalizedUserName = "STEFAN.KOVACHEV@GMAIL.COM",
-                    Email = "stefan.kovachev@gmail.com",
-                    NormalizedEmail = "STEFAN.KOVACHEV@GMAIL.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                },
-                new IdentityUser
-                {
-                    Id = "9ab8c775-88c0-4dc3-b11d-178c3ca2129",
-                    UserName = "valentina.nikolova@gmail.com",
-                    NormalizedUserName = "VALENTINA.NIKOLOVA@GMAIL.COM",
-                    Email = "valentina.nikolova@gmail.com",
-                    NormalizedEmail = "VALENTINA.NIKOLOVA@GMAIL.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                },
-                new IdentityUser
-                {
-                    Id = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
-                    UserName = "admin@admin.com",
-                    NormalizedUserName = "ADMIN@ADMIN.COM",
-                    Email = "admin@admin.com",
-                    NormalizedEmail = "ADMIN@ADMIN.COM",
-                    EmailConfirmed = true,
-                    PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
-                    SecurityStamp = string.Empty
-                }
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    },
+    new IdentityUser
+    {
+        Id = "6b6433a7-3564-4cba-ace2-4a44afca4177",
+        UserName = "ivdra23@gmail.com",
+        NormalizedUserName = "IVDRA23@GMAIL.COM",
+        Email = "ivdra23@gmail.com",
+        NormalizedEmail = "IVDRA23@GMAIL.COM",
+        EmailConfirmed = true,
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    },
+    new IdentityUser
+    {
+        Id = "331d08d0-d407-4d61-af6e-1bb134ae7998",
+        UserName = "mariya.petrova@gmail.com",
+        NormalizedUserName = "MARIYA.PETROVA@GMAIL.COM",
+        Email = "mariya.petrova@gmail.com",
+        NormalizedEmail = "MARIYA.PETROVA@GMAIL.COM",
+        EmailConfirmed = true,
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    },
+    new IdentityUser
+    {
+        Id = "030ddabd-7dcb-46ca-bab6-3feeae3492a8",
+        UserName = "nikolai.vasilev@gmail.com",
+        NormalizedUserName = "NIKOLAI.VASILEV@GMAIL.COM",
+        Email = "nikolai.vasilev@gmail.com",
+        NormalizedEmail = "NIKOLAI.VASILEV@GMAIL.COM",
+        EmailConfirmed = true,
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    },
+    new IdentityUser
+    {
+        Id = "291cc1a8-8f2c-4f48-a919-ff4d9692a859",
+        UserName = "radoslav.ivanov@gmail.com",
+        NormalizedUserName = "RADOSLAV.IVANOV@GMAIL.COM",
+        Email = "radoslav.ivanov@gmail.com",
+        NormalizedEmail = "RADOSLAV.IVANOV@GMAIL.COM",
+        EmailConfirmed = true,
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    },
+    new IdentityUser
+    {
+        Id = "32739a60-8250-4178-a19c-96d90444ebd3",
+        UserName = "katerina.dimitrova@gmail.com",
+        NormalizedUserName = "KATERINA.DIMITROVA@GMAIL.COM",
+        Email = "katerina.dimitrova@gmail.com",
+        NormalizedEmail = "KATERINA.DIMITROVA@GMAIL.COM",
+        EmailConfirmed = true,
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    },
+    new IdentityUser
+    {
+        Id = "3647bea5-9ce4-4d8b-bf0f-7a5fbd3ea729",
+        UserName = "gosho.georgiev@gmail.com",
+        NormalizedUserName = "GOSHO.GEORGIEV@GMAIL.COM",
+        Email = "gosho.georgiev@gmail.com",
+        NormalizedEmail = "GOSHO.GEORGIEV@GMAIL.COM",
+        EmailConfirmed = true,
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    },
+    new IdentityUser
+    {
+        Id = "2ad410b1-c108-4b9c-99f1-0f68dbd6ad45",
+        UserName = "lidia.todorova@gmail.com",
+        NormalizedUserName = "LIDIA.TODOROVA@GMAIL.COM",
+        Email = "lidia.todorova@gmail.com",
+        NormalizedEmail = "LIDIA.TODOROVA@GMAIL.COM",
+        EmailConfirmed = true,
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    },
+    new IdentityUser
+    {
+        Id = "04b6c6b1-5f9b-4c7a-9f42-86193c03d327",
+        UserName = "stefan.kovachev@gmail.com",
+        NormalizedUserName = "STEFAN.KOVACHEV@GMAIL.COM",
+        Email = "stefan.kovachev@gmail.com",
+        NormalizedEmail = "STEFAN.KOVACHEV@GMAIL.COM",
+        EmailConfirmed = true,
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    },
+    new IdentityUser
+    {
+        Id = "9ab8c775-88c0-4dc3-b11d-178c3ca2129",
+        UserName = "valentina.nikolova@gmail.com",
+        NormalizedUserName = "VALENTINA.NIKOLOVA@GMAIL.COM",
+        Email = "valentina.nikolova@gmail.com",
+        NormalizedEmail = "VALENTINA.NIKOLOVA@GMAIL.COM",
+        EmailConfirmed = true,
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    },
+    new IdentityUser
+    {
+        Id = "bb8c0d8c-24e0-4e4f-b8a7-5c69e5895b9f",
+        UserName = "admin@admin.com",
+        NormalizedUserName = "ADMIN@ADMIN.COM",
+        Email = "admin@admin.com",
+        NormalizedEmail = "ADMIN@ADMIN.COM",
+        EmailConfirmed = true,
+        PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(null, "Password123"),
+        SecurityStamp = string.Empty
+    }
 };
 
 

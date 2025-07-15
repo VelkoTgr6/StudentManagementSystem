@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StudentManagementSystem.Infrastructure.Data.Configuration;
-using StudentManagementSystem.Infrastructure.Data.Configuration.StudentManagementSystem.Infrastructure.Data.Configuration;
 using StudentManagementSystem.Infrastructure.Data.Models;
 
 namespace StudentManagementSystem.Infrastructure
 {
-    public class StudentManagementDbContext : IdentityDbContext
+    public class StudentManagementDbContext : IdentityDbContext<IdentityUser, IdentityRole<string>, string>
     {
         public StudentManagementDbContext(DbContextOptions<StudentManagementDbContext> options)
             : base(options)
@@ -81,7 +81,7 @@ namespace StudentManagementSystem.Infrastructure
                 .OnDelete(DeleteBehavior.Cascade);
 
 
-
+            builder.ApplyConfiguration(new IdentityRoleConfiguration());
             builder.ApplyConfiguration(new IdentityUserConfiguration());
             builder.ApplyConfiguration(new IdentityUserRoleConfiguration());
             builder.ApplyConfiguration(new SchoolConfiguration());
