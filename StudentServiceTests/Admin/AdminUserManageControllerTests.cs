@@ -181,6 +181,24 @@ namespace Tests.Admin
         }
 
         [Test]
+        public async Task RemoveUserFromRole_PostRequest_UserNotInRole_ReturnsBadRequest()
+        {
+            
+            var model = new UserRoleFormViewModel { UserName = "TestUser", RoleName = "TestRole" };
+            var user = new IdentityUser { UserName = "TestUser" };
+
+            userManagerMock.Setup(u => u.FindByNameAsync(model.UserName)).ReturnsAsync(user);
+            roleManagerMock.Setup(r => r.RoleExistsAsync(model.RoleName)).ReturnsAsync(true);
+            userManagerMock.Setup(u => u.GetRolesAsync(user)).ReturnsAsync(new List<string>());
+
+            
+            var result = await controller.RemoveUserFromRole(model);
+
+            
+            Assert.IsInstanceOf<BadRequestResult>(result);
+        }
+
+        [Test]
         public async Task EditRole_GetRequest_ReturnsViewWithRoles()
         {
             

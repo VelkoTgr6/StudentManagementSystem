@@ -157,7 +157,6 @@ namespace Tests.Admin
                 ContactDetails = "123456789",
                 Titles = "Mr.",
                 Email = "john.doe@example.com",
-                ProfilePicturePath = "/images/profiles/jane.jpg",
                 IsDeleted = false,
                 Courses = new List<Course> { new Course { Id = 1, Name = "Math" } }
             };
