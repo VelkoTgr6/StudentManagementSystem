@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StudentManagementSystem.Infrastructure.Data.Models;
+using System;
+using System.Collections.Generic;
 
 namespace StudentManagementSystem.Infrastructure.Data.Configuration
 {
@@ -16,42 +18,32 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
         private static Remark[] GenerateInitialRemarks()
         {
             List<Remark> remarks = new List<Remark>();
-            Random random = new Random();
-
+            int id = 1;
+            int[] courseIds = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            int[] teacherIds = { 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
+            DateTime[] dates =
+            {
+                new DateTime(2024, 1, 10, 0, 0, 0, DateTimeKind.Utc),
+                new DateTime(2024, 2, 15, 0, 0, 0, DateTimeKind.Utc),
+                new DateTime(2024, 3, 20, 0, 0, 0, DateTimeKind.Utc)
+            };
             for (int studentId = 1; studentId <= 20; studentId++)
             {
                 for (int i = 0; i < 3; i++)
                 {
                     remarks.Add(new Remark
                     {
-                        Id = studentId * 3 + i,
-                        CourseId = random.Next(1, 11),
-                        TeacherId = random.Next(21, 31),
-                        Date = RandomDateGenerator.GenerateRandomDateIn2024(),
+                        Id = id++,
+                        CourseId = courseIds[(studentId + i) % courseIds.Length],
+                        TeacherId = teacherIds[(studentId + i) % teacherIds.Length],
+                        Date = dates[i % dates.Length],
                         RemarkText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                        StudentId = studentId
+                        StudentId = studentId,
+                        IsDeleted = false
                     });
                 }
             }
-
             return remarks.ToArray();
-        }
-    }
-
-    public static class RandomDateGenerator
-    {
-        public static DateTime GenerateRandomDate(DateTime startDate, DateTime endDate)
-        {
-            Random random = new Random();
-            int range = (endDate - startDate).Days;
-            return startDate.AddDays(random.Next(range));
-        }
-
-        public static DateTime GenerateRandomDateIn2024()
-        {
-            DateTime startDate = new DateTime(2024, 1, 2);
-            DateTime endDate = new DateTime(2024, 12, 24);
-            return GenerateRandomDate(startDate, endDate);
         }
     }
 }
