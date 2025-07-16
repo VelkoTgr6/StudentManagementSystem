@@ -6,7 +6,7 @@ services:
       - "10000:10000"
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=StudentManagementDb;Username=postgres;Password=yourpassword
-      - ASPNETCORE_ENVIRONMENT=master
+      - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       - postgres
   

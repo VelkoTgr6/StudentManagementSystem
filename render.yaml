@@ -24,6 +24,7 @@ services:
     env: docker
     plan: free
     region: frankfurt
+    branch: master
     dockerfilePath: ./Dockerfile
     envVars:
       - key: DATABASE_URL
