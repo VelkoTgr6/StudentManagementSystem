@@ -6,10 +6,6 @@ services:
     plan: free
     region: frankfurt
     dockerCommand: postgres
-    disk:
-      name: studentms-db-disk
-      mountPath: /var/lib/postgresql/data
-      sizeGB: 1
     envVars:
       - key: POSTGRES_DB
         value: StudentManagementDb
@@ -35,7 +31,3 @@ services:
         value: Production
       - key: ASPNETCORE_URLS
         value: http://+:10000
-
-disks:
-  - name: studentms-db-disk
-    sizeGB: 1
