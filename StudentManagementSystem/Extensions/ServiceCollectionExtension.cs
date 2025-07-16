@@ -29,8 +29,25 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddApplicationDbContext(this IServiceCollection services,IConfiguration config)
         {
-            var connectionString = config.GetConnectionString("DefaultConnection") ?? 
-                throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            // First try to get connection string from configuration
+            var connectionString = config.GetConnectionString("DefaultConnection");
+            
+            // If not found, try Render's DATABASE_URL environment variable
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+                if (!string.IsNullOrEmpty(databaseUrl))
+                {
+                    // Parse DATABASE_URL format: postgres://user:password@host:port/database
+                    var uri = new Uri(databaseUrl);
+                    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={uri.UserInfo.Split(':')[0]};Password={uri.UserInfo.Split(':')[1]};SSL Mode=Require;Trust Server Certificate=true";
+                }
+            }
+            
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("Connection string 'DefaultConnection' not found in configuration and DATABASE_URL environment variable is not set.");
+            }
 
             services.AddDbContext<StudentManagementDbContext>(options =>
                 options.UseNpgsql(connectionString));

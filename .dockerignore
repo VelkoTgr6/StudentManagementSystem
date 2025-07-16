@@ -1,0 +1,45 @@
+# Ignore build artifacts
+**/bin/
+**/obj/
+**/out/
+
+# Ignore test projects
+StudentServiceTests/
+StudentManagemntSystem.UnitTests/
+testing/
+ReplaceRandomNext/
+
+# Ignore development files
+**/.vs/
+**/.vscode/
+**/.idea/
+*.user
+*.suo
+*.cache
+
+# Ignore git files
+.git/
+.gitignore
+.gitattributes
+
+# Ignore Docker files
+Dockerfile*
+.dockerignore
+
+# Ignore documentation
+README.md
+LICENSE.txt
+
+# Ignore environment files
+**/.env
+**/.env.local
+**/.env.development
+**/.env.production
+
+# Ignore logs
+**/logs/
+**/*.log
+
+# Ignore temporary files
+**/tmp/
+**/temp/

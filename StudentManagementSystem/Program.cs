@@ -32,6 +32,9 @@ builder.Services.AddControllersWithViews(options =>
 
 var app = builder.Build();
 
+builder.WebHost.UseUrls("http://+:10000"); // avoids issues
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();

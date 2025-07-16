@@ -1,4 +1,24 @@
 services:
+  # PostgreSQL Database
+  - type: pserv
+    name: studentms-db
+    env: docker
+    plan: free
+    region: frankfurt
+    dockerCommand: postgres
+    disk:
+      name: studentms-db-disk
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 1
+    envVars:
+      - key: POSTGRES_DB
+        value: StudentManagementDb
+      - key: POSTGRES_USER
+        value: postgres
+      - key: POSTGRES_PASSWORD
+        generateValue: true
+
+  # Web Application
   - type: web
     name: student-management-system
     env: docker
@@ -10,3 +30,11 @@ services:
         fromDatabase:
           name: studentms-db
           property: connectionString
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:10000
+
+disks:
+  - name: studentms-db-disk
+    sizeGB: 1
