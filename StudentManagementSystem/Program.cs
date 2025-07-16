@@ -95,15 +95,17 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
 
     try
     {
         var context = services.GetRequiredService<StudentManagementDbContext>();
-        context.Database.Migrate(); // Apply pending migrations (this replaces CLI `update-database`)
+        logger.LogInformation("Starting database migration on Render...");
+        context.Database.Migrate();
+        logger.LogInformation("Database migration completed successfully on Render.");
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred applying database migrations.");
     }
 }
