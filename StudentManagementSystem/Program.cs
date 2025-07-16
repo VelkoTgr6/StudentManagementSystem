@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using StudentManagementSystem.Infrastructure;
+using StudentManagementSystem.Infrastructure.Services;
 using StudentManagementSystem.Infrastructure.Services.EmailSender;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,5 +91,21 @@ app.Use(async (context, next) =>
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    try
+    {
+        var context = services.GetRequiredService<StudentManagementDbContext>();
+        context.Database.Migrate(); // Apply pending migrations (this replaces CLI `update-database`)
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred applying database migrations.");
+    }
+}
 
 app.Run();
