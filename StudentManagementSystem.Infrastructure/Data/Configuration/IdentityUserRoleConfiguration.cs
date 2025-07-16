@@ -19,7 +19,7 @@ namespace StudentManagementSystem.Infrastructure.Data.Configuration
             new IdentityUserRole<string> { RoleId = "2", UserId = "2ad410b1-c108-4b9c-99f1-0f68dbd6ad45" },
             new IdentityUserRole<string> { RoleId = "2", UserId = "04b6c6b1-5f9b-4c7a-9f42-86193c03d327" },
             new IdentityUserRole<string> { RoleId = "2", UserId = "9ab8c775-88c0-4dc3-b11d-178c3ca2129" },
-            new IdentityUserRole<string> { RoleId = "2", UserId = "aa7d01c6-9499-4ed4-a38e-3d0afa2b707c" },
+            new IdentityUserRole<string> { RoleId = "3", UserId = "aa7d01c6-9499-4ed4-a38e-3d0afa2b707c" },
             new IdentityUserRole<string> { RoleId = "3", UserId = "f2875100-0cf1-4b1d-ba91-1dfa38690f84" },
             new IdentityUserRole<string> { RoleId = "3", UserId = "b65e6163-1454-4164-9869-2ff822f9da98" },  // Student
             new IdentityUserRole<string> { RoleId = "3", UserId = "c5d7d80f-08d5-41ec-892c-30833098c047" },

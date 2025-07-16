@@ -21,9 +21,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             IAdminClassService _adminClassService,
             IAdminCourseService _adminCourseService,
             IAdminTeacherService _adminTeacherService,
-            IAdminStudentService _adminStudentService,
-            UserManager<IdentityUser> _userManager,
-            RoleManager<IdentityRole> _roleManager)
+            IAdminStudentService _adminStudentService)
         {
             adminService = _adminService;
             adminClassService = _adminClassService;
