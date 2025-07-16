@@ -1,10 +1,9 @@
-services:
-  # PostgreSQL Database
-  - type: pserv
-    name: studentms-db
+databases:
+  - name: studentms-db
     plan: free
     region: frankfurt
 
+services:
   # Web Application
   - type: web
     name: student-management-system
