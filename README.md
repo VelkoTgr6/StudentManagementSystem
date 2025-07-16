@@ -126,34 +126,3 @@ dotnet run --project StudentManagementSystem
 ```
 
 The application will be available at `https://localhost:7071`
-
-## � Live Demo
-
-You can try the application with the live demo deployed on Render:
-
-**Demo URL**: https://student-management-system-bons.onrender.com
-
-### Demo Credentials
-
-#### Student
-- **Email**: `ivan414@gmail.com`
-- **Password**: `Password1!`
-- **Access**: View grades, remarks, schedule, academic dashboard
-
-#### Teacher
-- **Email**: `stan12@gmail.com`
-- **Password**: `Password123`
-- **Access**: Grade management, student remarks, assigned classes
-
-#### Administrator
-- **Email**: `admin@admin.com`
-- **Password**: `Password123`
-- **Access**: Full system management, user creation, course management
-
-> **Note**: This is a demo environment. Data may be reset periodically. Please do not enter any sensitive or personal information.
-
-### Demo Features to Test
-- **Admin Panel**: Create new users, manage courses and classes
-- **Teacher Dashboard**: Add grades and remarks for students
-- **Student Portal**: View academic performance and schedules
-- **Role-based Access**: Notice different features available to each role
