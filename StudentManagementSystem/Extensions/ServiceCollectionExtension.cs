@@ -27,39 +27,49 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static IServiceCollection AddApplicationDbContext(this IServiceCollection services,IConfiguration config)
+        public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration config)
+{
+    var connectionString = config.GetConnectionString("DefaultConnection");
+
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+        if (string.IsNullOrEmpty(databaseUrl))
         {
-            // First try to get connection string from configuration
-            var connectionString = config.GetConnectionString("DefaultConnection");
-            
-            // If not found, try Render's DATABASE_URL environment variable
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-                if (!string.IsNullOrEmpty(databaseUrl))
-                {
-                    // Parse DATABASE_URL format: postgres://user:password@host:port/database
-                    var uri = new Uri(databaseUrl);
-                    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={uri.UserInfo.Split(':')[0]};Password={uri.UserInfo.Split(':')[1]};SSL Mode=Require;Trust Server Certificate=true";
-                }
-            }
-            
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new InvalidOperationException("Connection string 'DefaultConnection' not found in configuration and DATABASE_URL environment variable is not set.");
-            }
-
-            services.AddDbContext<StudentManagementDbContext>(options =>
-                options.UseNpgsql(connectionString));
-
-            services.AddScoped<IRepository, Repository>();
-
-            services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddRazorPages();
-
-            return services;
+            throw new InvalidOperationException("DATABASE_URL environment variable is not set.");
         }
+
+        var uri = new Uri(databaseUrl);
+        var userInfo = uri.UserInfo.Split(':');
+
+        var host = uri.Host;
+        var port = uri.Port != -1 ? uri.Port : 5432;
+        var database = uri.AbsolutePath.TrimStart('/');
+        var username = userInfo[0];
+        var password = userInfo.Length > 1 ? userInfo[1] : "";
+
+        connectionString = $"Host={host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+
+        Console.WriteLine($"Using DATABASE_URL with host {host} and database {database}");
+    }
+    else
+    {
+        Console.WriteLine("Using connection string from configuration");
+    }
+
+    services.AddDbContext<StudentManagementDbContext>(options =>
+        options.UseNpgsql(connectionString));
+
+    services.AddScoped<IRepository, Repository>();
+
+    services.AddDatabaseDeveloperPageExceptionFilter();
+
+    services.AddRazorPages();
+
+    return services;
+}
+
+
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services,IConfiguration config)
         {

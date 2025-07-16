@@ -2,9 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using StudentManagementSystem.Infrastructure;
-using StudentManagementSystem.Infrastructure.Services;
 using StudentManagementSystem.Infrastructure.Services.EmailSender;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +35,6 @@ builder.Services.AddControllersWithViews(options =>
 var app = builder.Build();
 
 builder.WebHost.UseUrls("http://+:10000"); // avoids issues
-
 
 if (app.Environment.IsDevelopment())
 {
