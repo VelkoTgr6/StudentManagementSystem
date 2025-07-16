@@ -4,8 +4,6 @@ services:
     name: studentms-db
     plan: free
     region: frankfurt
-    databaseName: StudentManagementDb
-    user: postgres
 
   # Web Application
   - type: web
