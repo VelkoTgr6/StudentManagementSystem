@@ -2,17 +2,10 @@ services:
   # PostgreSQL Database
   - type: pserv
     name: studentms-db
-    env: docker
     plan: free
     region: frankfurt
-    dockerCommand: postgres
-    envVars:
-      - key: POSTGRES_DB
-        value: StudentManagementDb
-      - key: POSTGRES_USER
-        value: postgres
-      - key: POSTGRES_PASSWORD
-        generateValue: true
+    databaseName: StudentManagementDb
+    user: postgres
 
   # Web Application
   - type: web
