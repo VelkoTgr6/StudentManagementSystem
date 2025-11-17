@@ -54,6 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     var username = userInfo[0];
                     var password = userInfo.Length > 1 ? userInfo[1] : "";
 
+                    Console.WriteLine($"Parsed connection - Host: {host}, Port: {port}, Database: {database}");
                     connectionString = $"Host={host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
 
                     Console.WriteLine($"Using DATABASE_URL with host {host} and database {database}");
