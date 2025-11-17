@@ -89,8 +89,11 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-using (var scope = app.Services.CreateScope())
+// Run migrations in background so app starts immediately
+_ = Task.Run(async () =>
 {
+    await Task.Delay(1000); // Let app start first
+    using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
     var logger = services.GetRequiredService<ILogger<Program>>();
 
@@ -109,6 +112,6 @@ using (var scope = app.Services.CreateScope())
     {
         logger.LogError(ex, "An error occurred applying database migrations.");
     }
-}
+});
 
 app.Run();
