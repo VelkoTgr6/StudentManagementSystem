@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿    using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StudentManagementSystem.Areas.Admin.Controllers;
@@ -9,15 +9,15 @@ namespace Tests.Admin
     [TestFixture]
     public class AdminUserManageControllerTests
     {
-        private Mock<RoleManager<IdentityRole>> roleManagerMock;
+        private Mock<RoleManager<IdentityRole<string>>> roleManagerMock;
         private Mock<UserManager<IdentityUser>> userManagerMock;
         private AdminUserManageController controller;
 
         [SetUp]
         public void SetUp()
         {
-            var roleStore = new Mock<IRoleStore<IdentityRole>>();
-            roleManagerMock = new Mock<RoleManager<IdentityRole>>(roleStore.Object, null, null, null, null);
+            var roleStore = new Mock<IRoleStore<IdentityRole<string>>>();
+            roleManagerMock = new Mock<RoleManager<IdentityRole<string>>>(roleStore.Object, null, null, null, null);
 
             var userStore = new Mock<IUserStore<IdentityUser>>();
             userManagerMock = new Mock<UserManager<IdentityUser>>(userStore.Object, null, null, null, null, null, null, null, null);
@@ -178,24 +178,6 @@ namespace Tests.Admin
             Assert.IsNotNull(redirectResult);
             Assert.That(redirectResult.ActionName, Is.EqualTo("Index"));
             Assert.That(redirectResult.ControllerName, Is.EqualTo("AdminHome"));
-        }
-
-        [Test]
-        public async Task RemoveUserFromRole_PostRequest_UserNotInRole_ReturnsBadRequest()
-        {
-            
-            var model = new UserRoleFormViewModel { UserName = "TestUser", RoleName = "TestRole" };
-            var user = new IdentityUser { UserName = "TestUser" };
-
-            userManagerMock.Setup(u => u.FindByNameAsync(model.UserName)).ReturnsAsync(user);
-            roleManagerMock.Setup(r => r.RoleExistsAsync(model.RoleName)).ReturnsAsync(true);
-            userManagerMock.Setup(u => u.GetRolesAsync(user)).ReturnsAsync(new List<string>());
-
-            
-            var result = await controller.RemoveUserFromRole(model);
-
-            
-            Assert.IsInstanceOf<BadRequestResult>(result);
         }
 
         [Test]

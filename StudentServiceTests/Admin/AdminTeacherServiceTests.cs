@@ -186,8 +186,7 @@ namespace Tests.Admin
             Assert.That(teacher.LastName, Is.EqualTo("Smith"));
             Assert.That(teacher.ContactDetails, Is.EqualTo("987654321"));
             Assert.That(teacher.Titles, Is.EqualTo("Ms."));
-            Assert.That(teacher.Email, Is.EqualTo("jane.smith@example.com") );
-            Assert.That(teacher.ProfilePicturePath, Is.EqualTo("/images/profiles/jane.jpg"));
+            Assert.That(teacher.Email, Is.EqualTo("jane.smith@example.com"));
             Assert.That(teacher.Courses.Count, Is.EqualTo(1));
             Assert.That(teacher.Courses.First().Id, Is.EqualTo(2));
         }

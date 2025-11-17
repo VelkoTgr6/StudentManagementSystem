@@ -6,6 +6,8 @@ using StudentManagementSystem.Infrastructure.Services.EmailSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://+:10000");
+
 builder.Services.AddApplicationDbContext(builder.Configuration);
 
 builder.Services.AddApplicationServices();
@@ -33,8 +35,6 @@ builder.Services.AddControllersWithViews(options =>
 });
 
 var app = builder.Build();
-
-builder.WebHost.UseUrls("http://+:10000"); // avoids issues
 
 if (app.Environment.IsDevelopment())
 {
@@ -89,8 +89,11 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-using (var scope = app.Services.CreateScope())
+// Run migrations in background so app starts immediately
+_ = Task.Run(async () =>
 {
+    await Task.Delay(1000); // Let app start first
+    using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
     var logger = services.GetRequiredService<ILogger<Program>>();
 
@@ -98,13 +101,17 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<StudentManagementDbContext>();
         logger.LogInformation("Starting database migration on Render...");
+        
+        // Increase timeout for Supabase connection pooling
+        context.Database.SetCommandTimeout(300); // 5 minutes
         context.Database.Migrate();
+        
         logger.LogInformation("Database migration completed successfully on Render.");
     }
     catch (Exception ex)
     {
         logger.LogError(ex, "An error occurred applying database migrations.");
     }
-}
+});
 
 app.Run();

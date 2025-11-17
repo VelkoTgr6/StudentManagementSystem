@@ -168,7 +168,7 @@ namespace Tests.Admin
             Assert.That(result.PersonalId, Is.EqualTo("1234567890"));
             Assert.That(result.DateOfBirth, Is.EqualTo(new DateTime(2000, 1, 1)));
             Assert.That(result.Class, Is.EqualTo("10A"));
-            Assert.That(result.Performance, Is.EqualTo("85,50"));
+            Assert.That(result.Performance, Is.EqualTo("85.50"));
         }
 
         [Test]
@@ -310,7 +310,7 @@ namespace Tests.Admin
             Assert.That(result.FirstName, Is.EqualTo("John"));
             Assert.That(result.LastName, Is.EqualTo("Doe"));
             Assert.That(result.SchoolName, Is.EqualTo("Test School"));
-            Assert.That(result.Performance, Is.EqualTo("85,50"));
+            Assert.That(result.Performance, Is.EqualTo("85.50"));
             Assert.That(result.ProfilePicturePath, Is.EqualTo("/path/to/picture"));
         }
 

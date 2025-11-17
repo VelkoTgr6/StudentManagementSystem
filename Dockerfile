@@ -8,7 +8,7 @@ COPY StudentManagementSystem/*.csproj ./StudentManagementSystem/
 COPY StudentManagementSystem.Core/*.csproj ./StudentManagementSystem.Core/
 COPY StudentManagementSystem.Infrastructure/*.csproj ./StudentManagementSystem.Infrastructure/
 
-# Restore dependencies for the main project (this will restore all referenced projects)
+# Restore dependencies
 RUN dotnet restore StudentManagementSystem/StudentManagementSystem.csproj
 
 # Copy the rest of the source code
@@ -21,12 +21,14 @@ RUN dotnet publish StudentManagementSystem/StudentManagementSystem.csproj -c Rel
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
+# Copy app
 COPY --from=build /app/publish .
 
-# Set environment variables for ASP.NET Core
+# Environment variables
 ENV ASPNETCORE_URLS=http://+:10000
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 EXPOSE 10000
 
+# Run the app
 ENTRYPOINT ["dotnet", "StudentManagementSystem.dll"]
