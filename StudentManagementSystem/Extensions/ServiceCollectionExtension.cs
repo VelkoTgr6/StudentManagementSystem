@@ -34,13 +34,16 @@ namespace Microsoft.Extensions.DependencyInjection
             if (string.IsNullOrEmpty(connectionString))
             {
                 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+                Console.WriteLine($"DATABASE_URL from environment: {(string.IsNullOrEmpty(databaseUrl) ? "NOT SET" : "SET (hidden for security)")}");
 
                 if (string.IsNullOrEmpty(databaseUrl))
                 {
                     throw new InvalidOperationException("DATABASE_URL environment variable is not set.");
                 }
 
-                if (databaseUrl.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase))
+                // Handle both postgres:// and postgresql:// formats
+                if (databaseUrl.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase) || 
+                    databaseUrl.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase))
                 {
                     var uri = new Uri(databaseUrl);
                     var userInfo = uri.UserInfo.Split(':');
