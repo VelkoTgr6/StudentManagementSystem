@@ -98,7 +98,11 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<StudentManagementDbContext>();
         logger.LogInformation("Starting database migration on Render...");
+        
+        // Increase timeout for Supabase connection pooling
+        context.Database.SetCommandTimeout(300); // 5 minutes
         context.Database.Migrate();
+        
         logger.LogInformation("Database migration completed successfully on Render.");
     }
     catch (Exception ex)
