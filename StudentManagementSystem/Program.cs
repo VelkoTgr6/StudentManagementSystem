@@ -6,6 +6,8 @@ using StudentManagementSystem.Infrastructure.Services.EmailSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://+:10000");
+
 builder.Services.AddApplicationDbContext(builder.Configuration);
 
 builder.Services.AddApplicationServices();
@@ -33,8 +35,6 @@ builder.Services.AddControllersWithViews(options =>
 });
 
 var app = builder.Build();
-
-builder.WebHost.UseUrls("http://+:10000"); // avoids issues
 
 if (app.Environment.IsDevelopment())
 {
