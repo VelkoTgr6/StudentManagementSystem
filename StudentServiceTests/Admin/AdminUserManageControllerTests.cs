@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿    using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StudentManagementSystem.Areas.Admin.Controllers;
@@ -9,15 +9,15 @@ namespace Tests.Admin
     [TestFixture]
     public class AdminUserManageControllerTests
     {
-        private Mock<RoleManager<IdentityRole>> roleManagerMock;
+        private Mock<RoleManager<IdentityRole<string>>> roleManagerMock;
         private Mock<UserManager<IdentityUser>> userManagerMock;
         private AdminUserManageController controller;
 
         [SetUp]
         public void SetUp()
         {
-            var roleStore = new Mock<IRoleStore<IdentityRole>>();
-            roleManagerMock = new Mock<RoleManager<IdentityRole>>(roleStore.Object, null, null, null, null);
+            var roleStore = new Mock<IRoleStore<IdentityRole<string>>>();
+            roleManagerMock = new Mock<RoleManager<IdentityRole<string>>>(roleStore.Object, null, null, null, null);
 
             var userStore = new Mock<IUserStore<IdentityUser>>();
             userManagerMock = new Mock<UserManager<IdentityUser>>(userStore.Object, null, null, null, null, null, null, null, null);
