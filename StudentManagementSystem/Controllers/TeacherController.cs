@@ -11,10 +11,12 @@ namespace StudentManagementSystem.Controllers
     public class TeacherController : Controller
     {
         private readonly ITeacherService teacherService;
+        private readonly ILogger<TeacherService> logger;
 
-        public TeacherController(ITeacherService _teacherService)
+        public TeacherController(ITeacherService _teacherService, ILogger<TeacherService> _logger)
         {
             teacherService = _teacherService;
+            logger = _logger;
         }
 
         [HttpGet]
@@ -37,6 +39,12 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> StudentsByClass(int classId, string userId)
         {
             userId = User.GetId();
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
             var students = await teacherService.GetStudentsByTeacherAndClassAsync(classId, userId);
             return View(students);
         }
@@ -67,6 +75,10 @@ namespace StudentManagementSystem.Controllers
                 StudentId = studentId,
                 Courses = await teacherService.GetTeacherCourses(User.GetId()),
             };
+
+            logger.LogInformation
+                ($"Preparing to add grade for student with ID : {studentId}.");
+
             return View(model);
         }
 
@@ -81,6 +93,9 @@ namespace StudentManagementSystem.Controllers
             await teacherService.AddGradeToStudent(model, model.StudentId);
             await teacherService.AddGradeNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId, model.GradeScore.ToString());
 
+            logger.LogInformation
+                ($"Added grade {model.GradeScore} for student with ID : {model.StudentId} in course with ID: {model.CourseId}");
+
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
         }
 
@@ -92,6 +107,10 @@ namespace StudentManagementSystem.Controllers
                 StudentId = studentId,
                 Courses = await teacherService.GetTeacherCourses(User.GetId()),
             };
+
+            logger.LogInformation
+                ($"Preparing to add grade for student with ID : {studentId} by main class teacher.");
+
             return View(model);
         }
 
@@ -106,6 +125,9 @@ namespace StudentManagementSystem.Controllers
             await teacherService.AddGradeToStudent(model, model.StudentId);
             await teacherService.AddGradeNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId, model.GradeScore.ToString());
 
+            logger.LogInformation
+                ($"Added grade {model.GradeScore} for student with ID : {model.StudentId} in course with ID: {model.CourseId} by main class teacher.");
+
             return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
         }
 
@@ -115,6 +137,9 @@ namespace StudentManagementSystem.Controllers
             var model = await teacherService.GetGradeByIdAsync(gradeId);
 
             model.Courses = await teacherService.GetTeacherCourses(User.GetId());
+
+            logger.LogInformation($"Preparing to edit grade with ID : {gradeId}.");
+
             return View(model);
         }
 
@@ -129,6 +154,9 @@ namespace StudentManagementSystem.Controllers
             await teacherService.EditGradeAsync(gradeId, model);
             await teacherService.AddGradeNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId, model.GradeScore.ToString());
 
+            logger.LogInformation
+                ($"Edited grade with ID : {gradeId} to new score {model.GradeScore} for student with ID : {model.StudentId} in course with ID: {model.CourseId}");
+
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
         }
 
@@ -136,6 +164,12 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> EditGradeMainTeacher(int gradeId)
         {
             var model = await teacherService.GetGradeByIdAsync(gradeId);
+
+            if (model == null)
+            {
+                logger.LogWarning($"Grade with ID : {gradeId} not found for editing by main class teacher.");
+                return NotFound();
+            }
 
             model.Courses = await teacherService.GetTeacherCourses(User.GetId());
             return View(model);
@@ -152,6 +186,9 @@ namespace StudentManagementSystem.Controllers
             await teacherService.EditGradeAsync(gradeId, model);
             await teacherService.AddGradeNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId, model.GradeScore.ToString());
 
+            logger.LogInformation
+                ($"Edited grade with ID : {gradeId} to new score {model.GradeScore} for student with ID : {model.StudentId} in course with ID: {model.CourseId} by main class teacher.");
+
             return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
         }
 
@@ -159,6 +196,12 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> DeleteGrade(int gradeId)
         {
             var grade = await teacherService.GetGradeByIdAsync(gradeId);
+
+            if (grade == null)
+            {
+                logger.LogWarning($"Grade with ID : {gradeId} not found for deletion.");
+                return NotFound();
+            }
 
             await teacherService.DeleteGradeAsync(gradeId);
 
@@ -171,6 +214,9 @@ namespace StudentManagementSystem.Controllers
             var grade = await teacherService.GetGradeByIdAsync(gradeId);
 
             await teacherService.DeleteGradeAsync(gradeId);
+
+            logger.LogInformation
+                ($"Deleted grade with ID : {gradeId} for student with ID : {grade.StudentId} by main class teacher.");
 
             return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = grade.StudentId });
         }
@@ -196,6 +242,10 @@ namespace StudentManagementSystem.Controllers
             }
             await teacherService.AddAbsenceToStudentAsync(model, model.StudentId);
             await teacherService.AddAbsenceNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
+
+            logger.LogInformation
+                ($"Added absence on {model.AbsenceDate.ToShortDateString()} for student with ID : {model.StudentId} in course with ID: {model.CourseId}");
+
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
 
         }
@@ -221,14 +271,23 @@ namespace StudentManagementSystem.Controllers
             }
             await teacherService.AddAbsenceToStudentAsync(model, model.StudentId);
             await teacherService.AddAbsenceNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
-            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
 
+            logger.LogInformation
+                ($"Added absence on {model.AbsenceDate.ToShortDateString()} for student with ID : {model.StudentId} in course with ID: {model.CourseId} by main class teacher.");
+
+            return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
         }
 
         [HttpGet]
         public async Task<IActionResult> EditAbsence(int id)
         {
             var absence = await teacherService.GetAbsenceByIdAsync(id);
+
+            if (absence == null)
+            {
+                return NotFound();
+            }
+
             absence.Courses = await teacherService.GetTeacherCourses(User.GetId());
 
             return View(absence);
@@ -245,6 +304,9 @@ namespace StudentManagementSystem.Controllers
             await teacherService.EditAbsenceAsync(id, model);
             await teacherService.AddAbsenceNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
 
+            logger.LogInformation
+                ($"Edited absence with ID : {id} for student with ID : {model.StudentId} in course with ID: {model.CourseId}");
+
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
         }
 
@@ -252,6 +314,13 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> EditAbsenceMainTeacher(int id)
         {
             var absence = await teacherService.GetAbsenceByIdAsync(id);
+
+            if (absence == null)
+            {
+                logger.LogWarning($"Absence with ID : {id} not found for editing.");
+                return NotFound();
+            }
+
             absence.Courses = await teacherService.GetTeacherCourses(User.GetId());
 
             return View(absence);
@@ -268,6 +337,9 @@ namespace StudentManagementSystem.Controllers
             await teacherService.EditAbsenceAsync(id, model);
             await teacherService.AddAbsenceNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
 
+            logger.LogInformation
+                ($"Edited absence with ID : {id} for student with ID : {model.StudentId} in course with ID: {model.CourseId} by main class teacher.");
+
             return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
         }
 
@@ -275,6 +347,13 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> DeleteAbsence(int id)
         {
             var absence = await teacherService.GetAbsenceByIdAsync(id);
+
+            if (absence == null)
+            {
+                logger.LogWarning($"Absence with ID : {id} not found for editing.");
+                return NotFound();
+            }
+
             await teacherService.DeleteAbsenceAsync(id);
             return RedirectToAction(nameof(StudentDetails), new { studentId = absence.StudentId });
         }
@@ -284,6 +363,10 @@ namespace StudentManagementSystem.Controllers
         {
             var absence = await teacherService.GetAbsenceByIdAsync(id);
             await teacherService.DeleteAbsenceAsync(id);
+
+            logger.LogInformation
+                ($"Deleted absence with ID : {id} for student with ID : {absence.StudentId} by main class teacher.");
+
             return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = absence.StudentId });
         }
 
@@ -321,6 +404,9 @@ namespace StudentManagementSystem.Controllers
             await teacherService.AddRemarkNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
 
             model.CourseName = await teacherService.GetCourseNameById(model.CourseId);
+
+            logger.LogInformation
+                ($"Added remark '{model.RemarkText}' for student with ID : {model.StudentId} in course with ID: {model.CourseId}");
 
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
         }
@@ -360,6 +446,9 @@ namespace StudentManagementSystem.Controllers
 
             model.CourseName = await teacherService.GetCourseNameById(model.CourseId);
 
+            logger.LogInformation
+                ($"Added remark '{model.RemarkText}' for student with ID : {model.StudentId} in course with ID: {model.CourseId} by main class teacher.");
+
             return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
         }
 
@@ -367,6 +456,13 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> EditRemark(int remarkId)
         {
             var remark = await teacherService.GetRemarkByIdAsync(remarkId);
+
+            if (remark == null)
+            {
+                logger.LogWarning($"Remark with ID : {remarkId} not found for editing.");
+                return NotFound();
+            }
+
             remark.Courses = await teacherService.GetTeacherCourses(User.GetId());
             return View(remark);
         }
@@ -383,6 +479,10 @@ namespace StudentManagementSystem.Controllers
             await teacherService.AddRemarkNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
 
             model.CourseName = await teacherService.GetCourseNameById(model.CourseId);
+
+            logger.LogInformation
+                ($"Edited remark with ID : {id} for student with ID : {model.StudentId} in course with ID: {model.CourseId}");
+
             return RedirectToAction(nameof(StudentDetails), new { studentId = model.StudentId });
         }
 
@@ -390,6 +490,13 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> EditRemarkMainTeacher(int remarkId)
         {
             var remark = await teacherService.GetRemarkByIdAsync(remarkId);
+
+            if (remark == null)
+            {
+                logger.LogWarning($"Remark with ID : {remarkId} not found for editing.");
+                return NotFound();
+            }
+
             remark.Courses = await teacherService.GetTeacherCourses(User.GetId());
             return View(remark);
         }
@@ -406,12 +513,23 @@ namespace StudentManagementSystem.Controllers
             await teacherService.AddRemarkNewsToStudentAsync(User.GetId(), model.StudentId, model.CourseId);
 
             model.CourseName = await teacherService.GetCourseNameById(model.CourseId);
+
+            logger.LogInformation
+                ($"Edited remark with ID : {id} for student with ID : {model.StudentId} in course with ID: {model.CourseId} by main class teacher.");
+
             return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = model.StudentId });
         }
         [HttpGet]
         public async Task<IActionResult> DeleteRemark(int remarkId)
         {
             var remark = await teacherService.GetRemarkByIdAsync(remarkId);
+
+            if (remark == null)
+            {
+                logger.LogWarning($"Remark with ID : {remarkId} not found for editing.");
+                return NotFound();
+            }
+
             await teacherService.DeleteRemarkAsync(remarkId);
             return RedirectToAction(nameof(StudentDetails), new { studentId = remark.StudentId });
         }
@@ -421,6 +539,9 @@ namespace StudentManagementSystem.Controllers
         {
             var remark = await teacherService.GetRemarkByIdAsync(remarkId);
             await teacherService.DeleteRemarkAsync(remarkId);
+
+            logger.LogInformation($"Deleted remark with ID : {remarkId} by main class teacher.");
+
             return RedirectToAction(nameof(StudentMainTeacherDetails), new { studentId = remark.StudentId });
         }
 
@@ -436,6 +557,13 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> Profile(int id)
         {
             var teacherId = await teacherService.GetTeacherByIdAsync(User.GetId());
+
+            if (teacherId == 0)
+            {
+                logger.LogWarning($"Teacher profile not found for user ID : {User.GetId()}.");
+                return NotFound();
+            }
+
             var student = await teacherService.GetTeacherProfileAsync(teacherId);
             return View(student);
         }
@@ -459,6 +587,9 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
             await teacherService.AddNewsToTeacherAsync(model);
+
+            logger.LogInformation($"Added news '{model.Title}' for teacher with User ID : {User.GetId()}.");
+
             return RedirectToAction(nameof(AllNews));
         }
 
@@ -466,6 +597,13 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> EditNews(int id)
         {
             var model = await teacherService.GetNewsByIdAsync(id);
+
+            if (model == null)
+            {
+                logger.LogWarning($"News with ID : {id} not found for editing.");
+                return NotFound();
+            }
+
             return View(model);
         }
 
@@ -477,6 +615,9 @@ namespace StudentManagementSystem.Controllers
                 return View(model);
             }
             await teacherService.EditNewsAsync(id, model);
+
+            logger.LogInformation($"Edited news with ID : {id}");
+
             return RedirectToAction(nameof(AllNews));
         }
 
@@ -484,6 +625,9 @@ namespace StudentManagementSystem.Controllers
         public async Task<IActionResult> DeleteNews(int id)
         {
             await teacherService.DeleteNewsAsync(id);
+
+            logger.LogInformation($"Deleted news with ID : {id}");
+
             return RedirectToAction(nameof(AllNews));
         }
     }
