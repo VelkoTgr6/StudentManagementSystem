@@ -9,11 +9,11 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
     [Authorize(Roles = "Administrator")]
     public class AdminUserManageController : Controller
     {
-        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly RoleManager<IdentityRole<string>> roleManager;
         private readonly UserManager<IdentityUser> userManager;
 
         public AdminUserManageController(
-            RoleManager<IdentityRole> roleManager,
+            RoleManager<IdentityRole<string>> roleManager,
             UserManager<IdentityUser> userManager)
         {
             this.roleManager = roleManager;

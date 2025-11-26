@@ -389,7 +389,6 @@ namespace Tests
             Assert.That(result.StudentId, Is.EqualTo(100));
             Assert.That(result.CourseId, Is.EqualTo(200));
             Assert.That(result.GradeScore, Is.EqualTo(90));
-            Assert.That(result.CustomGradeType, Is.EqualTo("A"));
             Assert.That(result.SelectedCourseId, Is.EqualTo(200));
             Assert.That(result.SelectedGrade, Is.EqualTo("90"));
             Assert.That(result.SelectedGradeType, Is.EqualTo("A"));

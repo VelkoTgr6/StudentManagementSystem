@@ -9,11 +9,11 @@ using StudentManagementSystem.Infrastructure.Data.Common;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class ServiceCollectionExtension 
+    public static class ServiceCollectionExtension
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IStudentService,StudentService>();
+            services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<ITeacherService, TeacherService>();
 
             services.AddScoped<IAdminService, AdminService>();
@@ -27,26 +27,43 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static IServiceCollection AddApplicationDbContext(this IServiceCollection services,IConfiguration config)
+        public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration config)
         {
-            // First try to get connection string from configuration
             var connectionString = config.GetConnectionString("DefaultConnection");
-            
-            // If not found, try Render's DATABASE_URL environment variable
+
             if (string.IsNullOrEmpty(connectionString))
             {
                 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-                if (!string.IsNullOrEmpty(databaseUrl))
+                Console.WriteLine($"DATABASE_URL from environment: {(string.IsNullOrEmpty(databaseUrl) ? "NOT SET" : "SET (hidden for security)")}");
+
+                if (string.IsNullOrEmpty(databaseUrl))
                 {
-                    // Parse DATABASE_URL format: postgres://user:password@host:port/database
-                    var uri = new Uri(databaseUrl);
-                    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={uri.UserInfo.Split(':')[0]};Password={uri.UserInfo.Split(':')[1]};SSL Mode=Require;Trust Server Certificate=true";
+                    throw new InvalidOperationException("DATABASE_URL environment variable is not set.");
                 }
-            }
-            
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new InvalidOperationException("Connection string 'DefaultConnection' not found in configuration and DATABASE_URL environment variable is not set.");
+
+                // Handle both postgres:// and postgresql:// formats
+                if (databaseUrl.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase) || 
+                    databaseUrl.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase))
+                {
+                    var uri = new Uri(databaseUrl);
+                    var userInfo = uri.UserInfo.Split(':');
+
+                    var host = uri.Host;
+                    var port = uri.Port != -1 ? uri.Port : 5432;
+                    var database = uri.AbsolutePath.TrimStart('/');
+                    var username = userInfo[0];
+                    var password = userInfo.Length > 1 ? userInfo[1] : "";
+
+                    Console.WriteLine($"Parsed connection - Host: {host}, Port: {port}, Database: {database}");
+                    connectionString = $"Host={host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+
+                    Console.WriteLine($"Using DATABASE_URL with host {host} and database {database}");
+                }
+                else
+                {
+                    connectionString = databaseUrl;
+                    Console.WriteLine("Using connection string from configuration");
+                }
             }
 
             services.AddDbContext<StudentManagementDbContext>(options =>
@@ -61,7 +78,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static IServiceCollection AddApplicationIdentity(this IServiceCollection services,IConfiguration config)
+        public static IServiceCollection AddApplicationIdentity(this IServiceCollection services, IConfiguration config)
         {
             services.AddIdentity<IdentityUser, IdentityRole<string>>(options =>
             {
@@ -72,7 +89,7 @@ namespace Microsoft.Extensions.DependencyInjection
             })
                 .AddEntityFrameworkStores<StudentManagementDbContext>()
                 .AddDefaultTokenProviders();
-                
+
 
             return services;
         }

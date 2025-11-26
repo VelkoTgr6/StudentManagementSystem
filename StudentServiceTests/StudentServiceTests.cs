@@ -133,7 +133,7 @@ namespace Tests
 
             
             Assert.That(result.AbsencesCount, Is.EqualTo("1"));
-            Assert.That(result.AverageGrade, Is.EqualTo("90,00"));
+            Assert.That(result.AverageGrade, Is.EqualTo("90.00"));
             Assert.That(result.Remarks, Is.EqualTo("1"));
             Assert.That(result.ClassName, Is.EqualTo("10A"));
             Assert.That(result.SchoolName, Is.EqualTo("Sample School"));

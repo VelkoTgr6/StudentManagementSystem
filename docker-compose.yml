@@ -5,7 +5,7 @@ services:
     ports:
       - "10000:10000"
     environment:
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=StudentManagementDb;Username=postgres;Password=yourpassword
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=StudentManagementDb;Username=postgres;Password=password
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       - postgres
@@ -15,7 +15,7 @@ services:
     environment:
       - POSTGRES_DB=StudentManagementDb
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=yourpassword
+      - POSTGRES_PASSWORD=password
     ports:
       - "5432:5432"
     volumes:
