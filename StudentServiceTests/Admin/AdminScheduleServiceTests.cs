@@ -1,4 +1,5 @@
-﻿using MockQueryable;
+﻿using Microsoft.Extensions.Logging;
+using MockQueryable;
 using Moq;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Models.Admin.Schedule;
@@ -12,13 +13,15 @@ namespace Tests.Admin
     public class AdminScheduleServiceTests
     {
         private Mock<IRepository> mockRepository;
+        private Mock<ILogger<AdminScheduleService>> mockLogger;
         private AdminScheduleService adminScheduleService;
 
         [SetUp]
         public void SetUp()
         {
             mockRepository = new Mock<IRepository>();
-            adminScheduleService = new AdminScheduleService(mockRepository.Object);
+            mockLogger = new Mock<ILogger<AdminScheduleService>>();
+            adminScheduleService = new AdminScheduleService(mockRepository.Object, mockLogger.Object);
         }
 
         [Test]
