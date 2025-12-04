@@ -16,17 +16,20 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         private readonly IAdminClassService adminClassService;
         private readonly IAdminCourseService adminCourseService;
         private readonly IAdminStudentService adminStudentService;
+        private readonly ILogger<AdminStudentController> logger;
 
         public AdminStudentController(IAdminService _adminService,
             IAdminClassService _adminClassService,
             IAdminCourseService _adminCourseService,
             IAdminTeacherService _adminTeacherService,
-            IAdminStudentService _adminStudentService)
+            IAdminStudentService _adminStudentService,
+            ILogger<AdminStudentController> _logger)
         {
             adminService = _adminService;
             adminClassService = _adminClassService;
             adminCourseService = _adminCourseService;
             adminStudentService = _adminStudentService;
+            logger = _logger;
         }
 
         public async Task<IActionResult> Index()
@@ -68,6 +71,8 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             }
 
             var id = await adminStudentService.CreateStudentAsync(model, profilePictureFile);
+
+            logger.LogInformation($"Admin created student with ID {id}");
 
             return RedirectToAction(nameof(DetailsStudent), new { id });
         }
@@ -114,7 +119,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         {
             if (await adminStudentService.ExistAsync(id) == false)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             if (!ModelState.IsValid)
@@ -124,6 +129,8 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             }
 
             await adminStudentService.EditStudentAsync(id, model, profilePictureFile);
+
+            logger.LogInformation($"Admin edited student with ID {id}");
 
             return RedirectToAction(nameof(DetailsStudent), new { id });
         }
@@ -185,6 +192,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 return View(model);
             }
             await adminStudentService.EditGradeAsync(id, model);
+            logger.LogInformation($"Admin edited grade for student with ID {model.StudentId}");
             return RedirectToAction(nameof(StudentGrades), new { id = model.StudentId });
         }
 
@@ -197,6 +205,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 return BadRequest();
             }
             await adminStudentService.DeleteGradeAsync(id);
+            logger.LogInformation($"Admin deleted grade for student with ID {grade.StudentId}");
             return RedirectToAction(nameof(StudentGrades), new { id = grade.StudentId });
         }
 
@@ -234,6 +243,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 return View(model);
             }
             await adminStudentService.EditRemarkAsync(id, model);
+            logger.LogInformation($"Admin edited remark for student with ID {model.StudentId}");
             return RedirectToAction(nameof(StudentRemarks), new { id = model.StudentId });
         }
 
@@ -246,6 +256,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 return BadRequest();
             }
             await adminStudentService.DeleteRemarkAsync(id);
+            logger.LogInformation($"Admin deleted remark for student with ID {remark.StudentId}");
             return RedirectToAction(nameof(StudentRemarks), new { id = remark.StudentId });
         }
 
@@ -282,6 +293,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 return View(model);
             }
             await adminStudentService.EditAbsenceAsync(id, model);
+            logger.LogInformation($"Admin edited absence for student with ID {model.StudentId}");
             return RedirectToAction(nameof(StudentAbsences), new { id = model.StudentId });
         }
 
@@ -294,6 +306,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 return BadRequest();
             }
             await adminStudentService.DeleteAbsenceAsync(id);
+            logger.LogInformation($"Admin deleted absence for student with ID {absence.StudentId}");
             return RedirectToAction(nameof(StudentAbsences), new { id = absence.StudentId });
 
         }

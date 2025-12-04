@@ -12,13 +12,17 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
     {
         private IAdminCourseService adminCourseService;
         private IAdminTeacherService adminTeacherService;
+        private ILogger<AdminCourseController> logger;
 
         public AdminCourseController(
-            IAdminCourseService adminCourseService
-            , IAdminTeacherService adminTeacherService)
+            IAdminCourseService _adminCourseService
+            , IAdminTeacherService _adminTeacherService
+            , ILogger<AdminCourseController> _logger
+            )
         {
-            this.adminCourseService = adminCourseService;
-            this.adminTeacherService = adminTeacherService;
+            adminCourseService = _adminCourseService;
+            adminTeacherService = _adminTeacherService;
+            logger = _logger;
         }
 
         [HttpGet]
@@ -45,6 +49,8 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
 
             var id = await adminCourseService.CreateCourseAsync(model, publisherId);
 
+            logger.LogInformation($"Administrator with ID: {publisherId} created a new course with ID: {id} .");
+
             return RedirectToAction(nameof(DetailsCourse), new { id });
         }
 
@@ -70,7 +76,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         {
             if (await adminCourseService.CourseExistAsync(id) == false)
             {
-                return BadRequest();
+                return NotFound();
             }
             var course = await adminCourseService.GetCourseDetailsModelByIdAsync(id);
             return View(course);
@@ -82,7 +88,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         {
             if (await adminCourseService.CourseExistAsync(id) == false)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             var model = await adminCourseService.GetCourseFormModelByIdAsync(id);
@@ -90,6 +96,10 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             if (model != null)
             {
                 model.Teachers = await adminTeacherService.GetAllTeachersAsync();
+            }
+            else
+            {
+                return BadRequest();
             }
 
             return View(model);
@@ -100,8 +110,9 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         {
             if (await adminCourseService.CourseExistAsync(id) == false)
             {
-                return BadRequest();
+                return NotFound();
             }
+
             if (!ModelState.IsValid)
             {
                 model.Teachers = await adminTeacherService.GetAllTeachersAsync();
@@ -111,6 +122,8 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             var publisherId = User.GetId();
 
             await adminCourseService.EditCourseAsync(id, model, publisherId);
+
+            logger.LogInformation($"Administrator with ID: {publisherId} edited course with ID: {id} .");
 
             return RedirectToAction(nameof(DetailsCourse), new { id });
         }
@@ -124,6 +137,8 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             }
 
             await adminCourseService.DeleteCourseAsync(id);
+
+            logger.LogInformation($"Course with ID: {id} was deleted.");
 
             return RedirectToAction(nameof(AllCourses));
         }
