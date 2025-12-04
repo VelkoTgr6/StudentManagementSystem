@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Course;
@@ -12,10 +13,12 @@ namespace StudentManagementSystem.Core.Services.Admin
     public class AdminTeacherService : IAdminTeacherService
     {
         private readonly IRepository repository;
+        private readonly ILogger<AdminTeacherService> logger;
 
-        public AdminTeacherService(IRepository _repository)
+        public AdminTeacherService(IRepository _repository,ILogger<AdminTeacherService> _logger)
         {
             repository = _repository;
+            logger = _logger;
         }
 
         public async Task<TeacherQueryServiceModel> AllAsync(string? course = null, string? searchTerm = null, TeacherSorting sorting = TeacherSorting.Name, int currentPage = 1, int teachersPerPage = 10)
@@ -78,6 +81,11 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             var userId = await repository.GetIdByEmailAsync(model.Email);
 
+            if (userId == null)
+            {
+                throw new KeyNotFoundException("User with the provided email does not exist.");
+            }
+
             string profilePicturePath = "/images/profiles/default.jpg";
 
             if (profilePictureFile != null)
@@ -109,12 +117,19 @@ namespace StudentManagementSystem.Core.Services.Admin
             await repository.AddAsync(entity);
             await repository.SaveChangesAsync();
 
+            logger.LogInformation($"New Teacher {entity.FirstName} {entity.LastName} with ID: {entity.Id} created successfully.");
+
             return entity.Id;
         }
 
         public async Task DeleteTeacherAsync(int id)
         {
             var teacher = await repository.GetByIdAsync<Teacher>(id);
+
+            if (teacher == null)
+            {
+                throw new KeyNotFoundException($"Teacher with ID {id} not found.");
+            }
 
             if (teacher != null && teacher.IsDeleted == false)
             {
@@ -135,8 +150,14 @@ namespace StudentManagementSystem.Core.Services.Admin
                     //identityUser.PersonalId = null;
                 }
             }
+            else
+            {
+                logger.LogWarning($"Attempted to delete a non-existing or already deleted teacher with ID: {id}.");
+                throw new KeyNotFoundException($"Teacher with ID {id} not found or already deleted.");
+            }
 
-            
+            logger.LogInformation($"Teacher with ID: {id} deleted successfully.");
+
             await repository.SaveChangesAsync();
         }
         private async Task<string> SaveProfilePictureAsync(IFormFile file)
@@ -160,9 +181,15 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task EditTeacherAsync(int id, TeacherFormViewModel model, IFormFile? profilePictureFile)
         {
-            var teacher = await repository.All<Teacher>()
-                                          .Include(t => t.Courses) 
-                                          .FirstOrDefaultAsync(t => t.Id == id);
+            var teacher = await repository
+                .All<Teacher>()
+                .Include(t => t.Courses) 
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (teacher == null)
+            {
+                throw new KeyNotFoundException($"Teacher with ID {id} not found.");
+            }
 
             if (teacher != null && teacher.IsDeleted == false)
             {
@@ -202,7 +229,15 @@ namespace StudentManagementSystem.Core.Services.Admin
                     teacher.ProfilePicturePath = await SaveProfilePictureAsync(profilePictureFile);
                 }
 
+                logger.LogInformation($"Teacher with ID: {id} edited successfully.");
+
                 await repository.SaveChangesAsync();
+            }
+
+            else
+            {
+                logger.LogWarning($"Attempted to edit a non-existing or deleted teacher with ID: {id}.");
+                throw new KeyNotFoundException($"Teacher with ID {id} not found or is deleted.");
             }
         }
 
@@ -250,7 +285,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (teacher == null)
             {
-                throw new ArgumentException($"Teacher not found.");
+                throw new KeyNotFoundException($"Teacher with ID: {id} not found.");
             }
 
             return teacher;
@@ -274,7 +309,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (teacher == null)
             {
-                throw new ArgumentException($"Teacher not found.");
+                throw new KeyNotFoundException($"Teacher with ID: {id} not found.");
             }
 
             return teacher;

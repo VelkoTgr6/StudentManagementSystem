@@ -271,7 +271,7 @@ namespace StudentManagementSystem.Core.Services
             {
                 StudentId = studentId,
                 CourseId = model.CourseId,
-                Date = model.AbsenceDate
+                Date = DateTime.SpecifyKind(model.AbsenceDate.Date, DateTimeKind.Utc)
             };
 
             student.Аbsences.Add(absence);
@@ -314,7 +314,7 @@ namespace StudentManagementSystem.Core.Services
                 TeacherId = model.TeacherId,
                 CourseId = model.CourseId,
                 RemarkText = model.RemarkText,
-                Date = DateTime.Now
+                Date = DateTime.UtcNow
             };
 
             student.Remarks.Add(remark);
@@ -513,7 +513,8 @@ namespace StudentManagementSystem.Core.Services
                 throw new KeyNotFoundException($"Absence with ID {absenceId} not found");
             }
 
-            absence.Date = model.AbsenceDate;
+            // Ensure DateTime written to Postgres has Kind=Utc
+            absence.Date = DateTime.SpecifyKind(model.AbsenceDate.Date, DateTimeKind.Utc);
             absence.CourseId = model.CourseId;
 
             await repository.SaveChangesAsync();
