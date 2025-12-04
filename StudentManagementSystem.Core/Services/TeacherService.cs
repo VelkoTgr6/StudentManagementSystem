@@ -271,7 +271,7 @@ namespace StudentManagementSystem.Core.Services
             {
                 StudentId = studentId,
                 CourseId = model.CourseId,
-                Date = DateTime.SpecifyKind(model.AbsenceDate.Date, DateTimeKind.Utc)
+                Date = DateTime.SpecifyKind(model.AbsenceDate, DateTimeKind.Utc)
             };
 
             student.Аbsences.Add(absence);
@@ -410,7 +410,6 @@ namespace StudentManagementSystem.Core.Services
                     StudentId = g.StudentId,
                     CourseId = g.CourseId,
                     GradeScore = g.GradeScore,
-
                     GradeType = g.GradeType,
                     SelectedCourseId = g.CourseId,
                     SelectedGrade = g.GradeScore.ToString(),
@@ -483,14 +482,14 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<AbsenceFormViewModel> GetAbsenceByIdAsync(int absenceId)
         {
-            var absence =await repository.All<Absence>()
+            var absence =await repository.AllAsReadOnly<Absence>()
                 .Where(a => a.Id == absenceId && !a.IsDeleted)
                 .Select(a=> new AbsenceFormViewModel
                 {
                     Id = absenceId,
                     StudentId = a.StudentId,
                     CourseId = a.CourseId,
-                    AbsenceDate = a.Date.Date
+                    AbsenceDate = a.Date
                 })
                 .FirstOrDefaultAsync();
 
@@ -514,7 +513,7 @@ namespace StudentManagementSystem.Core.Services
             }
 
             // Ensure DateTime written to Postgres has Kind=Utc
-            absence.Date = DateTime.SpecifyKind(model.AbsenceDate.Date, DateTimeKind.Utc);
+            absence.Date = DateTime.SpecifyKind(model.AbsenceDate, DateTimeKind.Utc);
             absence.CourseId = model.CourseId;
 
             await repository.SaveChangesAsync();
