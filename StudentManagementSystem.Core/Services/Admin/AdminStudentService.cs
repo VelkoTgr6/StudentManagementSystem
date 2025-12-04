@@ -443,7 +443,7 @@ namespace StudentManagementSystem.Core.Services.Admin
             if (remark == null)
             {
                 logger.LogWarning($"Attempted to edit a non-existing remark with ID: {remarkId} .");
-                throw new ArgumentException($"Remark with ID: {remarkId} not found.");
+                throw new KeyNotFoundException($"Remark with ID: {remarkId} not found.");
             }
 
             remark.RemarkText = model.RemarkText;
@@ -469,7 +469,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (remark == null)
             {
-                throw new ArgumentException($"Remark with ID: {id} not found.");
+                throw new KeyNotFoundException($"Remark with ID: {id} not found.");
             }
 
             return remark;
