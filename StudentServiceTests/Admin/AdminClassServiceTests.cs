@@ -90,6 +90,8 @@ namespace Tests.Admin
 
             mockRepository.Setup(r => r.AddAsync(It.IsAny<Class>())).Returns(Task.CompletedTask);
 
+            var emptyClasses = new List<Class>().AsQueryable().BuildMock();
+            mockRepository.Setup(r => r.AllAsReadOnly<Class>()).Returns(emptyClasses);
 
             var result = await adminClassService.CreateClassAsync(model);
 

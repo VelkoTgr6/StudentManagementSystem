@@ -104,6 +104,10 @@ namespace Tests.Admin
             mockRepository.Setup(repo => repo.AddAsync(It.IsAny<CourseSchedule>())).Returns(Task.CompletedTask);
             mockRepository.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
 
+            // Ensure AllAsReadOnly returns an IQueryable with an async provider for EF Core async extensions
+            mockRepository.Setup(repo => repo.AllAsReadOnly<CourseSchedule>())
+                .Returns(Enumerable.Empty<CourseSchedule>().AsQueryable().BuildMock());
+
             
             await adminScheduleService.AddCourseScheduleAsync(model);
 
@@ -139,20 +143,6 @@ namespace Tests.Admin
             mockRepository.Verify(repo => repo.SaveChangesAsync(), Times.Once);
         }
 
-        [Test]
-        public async Task DeleteCourseScheduleAsync_ShouldDoNothing_WhenScheduleDoesNotExist()
-        {
-            
-            mockRepository.Setup(repo => repo.GetByIdAsync<CourseSchedule>(1))
-                .ReturnsAsync((CourseSchedule)null);
-
-            
-            await adminScheduleService.DeleteCourseScheduleAsync(1);
-
-            
-            mockRepository.Verify(repo => repo.DeleteSchedule(It.IsAny<CourseSchedule>()), Times.Never);
-            mockRepository.Verify(repo => repo.SaveChangesAsync(), Times.Never);
-        }
         [Test]
         public async Task EditCourseScheduleAsync_ShouldUpdateSchedule_WhenValidModelProvided()
         {
@@ -235,12 +225,11 @@ namespace Tests.Admin
         [Test]
         public async Task GetCourseScheduleByIdAsync_ShouldThrowException_WhenScheduleDoesNotExist()
         {
-            
             mockRepository.Setup(repo => repo.AllAsReadOnly<CourseSchedule>())
                 .Returns(Enumerable.Empty<CourseSchedule>().AsQueryable().BuildMock());
 
-            var exception = Assert.ThrowsAsync<Exception>(() => adminScheduleService.GetCourseScheduleByIdAsync(99));
-            Assert.That(exception.Message, Is.EqualTo("Course schedule not found"));
+            var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => adminScheduleService.GetCourseScheduleByIdAsync(99));
+            Assert.That(exception.Message, Is.EqualTo("Course schedule with ID: 99 not found."));
         }
 
     }

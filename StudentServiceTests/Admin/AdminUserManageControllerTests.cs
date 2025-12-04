@@ -1,7 +1,10 @@
-﻿    using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using StudentManagementSystem.Areas.Admin.Controllers;
+using StudentManagementSystem.Core.Services.Admin;
 using StudentManagementSystem.Models;
 
 namespace Tests.Admin
@@ -12,6 +15,7 @@ namespace Tests.Admin
         private Mock<RoleManager<IdentityRole<string>>> roleManagerMock;
         private Mock<UserManager<IdentityUser>> userManagerMock;
         private AdminUserManageController controller;
+        private Mock<ILogger<AdminUserManageController>> mockLogger;
 
         [SetUp]
         public void SetUp()
@@ -22,7 +26,8 @@ namespace Tests.Admin
             var userStore = new Mock<IUserStore<IdentityUser>>();
             userManagerMock = new Mock<UserManager<IdentityUser>>(userStore.Object, null, null, null, null, null, null, null, null);
 
-            controller = new AdminUserManageController(roleManagerMock.Object, userManagerMock.Object);
+            mockLogger = new Mock<ILogger<AdminUserManageController>>();
+            controller = new AdminUserManageController(roleManagerMock.Object, userManagerMock.Object, mockLogger.Object);
         }
 
         [TearDown]
@@ -118,7 +123,7 @@ namespace Tests.Admin
             var result = await controller.DeleteRole(roleName);
 
             
-            Assert.IsInstanceOf<BadRequestResult>(result);
+            Assert.IsInstanceOf<NotFoundResult>(result);
         }
 
         [Test]
