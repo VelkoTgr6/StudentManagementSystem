@@ -1,6 +1,8 @@
-﻿using MockQueryable;
+﻿using Microsoft.Extensions.Logging;
+using MockQueryable;
 using Moq;
 using StudentManagementSystem.Core.Models.Admin.Course;
+using StudentManagementSystem.Core.Services;
 using StudentManagementSystem.Core.Services.Admin;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
@@ -11,13 +13,15 @@ namespace Tests.Admin
     public class AdminCourseServiceTests
     {
         private Mock<IRepository> mockRepository;
+        private Mock<ILogger<AdminCourseService>> mockLogger;
         private AdminCourseService courseService;
 
         [SetUp]
         public void SetUp()
         {
             mockRepository = new Mock<IRepository>();
-            courseService = new AdminCourseService(mockRepository.Object);
+            mockLogger = new Mock<ILogger<AdminCourseService>>();
+            courseService = new AdminCourseService(mockRepository.Object, mockLogger.Object);
         }
 
         [Test]
@@ -79,19 +83,15 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task CourseExistAsync_ShouldReturnFalse_WhenCourseDoesNotExist()
+        public void CourseExistAsync_ShouldThrowKeyNotFoundException_WhenCourseDoesNotExist()
         {
-            
             mockRepository.Setup(repo => repo.AllAsReadOnly<Course>()).Returns(new List<Course>
             {
                 new Course { Id = 1, Name = "Math 101", IsDeleted = false }
             }.AsQueryable().BuildMock());
 
-            
-            var result = await courseService.CourseExistAsync(99);
-
-            
-            Assert.IsFalse(result);
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await courseService.CourseExistAsync(99));
+            Assert.That(ex.Message, Is.EqualTo("Course with ID: 99 not found"));
         }
 
         [Test]
@@ -111,10 +111,10 @@ namespace Tests.Admin
             mockRepository.Setup(repo => repo.AddAsync(It.IsAny<Course>())).Callback<Course>(c => c.Id = newCourseId).Returns(Task.CompletedTask);
             mockRepository.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
 
+            mockRepository.Setup(repo => repo.AllAsReadOnly<Course>()).Returns(new List<Course>().AsQueryable().BuildMock());
             
             var result = await courseService.CreateCourseAsync(courseForm, publisherId);
 
-            
             Assert.That(result, Is.EqualTo(newCourseId));
             mockRepository.Verify(repo => repo.AddAsync(It.Is<Course>(c =>
                 c.Name == courseForm.Name &&
@@ -165,19 +165,19 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task GetCourseDetailsModelByIdAsync_ShouldThrowArgumentException_WhenCourseDoesNotExist()
+        public void GetCourseDetailsModelByIdAsync_ShouldThrowKeyNotFoundException_WhenCourseDoesNotExist()
         {
             
             mockRepository.Setup(repo => repo.AllAsReadOnly<Course>())
                 .Returns(new List<Course>().AsQueryable().BuildMock());
 
              
-            var exception = Assert.ThrowsAsync<ArgumentException>(() => courseService.GetCourseDetailsModelByIdAsync(99));
+            var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => courseService.GetCourseDetailsModelByIdAsync(99));
             Assert.That(exception.Message, Is.EqualTo("Course with ID 99 not found."));
         }
 
         [Test]
-        public async Task GetCourseDetailsModelByIdAsync_ShouldThrowArgumentException_WhenCourseIsDeleted()
+        public void GetCourseDetailsModelByIdAsync_ShouldThrowKeyNotFoundException_WhenCourseIsDeleted()
         {
             
             var course = new Course
@@ -198,32 +198,15 @@ namespace Tests.Admin
                 .Returns(new List<Course> { course }.AsQueryable().BuildMock());
 
              
-            var exception = Assert.ThrowsAsync<ArgumentException>(() => courseService.GetCourseDetailsModelByIdAsync(1));
+            var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => courseService.GetCourseDetailsModelByIdAsync(1));
             Assert.That(exception.Message, Is.EqualTo("Course with ID 1 not found."));
         }
-
 
         [Test]
         public async Task DeleteCourseAsync_ShouldSetCourseToDeleted_WhenCourseExistsAndNotDeleted()
         {
             
             var course = new Course { Id = 1, Name = "Math 101", IsDeleted = false };
-            mockRepository.Setup(repo => repo.GetByIdAsync<Course>(1)).ReturnsAsync(course);
-            mockRepository.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
-
-            
-            await courseService.DeleteCourseAsync(1);
-
-            
-            Assert.IsTrue(course.IsDeleted);
-            mockRepository.Verify(repo => repo.SaveChangesAsync(), Times.Once);
-        }
-
-        [Test]
-        public async Task DeleteCourseAsync_ShouldNotChangeCourse_WhenCourseAlreadyDeleted()
-        {
-            
-            var course = new Course { Id = 1, Name = "Math 101", IsDeleted = true };
             mockRepository.Setup(repo => repo.GetByIdAsync<Course>(1)).ReturnsAsync(course);
             mockRepository.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
 
@@ -263,7 +246,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task EditCourseAsync_ShouldNotUpdateCourse_WhenCourseIsDeleted()
+        public void EditCourseAsync_ShouldThrowKeyNotFoundException_WhenCourseIsDeleted()
         {
             
             var course = new Course { Id = 1, Name = "Math 101", Description = "Old Description", IsDeleted = true };
@@ -279,12 +262,8 @@ namespace Tests.Admin
             mockRepository.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
 
             
-            await courseService.EditCourseAsync(1, model, publisherId);
-
-            
-            Assert.That(course.Name, Is.EqualTo("Math 101"));
-            Assert.That(course.Description, Is.EqualTo("Old Description"));
-            mockRepository.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await courseService.EditCourseAsync(1, model, publisherId));
+            Assert.That(ex.Message, Is.EqualTo("Course with ID 1 not found."));
         }
 
         [Test]
@@ -347,13 +326,13 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task GetCourseByIdAsync_ShouldThrowException_WhenCourseDoesNotExist()
+        public void GetCourseByIdAsync_ShouldThrowKeyNotFoundException_WhenCourseDoesNotExist()
         {
             
             mockRepository.Setup(repo => repo.GetByIdAsync<CourseServiceModel>(99)).ReturnsAsync((CourseServiceModel)null);
 
              
-            var exception = Assert.ThrowsAsync<ArgumentException>(() => courseService.GetCourseByIdAsync(99));
+            var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => courseService.GetCourseByIdAsync(99));
             Assert.That(exception.Message, Is.EqualTo("Course with ID 99 not found."));
         }
 
@@ -391,19 +370,19 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task GetCourseFormModelByIdAsync_ShouldThrowArgumentException_WhenCourseDoesNotExist()
+        public void GetCourseFormModelByIdAsync_ShouldThrowKeyNotFoundException_WhenCourseDoesNotExist()
         {
             
             mockRepository.Setup(repo => repo.AllAsReadOnly<Course>())
                 .Returns(new List<Course>().AsQueryable().BuildMock());
 
              
-            var exception = Assert.ThrowsAsync<ArgumentException>(() => courseService.GetCourseFormModelByIdAsync(99));
+            var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => courseService.GetCourseFormModelByIdAsync(99));
             Assert.AreEqual("Course with ID 99 not found.", exception.Message);
         }
 
         [Test]
-        public async Task GetCourseFormModelByIdAsync_ShouldThrowArgumentException_WhenCourseIsDeleted()
+        public void GetCourseFormModelByIdAsync_ShouldThrowKeyNotFoundException_WhenCourseIsDeleted()
         {
             
             var course = new Course
@@ -419,7 +398,7 @@ namespace Tests.Admin
                 .Returns(new List<Course> { course }.AsQueryable().BuildMock());
 
              
-            var exception = Assert.ThrowsAsync<ArgumentException>(() => courseService.GetCourseFormModelByIdAsync(1));
+            var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => courseService.GetCourseFormModelByIdAsync(1));
             Assert.That(exception.Message, Is.EqualTo("Course with ID 1 not found."));
         }
 

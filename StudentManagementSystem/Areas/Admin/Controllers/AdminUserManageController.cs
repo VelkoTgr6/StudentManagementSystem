@@ -11,13 +11,16 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
     {
         private readonly RoleManager<IdentityRole<string>> roleManager;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly ILogger<AdminUserManageController> logger;
 
         public AdminUserManageController(
-            RoleManager<IdentityRole<string>> roleManager,
-            UserManager<IdentityUser> userManager)
+            RoleManager<IdentityRole<string>> _roleManager,
+            UserManager<IdentityUser> _userManager,
+            ILogger<AdminUserManageController> _logger)
         {
-            this.roleManager = roleManager;
-            this.userManager = userManager;
+            roleManager = _roleManager;
+            userManager = _userManager;
+            logger = _logger;
         }
 
         [HttpGet]
@@ -46,6 +49,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
 
             if (result.Succeeded)
             {
+                logger.LogInformation($"Role {model.RoleName} created successfully.");
                 return RedirectToAction(nameof(Index));
             }
 
@@ -61,12 +65,17 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteRole(string roleName)
         {
             var role = await roleManager.FindByNameAsync(roleName);
+
             if (role != null)
             {
                 await roleManager.DeleteAsync(role);
+
+                logger.LogInformation($"Role {roleName} deleted successfully.");
+
                 return Ok();
             }
-            return BadRequest();
+
+            return NotFound();
         }
 
         [HttpGet]
@@ -130,10 +139,16 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                     }
 
                     await userManager.AddToRoleAsync(user, model.RoleName);
+
+                    logger.LogInformation($"User {model.UserName} added to role {model.RoleName}.");
+
                     return RedirectToAction("Index", "AdminHome");
                 }
             }
-            return BadRequest();
+
+            logger.LogWarning("Role or user not found.");
+
+            return NotFound();
         }
 
         [HttpGet]
@@ -195,6 +210,8 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
 
                 return View(model);
             }
+
+            logger.LogInformation($"Role {model.SelectedRoleName} renamed to {model.NewRoleName}.");
 
             return RedirectToAction("Index", "AdminHome");
         }
@@ -259,6 +276,8 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                         return View(model);
                     }
                     await userManager.RemoveFromRoleAsync(user, model.RoleName);
+
+                    logger.LogInformation($"User {model.UserName} removed from role {model.RoleName}.");
 
                     return RedirectToAction("Index", "AdminHome");
                 }

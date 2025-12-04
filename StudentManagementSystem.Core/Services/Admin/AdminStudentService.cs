@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Student;
@@ -11,10 +12,12 @@ namespace StudentManagementSystem.Core.Services.Admin
     public class AdminStudentService : IAdminStudentService
     {
         private readonly IRepository repository;
+        private readonly ILogger<AdminStudentService> logger;
 
-        public AdminStudentService(IRepository _repository)
+        public AdminStudentService(IRepository _repository, ILogger<AdminStudentService> _logger)
         {
             repository = _repository;
+            logger = _logger;
         }
 
         public async Task<StudentQueryServiceModel> AllAsync(string? studentClass = null, string? searchTerm = null, StudentSorting sorting = StudentSorting.Name, int currentPage = 1, int studentsPerPage = 10)
@@ -59,7 +62,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                     ContactDetails = s.ContactDetails,
                     Email = s.Email,
                     PersonalId = s.PersonalId,
-                    DateOfBirth = s.DateOfBirth,
+                    DateOfBirth = DateTime.SpecifyKind(s.DateOfBirth.Date, DateTimeKind.Utc),
                     Class = s.Class.Name,
                     Performance = s.Performance.ToString("f2"),
                 })
@@ -78,6 +81,11 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             var userId = await repository.GetIdByEmailAsync(model.Email);
 
+            if (userId == null)
+            {
+                throw new KeyNotFoundException($"User with the provided email: {model.Email} does not exist.");
+            }
+
             string profilePicturePath = "/images/profiles/default.jpg";
 
             if (profilePictureFile != null)
@@ -93,7 +101,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                 ContactDetails = model.ContactDetails,
                 Email = model.Email,
                 PersonalId = model.PersonalId,
-                DateOfBirth = model.DateOfBirth,
+                DateOfBirth = DateTime.SpecifyKind(model.DateOfBirth.Date, DateTimeKind.Utc),
                 UserId = userId,
                 ClassId = model.ClassId,
                 ProfilePicturePath = profilePicturePath,
@@ -103,6 +111,9 @@ namespace StudentManagementSystem.Core.Services.Admin
             await repository.AddAsync(entity);
             await repository.SaveChangesAsync();
 
+            logger.LogInformation
+                ($"New student created: {entity.FirstName} {entity.LastName}, ID: {entity.Id}");
+
             return entity.Id;
         }
 
@@ -111,23 +122,32 @@ namespace StudentManagementSystem.Core.Services.Admin
         {
             var student = await repository.GetByIdAsync<Student>(id);
 
-            if (student != null && student.IsDeleted == false)
+            if (student == null || student.IsDeleted == true)
             {
-                student.IsDeleted = true;
-                var identityUser = await repository.GetIdentityUserByIdAsync(student.UserId);
+                throw new KeyNotFoundException($"Student with ID {id} does not exist.");
+            }
 
-                if (identityUser != null)
-                {
-                    identityUser.UserName = null;
-                    identityUser.Email = null;
-                    identityUser.PhoneNumber = null;
-                    identityUser.EmailConfirmed = false;
-                    identityUser.PhoneNumberConfirmed = false;
-                    identityUser.LockoutEnabled = true;
-                    identityUser.NormalizedEmail = null;
-                    identityUser.NormalizedUserName = null;
-                    identityUser.PasswordHash = null;
-                }
+           
+            student.IsDeleted = true;
+            var identityUser = await repository.GetIdentityUserByIdAsync(student.UserId);
+
+            if (identityUser != null)
+            {
+                identityUser.UserName = null;
+                identityUser.Email = null;
+                identityUser.PhoneNumber = null;
+                identityUser.EmailConfirmed = false;
+                identityUser.PhoneNumberConfirmed = false;
+                identityUser.LockoutEnabled = true;
+                identityUser.NormalizedEmail = null;
+                identityUser.NormalizedUserName = null;
+                identityUser.PasswordHash = null;
+            }
+            else
+            {
+                logger.LogWarning
+                    ($"Attempted to delete a non-existing or already deleted identity user with student user ID: {student.UserId} ");
+                throw new KeyNotFoundException($"Identity user with ID: {student.UserId} not found.");
             }
 
             await repository.SaveChangesAsync();
@@ -145,7 +165,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                 entity.ContactDetails = model.ContactDetails;
                 entity.Email = model.Email;
                 entity.PersonalId = model.PersonalId;
-                entity.DateOfBirth = model.DateOfBirth;
+                entity.DateOfBirth = DateTime.SpecifyKind(model.DateOfBirth.Date, DateTimeKind.Utc);
                 entity.ClassId = model.ClassId;
 
                 if (profilePictureFile != null)
@@ -156,6 +176,11 @@ namespace StudentManagementSystem.Core.Services.Admin
                 {
                     entity.ProfilePicturePath = "/images/profiles/default.jpg"; 
                 }
+            }
+            else
+            {
+                logger.LogWarning($"Attempted to edit a non-existing student with ID: {id}.");
+                throw new KeyNotFoundException($"Student with ID {id} does not exist.");
             }
 
             await repository.SaveChangesAsync();
@@ -179,12 +204,21 @@ namespace StudentManagementSystem.Core.Services.Admin
                 await file.CopyToAsync(fileStream);
             }
 
+            logger.LogInformation($"Profile picture saved: {fileName} at {filePath}");
+
             return "/images/profiles/" + fileName; // Return the relative path
         }
 
         public async Task<bool> ExistAsync(int id)
         {
-            return await repository.AllAsReadOnly<Student>().AnyAsync(s => s.Id == id && s.IsDeleted == false);
+            var exists = await repository.AllAsReadOnly<Student>().AnyAsync(s => s.Id == id && s.IsDeleted == false);
+
+            if (!exists)
+            {
+                throw new KeyNotFoundException($"Student with ID: {id} not found");
+            }
+
+            return exists;
         }
 
         public async Task<IEnumerable<StudentServiceModel>> GetAllStudentsAsync()
@@ -214,7 +248,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                     ContactDetails = s.ContactDetails,
                     Email = s.Email,
                     PersonalId = s.PersonalId,
-                    DateOfBirth = s.DateOfBirth,
+                    DateOfBirth = DateTime.SpecifyKind(s.DateOfBirth.Date, DateTimeKind.Utc),
                     Class = s.Class.Name,
                     Performance = s.Performance.ToString("f2"),
                 })
@@ -222,7 +256,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (student == null)
             {
-                throw new ArgumentException($"Student not found.");
+                throw new KeyNotFoundException($"Student with ID: {id} not found.");
             }
 
             return student;
@@ -243,7 +277,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                     LastName = s.LastName,
                     Class = s.Class.Name,
                     Email = s.Email,
-                    DateOfBirth = s.DateOfBirth,
+                    DateOfBirth = DateTime.SpecifyKind(s.DateOfBirth.Date, DateTimeKind.Utc),
                     ContactDetails = s.ContactDetails,
                     Performance = s.Performance.ToString("f2"),
                     Grades = s.Grades
@@ -252,7 +286,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (student == null)
             {
-                throw new ArgumentException($"Student not found.");
+                throw new KeyNotFoundException($"Student with ID: {id} not found.");
             }
 
             return student;
@@ -270,7 +304,7 @@ namespace StudentManagementSystem.Core.Services.Admin
                     ContactDetails = s.ContactDetails,
                     Email = s.Email,
                     PersonalId = s.PersonalId,
-                    DateOfBirth = s.DateOfBirth,
+                    DateOfBirth = DateTime.SpecifyKind(s.DateOfBirth.Date, DateTimeKind.Utc),
                     ClassId = s.ClassId,
                     ProfilePicturePath = s.ProfilePicturePath
                 })
@@ -278,7 +312,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (student == null)
             {
-                throw new ArgumentException($"Student not found.");
+                throw new KeyNotFoundException($"Student with ID: {id} not found.");
             }
 
             return student;
@@ -286,6 +320,14 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task<IEnumerable<StudentGradeServiceViewModel>> GetStudentGradesAsync(int studentId)
         {
+            var exists = await repository.AllAsReadOnly<Student>()
+                .AnyAsync(s => s.Id == studentId && s.IsDeleted == false);
+
+            if (!exists)
+            {
+                throw new KeyNotFoundException($"Student with ID: {studentId} not found.");
+            }
+
             var studentGrades = await repository.AllAsReadOnly<Grade>()
                 .Where(g => g.StudentId == studentId && g.IsDeleted == false)
                 .Select(g => new StudentGradeServiceViewModel
@@ -310,7 +352,8 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (grade == null)
             {
-                throw new ArgumentException("Grade not found.");
+                logger.LogWarning($"Attempted to edit a non-existing grade with ID: {gradeId}.");
+                throw new KeyNotFoundException($"Grade with ID: {gradeId} not found.");
             }
 
             grade.GradeScore = model.GradeScore;
@@ -319,6 +362,8 @@ namespace StudentManagementSystem.Core.Services.Admin
 
 
             await repository.UpdateStudentsPerformanceAllAsync();
+
+            logger.LogInformation($"Grade with ID: {gradeId} has been edited.");
 
             await repository.SaveChangesAsync();
         }
@@ -339,7 +384,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (grade == null)
             {
-                throw new ArgumentException($"Grade not found.");
+                throw new KeyNotFoundException($"Grade with ID: {gradeId} not found.");
             }
 
             return grade;
@@ -352,29 +397,40 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (grade == null)
             {
-                throw new ArgumentException("Grade not found.");
+                logger.LogWarning($"Attempted to delete a non-existing grade with ID: {id}.");
+                throw new KeyNotFoundException($"Grade with ID: {id} not found.");
             }
 
             grade.IsDeleted = true;
 
             await repository.UpdateStudentsPerformanceAllAsync();
 
+            logger.LogInformation($"Grade with ID: {id} has been deleted.");
+
             await repository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<StudentRemarksServiceModel>> GetStudentRemarksAsync(int studentId)
         {
+            var exists = await repository.AllAsReadOnly<Student>()
+                .AnyAsync(s => s.Id == studentId && s.IsDeleted == false);
+
+            if (!exists)
+            {
+                throw new KeyNotFoundException($"Student with ID: {studentId} not found.");
+            }
+
             var remarks = await repository.AllAsReadOnly<Remark>()
-                .Where(r => r.StudentId == studentId && r.IsDeleted == false)
-                .Select(r=> new StudentRemarksServiceModel()
-                {
-                    RemarkId = r.Id,
-                    CourseId = r.CourseId,
-                    CourseName = r.Course.Name,
-                    RemarkText = r.RemarkText
-                })
-                .OrderBy(r => r.CourseName)
-                .ToListAsync();
+            .Where(r => r.StudentId == studentId && r.IsDeleted == false)
+            .Select(r=> new StudentRemarksServiceModel()
+            {
+                RemarkId = r.Id,
+                CourseId = r.CourseId,
+                CourseName = r.Course.Name,
+                RemarkText = r.RemarkText
+            })
+            .OrderBy(r => r.CourseName)
+            .ToListAsync();
 
             return remarks;
         }
@@ -386,11 +442,14 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (remark == null)
             {
-                throw new ArgumentException("Remark not found.");
+                logger.LogWarning($"Attempted to edit a non-existing remark with ID: {remarkId} .");
+                throw new KeyNotFoundException($"Remark with ID: {remarkId} not found.");
             }
 
             remark.RemarkText = model.RemarkText;
             remark.CourseId = model.CourseId;
+
+            logger.LogInformation($"Remark with ID: {remarkId} has been edited.");
 
             await repository.SaveChangesAsync();
         }
@@ -410,7 +469,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (remark == null)
             {
-                throw new ArgumentException($"Remark not found.");
+                throw new KeyNotFoundException($"Remark with ID: {id} not found.");
             }
 
             return remark;
@@ -422,26 +481,37 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (remark == null || remark.IsDeleted == true)
             {
-                throw new ArgumentException("Remark not found.");
+                logger.LogWarning($"Attempted to delete a non-existing remark with ID: {id}.");
+                throw new ArgumentException($"Remark with ID: {id} not found.");
             }
 
             remark.IsDeleted = true;
+
+            logger.LogInformation($"Remark with ID: {id} has been deleted.");
 
             await repository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<StudentAbsenceServiceModel>> GetStudentAbsencesAsync(int studentId)
         {
+            var exists = await repository.AllAsReadOnly<Student>()
+                .AnyAsync(s => s.Id == studentId && s.IsDeleted == false);
+
+            if (!exists)
+            {
+                throw new KeyNotFoundException($"Student with ID: {studentId} not found.");
+            }
+
             var absences = await repository.AllAsReadOnly<Absence>()
-                .Where(a => a.StudentId == studentId && a.IsDeleted == false)
-                .Select(a => new StudentAbsenceServiceModel
-                {
-                    Id = a.Id,
-                    CourseName = a.Course.Name,
-                    AbsenceDate = a.Date.ToString("dd.MM.yyyy"),
-                })
-                .OrderBy(a => a.CourseName)
-                .ToListAsync();
+            .Where(a => a.StudentId == studentId && a.IsDeleted == false)
+            .Select(a => new StudentAbsenceServiceModel
+            {
+                Id = a.Id,
+                CourseName = a.Course.Name,
+                AbsenceDate = a.Date.ToString("dd.MM.yyyy"),
+            })
+            .OrderBy(a => a.CourseName)
+            .ToListAsync();
 
             return absences;
         }
@@ -455,13 +525,13 @@ namespace StudentManagementSystem.Core.Services.Admin
                     Id = a.Id,
                     StudentId = a.StudentId,
                     CourseId = a.CourseId,
-                    AbsenceDate = a.Date
+                    AbsenceDate = DateTime.SpecifyKind(a.Date, DateTimeKind.Utc)
                 })
                 .FirstOrDefaultAsync();
 
             if (absence == null)
             {
-                throw new ArgumentException($"Absence not found.");
+                throw new KeyNotFoundException($"Absence with ID: {id} not found.");
             }
 
             return absence;
@@ -473,13 +543,16 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (absence == null || absence.IsDeleted == true)
             {
-                throw new ArgumentException("Absence not found.");
+                logger.LogWarning($"Attempted to edit a non-existing absence with ID: {id}.");
+                throw new KeyNotFoundException($"Absence with ID: {id} not found.");
             }
 
             absence.Date = model.AbsenceDate;
             absence.CourseId = model.CourseId;
 
-             await repository.SaveChangesAsync();
+            logger.LogInformation($"Absence with ID: {id} has been edited.");
+
+            await repository.SaveChangesAsync();
         }
 
         public async Task DeleteAbsenceAsync(int id)
@@ -488,10 +561,13 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (absence == null || absence.IsDeleted == true)
             {
-                throw new ArgumentException("Absence not found.");
+                logger.LogWarning($"Attempted to delete a non-existing absence with ID: {id}.");
+                throw new KeyNotFoundException($"Absence with ID: {id} not found.");
             }
 
             absence.IsDeleted = true;
+
+            logger.LogInformation($"Absence with ID: {id} has been deleted.");
 
             await repository.SaveChangesAsync();
         }

@@ -1,5 +1,6 @@
 ﻿using MockQueryable;
 using Moq;
+using Microsoft.Extensions.Logging;
 using StudentManagementSystem.Core.Models.Teacher;
 using StudentManagementSystem.Core.Services;
 using StudentManagementSystem.Infrastructure.Data.Common;
@@ -12,12 +13,14 @@ namespace Tests
     {
         private TeacherService teacherService;
         private Mock<IRepository> mockRepository;
+        private Mock<ILogger<TeacherService>> mockLogger;
 
         [SetUp]
         public void Setup()
         {
             mockRepository = new Mock<IRepository>();
-            teacherService = new TeacherService(mockRepository.Object);
+            mockLogger = new Mock<ILogger<TeacherService>>();
+            teacherService = new TeacherService(mockRepository.Object, mockLogger.Object);
         }
 
         [Test]
@@ -71,7 +74,7 @@ namespace Tests
         }
 
         [Test]
-        public void AddGradeToStudent_ShouldThrowArgumentNullException_WhenStudentIsNotFound()
+        public void AddGradeToStudent_ShouldThrowKeyNotFoundException_WhenStudentIsNotFound()
         {
             
             var studentId = 1;
@@ -85,12 +88,12 @@ namespace Tests
             mockRepository.Setup(r => r.All<Student>())
                 .Returns(Enumerable.Empty<Student>().AsQueryable().BuildMock());  // No student found
 
-            Assert.That(() => teacherService.AddGradeToStudent(model, studentId),
-                Throws.ArgumentNullException.With.Message.Contains("Student not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.AddGradeToStudent(model, studentId));
+            Assert.That(ex.Message, Does.Contain("Student").And.Contain("not found"));
         }
 
         [Test]
-        public void AddGradeToStudent_ShouldThrowArgumentNullException_WhenCourseIsNotFound()
+        public void AddGradeToStudent_ShouldThrowKeyNotFoundException_WhenCourseIsNotFound()
         {
             
             var studentId = 1;
@@ -114,9 +117,8 @@ namespace Tests
             mockRepository.Setup(r => r.All<Course>())
                 .Returns(Enumerable.Empty<Course>().AsQueryable().BuildMock());  // No course found
 
-            
-            Assert.That(() => teacherService.AddGradeToStudent(model, studentId),
-                Throws.ArgumentNullException.With.Message.Contains("Course not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.AddGradeToStudent(model, studentId));
+            Assert.That(ex.Message, Does.Contain("Course").And.Contain("not found"));
         }
         [Test]
         public async Task AddRemarkToStudentAsync_ShouldReturnRemarkId_WhenValidDataIsProvided()
@@ -166,7 +168,7 @@ namespace Tests
             Assert.That(result, Is.GreaterThan(0)); // Expecting a valid Remark ID to be returned
         }
         [Test]
-        public void AddRemarkToStudentAsync_ShouldThrowArgumentNullException_WhenStudentNotFound()
+        public void AddRemarkToStudentAsync_ShouldThrowKeyNotFoundException_WhenStudentNotFound()
         {
             
             var studentId = 1;
@@ -180,12 +182,11 @@ namespace Tests
             mockRepository.Setup(r => r.All<Student>())
                 .Returns(Enumerable.Empty<Student>().AsQueryable().BuildMock());  // No student found
 
-            
-            Assert.That(() => teacherService.AddRemarkToStudentAsync(model, studentId),
-                Throws.ArgumentNullException.With.Message.Contains("Student not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.AddRemarkToStudentAsync(model, studentId));
+            Assert.That(ex.Message, Does.Contain("Student").And.Contain("not found"));
         }
         [Test]
-        public void AddRemarkToStudentAsync_ShouldThrowArgumentNullException_WhenCourseNotFound()
+        public void AddRemarkToStudentAsync_ShouldThrowKeyNotFoundException_WhenCourseNotFound()
         {
             
             var studentId = 1;
@@ -209,9 +210,8 @@ namespace Tests
             mockRepository.Setup(r => r.All<Course>())
                 .Returns(Enumerable.Empty<Course>().AsQueryable().BuildMock());  // No course found
 
-            
-            Assert.That(() => teacherService.AddRemarkToStudentAsync(model, studentId),
-                Throws.ArgumentNullException.With.Message.Contains("Course not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.AddRemarkToStudentAsync(model, studentId));
+            Assert.That(ex.Message, Does.Contain("Course").And.Contain("not found"));
         }
         [Test]
         public async Task GetTeacherEntityIdByUserIdAsync_ShouldReturnTeacherId_WhenTeacherExists()
@@ -236,7 +236,7 @@ namespace Tests
         }
 
         [Test]
-        public void GetTeacherEntityIdByUserIdAsync_ShouldThrowArgumentNullException_WhenTeacherNotFound()
+        public void GetTeacherEntityIdByUserIdAsync_ShouldThrowKeyNotFoundException_WhenTeacherNotFound()
         {
             
             var userId = "nonexistentTeacher";
@@ -244,9 +244,8 @@ namespace Tests
             mockRepository.Setup(r => r.AllAsReadOnly<Teacher>())
                 .Returns(Enumerable.Empty<Teacher>().AsQueryable().BuildMock());  // No teacher found
 
-            
-            Assert.That(() => teacherService.GetTeacherEntityIdByUserIdAsync(userId),
-                Throws.ArgumentNullException.With.Message.Contains("Teacher not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.GetTeacherEntityIdByUserIdAsync(userId));
+            Assert.That(ex.Message, Does.Contain("Teacher").And.Contain("not found"));
         }
 
         [Test]
@@ -307,7 +306,7 @@ namespace Tests
         }
 
         [Test]
-        public void RemarkOfStudentExists_ShouldThrowArgumentNullException_WhenStudentNotFound()
+        public void RemarkOfStudentExists_ShouldThrowKeyNotFoundException_WhenStudentNotFound()
         {
             
             var studentId = 1;
@@ -317,9 +316,8 @@ namespace Tests
             mockRepository.Setup(r => r.All<Student>())
                 .Returns(Enumerable.Empty<Student>().AsQueryable().BuildMock());  // No student found
 
-            
-            Assert.That(() => teacherService.RemarkOfStudentExists(studentId, remarkText, courseId),
-                Throws.ArgumentNullException.With.Message.Contains("Student not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.RemarkOfStudentExists(studentId, remarkText, courseId));
+            Assert.That(ex.Message, Does.Contain("Student").And.Contain("not found"));
         }
 
         [Test]
@@ -347,7 +345,7 @@ namespace Tests
         }
 
         [Test]
-        public void GetCourseNameById_ShouldThrowArgumentNullException_WhenCourseNotFound()
+        public void GetCourseNameById_ShouldThrowKeyNotFoundException_WhenCourseNotFound()
         {
             
             var courseId = 1;
@@ -355,9 +353,8 @@ namespace Tests
             mockRepository.Setup(r => r.AllAsReadOnly<Course>())
                 .Returns(Enumerable.Empty<Course>().AsQueryable().BuildMock());  // No course found
 
-            
-            Assert.That(() => teacherService.GetCourseNameById(courseId),
-                Throws.ArgumentNullException.With.Message.Contains("Course not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.GetCourseNameById(courseId));
+            Assert.That(ex.Message, Does.Contain("Course").And.Contain("not found"));
         }
 
         [Test]
@@ -395,7 +392,7 @@ namespace Tests
         }
 
         [Test]
-        public void GetGradeByIdAsync_ShouldThrowArgumentNullException_WhenGradeNotFound()
+        public void GetGradeByIdAsync_ShouldThrowKeyNotFoundException_WhenGradeNotFound()
         {
             
             var gradeId = 1;
@@ -403,9 +400,8 @@ namespace Tests
             mockRepository.Setup(r => r.AllAsReadOnly<Grade>())
                 .Returns(Enumerable.Empty<Grade>().AsQueryable().BuildMock());  // No grade found
 
-            
-            Assert.That(() => teacherService.GetGradeByIdAsync(gradeId),
-                Throws.ArgumentNullException.With.Message.Contains("Grade not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.GetGradeByIdAsync(gradeId));
+            Assert.That(ex.Message, Does.Contain("Grade").And.Contain("not found"));
         }
 
         [Test]
@@ -445,7 +441,7 @@ namespace Tests
         }
 
         [Test]
-        public void EditGradeAsync_ShouldThrowArgumentNullException_WhenGradeNotFound()
+        public void EditGradeAsync_ShouldThrowKeyNotFoundException_WhenGradeNotFound()
         {
             
             var gradeId = 1;
@@ -459,9 +455,8 @@ namespace Tests
             mockRepository.Setup(r => r.All<Grade>())
                 .Returns(Enumerable.Empty<Grade>().AsQueryable().BuildMock());  // No grade found
 
-            
-            Assert.That(() => teacherService.EditGradeAsync(gradeId, gradeModel),
-                Throws.ArgumentNullException.With.Message.Contains("Grade not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.EditGradeAsync(gradeId, gradeModel));
+            Assert.That(ex.Message, Does.Contain("Grade").And.Contain("not found"));
         }
 
         [Test]
@@ -493,7 +488,7 @@ namespace Tests
         }
 
         [Test]
-        public void DeleteGradeAsync_ShouldThrowArgumentNullException_WhenGradeNotFound()
+        public void DeleteGradeAsync_ShouldThrowKeyNotFoundException_WhenGradeNotFound()
         {
             
             var gradeId = 1;
@@ -501,9 +496,8 @@ namespace Tests
             mockRepository.Setup(r => r.All<Grade>())
                 .Returns(Enumerable.Empty<Grade>().AsQueryable().BuildMock());  // No grade found
 
-            
-            Assert.That(() => teacherService.DeleteGradeAsync(gradeId),
-                Throws.ArgumentNullException.With.Message.Contains("Grade not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.DeleteGradeAsync(gradeId));
+            Assert.That(ex.Message, Does.Contain("Grade").And.Contain("not found"));
         }
 
         [Test]
@@ -512,20 +506,19 @@ namespace Tests
             
             var absenceId = 1;
             var absences = new List<Absence>
-        {
-            new Absence
             {
-                Id = absenceId,
-                StudentId = 100,
-                CourseId = 200,
-                Date = new DateTime(2024, 12, 15),
-                IsDeleted = false
-            }
-        }.AsQueryable().BuildMock();
+                new Absence
+                {
+                    Id = absenceId,
+                    StudentId = 100,
+                    CourseId = 200,
+                    Date = new DateTime(2024, 12, 15),
+                    IsDeleted = false
+                }
+            }.AsQueryable().BuildMock();
 
-            mockRepository.Setup(r => r.All<Absence>()).Returns(absences);
+            mockRepository.Setup(r => r.AllAsReadOnly<Absence>()).Returns(absences);
 
-           
             var result = await teacherService.GetAbsenceByIdAsync(absenceId);
 
             
@@ -538,17 +531,16 @@ namespace Tests
 
 
         [Test]
-        public void GetAbsenceByIdAsync_ShouldThrowArgumentNullException_WhenAbsenceNotFound()
+        public void GetAbsenceByIdAsync_ShouldThrowKeyNotFoundException_WhenAbsenceNotFound()
         {
             
             var absenceId = 1;
 
-            mockRepository.Setup(r => r.All<Absence>())
+            mockRepository.Setup(r => r.AllAsReadOnly<Absence>())
                 .Returns(Enumerable.Empty<Absence>().AsQueryable().BuildMock());  // No absence found
 
-            
-            Assert.That(() => teacherService.GetAbsenceByIdAsync(absenceId),
-                Throws.ArgumentNullException.With.Message.Contains("Absence not found"));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.GetAbsenceByIdAsync(absenceId));
+            Assert.That(ex.Message, Does.Contain("Absence").And.Contain("not found"));
         }
 
         [Test]
@@ -601,8 +593,7 @@ namespace Tests
             var remarkId = 1;
             var remark = new Remark { Id = remarkId, IsDeleted = false };
 
-            mockRepository.Setup(r => r.All<Remark>())
-                .Returns(new List<Remark> { remark }.AsQueryable().BuildMock());
+            mockRepository.Setup(r => r.All<Remark>()).Returns(new List<Remark> { remark }.AsQueryable().BuildMock());
 
            
             var result = await teacherService.GetRemarkByIdAsync(remarkId);
@@ -624,8 +615,7 @@ namespace Tests
             };
             var remark = new Remark { Id = remarkId, IsDeleted = false };
 
-            mockRepository.Setup(r => r.All<Remark>())
-                .Returns(new List<Remark> { remark }.AsQueryable().BuildMock());
+            mockRepository.Setup(r => r.All<Remark>()).Returns(new List<Remark> { remark }.AsQueryable().BuildMock());
 
            
             var result = await teacherService.EditRemarkASync(remarkId, model);
@@ -644,8 +634,7 @@ namespace Tests
             var remarkId = 1;
             var remark = new Remark { Id = remarkId, IsDeleted = false };
 
-            mockRepository.Setup(r => r.All<Remark>())
-                .Returns(new List<Remark> { remark }.AsQueryable().BuildMock());
+            mockRepository.Setup(r => r.All<Remark>()).Returns(new List<Remark> { remark }.AsQueryable().BuildMock());
 
            
             await teacherService.DeleteRemarkAsync(remarkId);
@@ -669,7 +658,10 @@ namespace Tests
             mockRepository.Setup(r => r.AddAsync(It.IsAny<News>())).Returns(Task.CompletedTask);
             mockRepository.Setup(r => r.SaveChangesAsync()).Returns(Task.FromResult(1));
 
-           
+            var teacher = new Teacher { Id = 1, UserId = "teacher1" };
+            mockRepository.Setup(r => r.AllAsReadOnly<Teacher>())
+                .Returns(new List<Teacher> { teacher }.AsQueryable().BuildMock());
+
             var result = await teacherService.AddNewsToTeacherAsync(model);
 
             
@@ -764,7 +756,7 @@ namespace Tests
         }
 
         [Test]
-        public void GetStudentsByMainClassTeacherAsync_ShouldThrowException_WhenNoStudentsFound()
+        public void GetStudentsByMainClassTeacherAsync_ShouldThrowKeyNotFoundException_WhenNoStudentsFound()
         {
             
             var userId = "testUserId";
@@ -774,8 +766,7 @@ namespace Tests
             mockRepository.Setup(r => r.All<Student>()).Returns(students);
             mockRepository.Setup(r => r.AllAsReadOnly<Teacher>()).Returns(new List<Teacher> { new Teacher { Id = teacherId, UserId = userId } }.AsQueryable().BuildMock());
 
-            
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await teacherService.GetStudentsByMainClassTeacherAsync(userId));
+            Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.GetStudentsByMainClassTeacherAsync(userId));
         }
 
         [Test]
@@ -812,7 +803,7 @@ namespace Tests
         }
 
         [Test]
-        public void GetMainTeacherStudentDetailsAsync_ShouldThrowException_WhenStudentNotFound()
+        public void GetMainTeacherStudentDetailsAsync_ShouldThrowKeyNotFoundException_WhenStudentNotFound()
         {
             
             var studentId = 1;
@@ -820,8 +811,7 @@ namespace Tests
 
             mockRepository.Setup(r => r.AllAsReadOnly<Student>()).Returns(students);
 
-            
-            Assert.ThrowsAsync<ArgumentNullException>(async () => await teacherService.GetMainTeacherStudentDetailsAsync(studentId));
+            Assert.ThrowsAsync<KeyNotFoundException>(async () => await teacherService.GetMainTeacherStudentDetailsAsync(studentId));
         }
 
         [Test]
@@ -904,7 +894,7 @@ namespace Tests
         }
 
         [Test]
-        public void GetAllClassesByTeacher_ShouldThrowArgumentNullException_WhenTeacherNotFound()
+        public void GetAllClassesByTeacher_ShouldThrowKeyNotFoundException_WhenTeacherNotFound()
         {
             
             var userId = "invalidTeacher";
@@ -912,9 +902,8 @@ namespace Tests
 
             mockRepository.Setup(r => r.AllAsReadOnly<Teacher>()).Returns(teachersMock);
 
-            
             Assert.That(async () => await teacherService.GetAllClassesByTeacher(userId),
-                Throws.TypeOf<ArgumentNullException>());
+                Throws.TypeOf<KeyNotFoundException>());
         }
 
         [Test]
@@ -1042,6 +1031,7 @@ namespace Tests
         }
     }
 }
+
 
 
 

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using MockQueryable;
 using MockQueryable.Moq;
 using Moq;
+using NuGet.Protocol.Core.Types;
 using StudentManagementSystem.Core.Models.Admin.Student;
 using StudentManagementSystem.Core.Services.Admin;
 using StudentManagementSystem.Infrastructure.Data.Common;
@@ -14,13 +16,15 @@ namespace Tests.Admin
     public class AdminStudentServiceTests
     {
         private Mock<IRepository> repositoryMock;
+        private Mock<ILogger<AdminStudentService>> loggerMock;
         private AdminStudentService adminStudentService;
 
         [SetUp]
         public void SetUp()
         {
             repositoryMock = new Mock<IRepository>();
-            adminStudentService = new AdminStudentService(repositoryMock.Object);
+            loggerMock = new Mock<ILogger<AdminStudentService>>();
+            adminStudentService = new AdminStudentService(repositoryMock.Object, loggerMock.Object);
         }
 
         [Test]
@@ -151,7 +155,7 @@ namespace Tests.Admin
 
             mockRepository.Setup(r => r.AllAsReadOnly<Student>()).Returns(students.Object);
 
-            var service = new AdminStudentService(mockRepository.Object);
+            var service = new AdminStudentService(mockRepository.Object, loggerMock.Object);
 
             // Act
             var result = await service.GetStudentByIdAsync(studentId);
@@ -178,8 +182,8 @@ namespace Tests.Admin
             repositoryMock.Setup(r => r.AllAsReadOnly<Student>()).Returns(Enumerable.Empty<Student>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(async () => await adminStudentService.GetStudentByIdAsync(1));
-            Assert.That(ex.Message, Is.EqualTo("Student not found."));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await adminStudentService.GetStudentByIdAsync(1));
+            Assert.That(ex.Message, Is.EqualTo("Student with ID: 1 not found."));
         }
 
         [Test]
@@ -200,7 +204,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task ExistAsync_ShouldReturnFalse_WhenStudentDoesNotExist()
+        public async Task ExistAsync_ShouldReturnException_WhenNotFound()
         {
             // Arrange
             var studentId = 1;
@@ -208,29 +212,11 @@ namespace Tests.Admin
             repositoryMock.Setup(r => r.AllAsReadOnly<Student>())
                 .Returns(new List<Student>().AsQueryable().BuildMock());
 
-            // Act
-            var result = await adminStudentService.ExistAsync(studentId);
-
-            // Assert
-            Assert.That(result, Is.False);
+            // Assert & Act
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.ExistAsync(studentId));
+            Assert.That(ex.Message, Is.EqualTo("Student with ID: 1 not found"));
         }
 
-        [Test]
-        public async Task ExistAsync_ShouldReturnFalse_WhenStudentIsDeleted()
-        {
-            // Arrange
-            var studentId = 1;
-            var student = new Student { Id = studentId, IsDeleted = true };
-
-            repositoryMock.Setup(r => r.AllAsReadOnly<Student>())
-                .Returns(new List<Student> { student }.AsQueryable().BuildMock());
-
-            // Act
-            var result = await adminStudentService.ExistAsync(studentId);
-
-            // Assert
-            Assert.That(result, Is.False);
-        }
         [Test]
         public async Task GetAllStudentsAsync_ShouldReturnAllStudents_WhenCalled()
         {
@@ -315,7 +301,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task GetStudentDetailsModelByIdAsync_ShouldThrowArgumentException_WhenStudentDoesNotExist()
+        public async Task GetStudentDetailsModelByIdAsync_ShouldThrowKeyNotFoundException_WhenStudentDoesNotExist()
         {
             // Arrange
             var studentId = 1;
@@ -324,8 +310,8 @@ namespace Tests.Admin
                 .Returns(new List<Student>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => adminStudentService.GetStudentDetailsModelByIdAsync(studentId));
-            Assert.That(ex.Message, Is.EqualTo("Student not found."));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.GetStudentDetailsModelByIdAsync(studentId));
+            Assert.That(ex.Message, Is.EqualTo("Student with ID: 1 not found."));
         }
 
         [Test]
@@ -362,7 +348,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async  Task GetStudentFormModelByIdAsync_ShouldThrowArgumentException_WhenStudentDoesNotExist()
+        public async Task GetStudentFormModelByIdAsync_ShouldThrowException_WhenStudentDoesNotExist()
         {
             // Arrange
             var studentId = 1;
@@ -371,66 +357,8 @@ namespace Tests.Admin
                 .Returns(new List<Student>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => adminStudentService.GetStudentFormModelByIdAsync(studentId));
-            Assert.That(ex.Message, Is.EqualTo("Student not found."));
-        }
-        [Test]
-        public async Task GetStudentGradesAsync_ShouldReturnStudentGrades()
-        {
-            // Arrange
-            var studentId = 1;
-            var grades = new List<Grade>
-            {
-                new Grade
-                {
-                    Id = 1,
-                    StudentId = studentId,
-                    GradeScore = 90,
-                    GradeAssignedDate = new DateTime(2023, 1, 1),
-                    GradeType = "Midterm",
-                    Course = new Course { Name = "Math" },
-                    Student = new Student { Class = new Class { Name = "A1" } },
-                    IsDeleted = false
-                },
-                new Grade
-                {
-                    Id = 2,
-                    StudentId = studentId,
-                    GradeScore = 85,
-                    GradeAssignedDate = new DateTime(2023, 2, 1),
-                    GradeType = "Final",
-                    Course = new Course { Name = "Science" },
-                    Student = new Student { Class = new Class { Name = "B1" } },
-                    IsDeleted = false
-                }
-            }.AsQueryable().BuildMock();
-
-            repositoryMock.Setup(r => r.AllAsReadOnly<Grade>()).Returns(grades);
-
-            // Act
-            var result = await adminStudentService.GetStudentGradesAsync(studentId);
-
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.First().Name, Is.EqualTo("Science"));
-            Assert.That(result.Last().Name, Is.EqualTo("Math"));
-        }
-
-        [Test]
-        public async Task GetStudentGradesAsync_ShouldReturnEmpty_WhenNoGradesExist()
-        {
-            // Arrange
-            var studentId = 1;
-
-            repositoryMock.Setup(r => r.AllAsReadOnly<Grade>())
-                .Returns(new List<Grade>().AsQueryable().BuildMock());
-
-            // Act
-            var result = await adminStudentService.GetStudentGradesAsync(studentId);
-
-            // Assert
-            Assert.That(result, Is.Empty);
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.GetStudentFormModelByIdAsync(studentId));
+            Assert.That(ex.Message, Is.EqualTo("Student with ID: 1 not found."));
         }
 
         [Test]
@@ -471,7 +399,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task EditGradeAsync_ShouldThrowArgumentException_WhenGradeDoesNotExist()
+        public async Task EditGradeAsync_ShouldThrowKeyNotFoundException_WhenGradeDoesNotExist()
         {
             // Arrange
             var gradeId = 1;
@@ -486,8 +414,8 @@ namespace Tests.Admin
                 .Returns(new List<Grade>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => adminStudentService.EditGradeAsync(gradeId, model));
-            Assert.That(ex.Message, Is.EqualTo("Grade not found."));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.EditGradeAsync(gradeId, model));
+            Assert.That(ex.Message, Is.EqualTo("Grade with ID: 1 not found."));
         }
 
         [Test]
@@ -520,7 +448,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task GetGradeFormModelByIdAsync_ShouldThrowArgumentException_WhenGradeDoesNotExist()
+        public async Task GetGradeFormModelByIdAsync_ShouldThrowKeyNotFoundException_WhenGradeDoesNotExist()
         {
             // Arrange
             var gradeId = 1;
@@ -529,8 +457,8 @@ namespace Tests.Admin
                 .Returns(new List<Grade>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => adminStudentService.GetGradeFormModelByIdAsync(gradeId));
-            Assert.That(ex.Message, Is.EqualTo("Grade not found."));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.GetGradeFormModelByIdAsync(gradeId));
+            Assert.That(ex.Message, Is.EqualTo("Grade with ID: 1 not found."));
         }
 
         [Test]
@@ -559,7 +487,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task DeleteGradeAsync_ShouldThrowArgumentException_WhenGradeDoesNotExist()
+        public async Task DeleteGradeAsync_ShouldThrowKeyNotFoundException_WhenGradeDoesNotExist()
         {
             // Arrange
             var gradeId = 1;
@@ -568,8 +496,8 @@ namespace Tests.Admin
                 .Returns(new List<Grade>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => adminStudentService.DeleteGradeAsync(gradeId));
-            Assert.That(ex.Message, Is.EqualTo("Grade not found."));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.DeleteGradeAsync(gradeId));
+            Assert.That(ex.Message, Is.EqualTo("Grade with ID: 1 not found."));
         }
 
         [Test]
@@ -577,39 +505,38 @@ namespace Tests.Admin
         {
             // Arrange
             var studentId = 1;
+            var students = new List<Student> { new Student { Id = studentId, IsDeleted = false } }
+                .AsQueryable().BuildMock();
+            repositoryMock.Setup(r => r.AllAsReadOnly<Student>()).Returns(students);
+
             var remarks = new List<Remark>
             {
-                new Remark { Id = 1, StudentId = studentId, CourseId = 1, RemarkText = "Great performance", IsDeleted = false, Course = new Course { Name = "Math" } },
-                new Remark { Id = 2, StudentId = studentId, CourseId = 2, RemarkText = "Needs improvement", IsDeleted = false, Course = new Course { Name = "Science" } }
-            };
-
-            repositoryMock.Setup(r => r.AllAsReadOnly<Remark>())
-                .Returns(remarks.AsQueryable().BuildMock());
+                new Remark { Id = 1, StudentId = studentId, CourseId = 1, RemarkText = "Great", IsDeleted = false, Course = new Course { Name = "Math" } },
+                new Remark { Id = 2, StudentId = studentId, CourseId = 2, RemarkText = "Ok", IsDeleted = false, Course = new Course { Name = "Science" } }
+            }.AsQueryable().BuildMock();
+            repositoryMock.Setup(r => r.AllAsReadOnly<Remark>()).Returns(remarks);
 
             // Act
-            var result = await adminStudentService.GetStudentRemarksAsync(studentId);
+            var result = (await adminStudentService.GetStudentRemarksAsync(studentId)).ToList();
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.First().CourseName, Is.EqualTo("Math"));
-            Assert.That(result.Last().CourseName, Is.EqualTo("Science"));
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result[0].CourseName, Is.EqualTo("Math"));
+            Assert.That(result[1].CourseName, Is.EqualTo("Science"));
         }
 
         [Test]
-        public async Task GetStudentRemarksAsync_ShouldReturnEmpty_WhenNoRemarksExist()
+        public void GetStudentRemarksAsync_ThrowsKeyNotFoundException_WhenStudentDoesNotExist()
         {
             // Arrange
-            var studentId = 1;
+            var studentId = 999;
+            repositoryMock.Setup(r => r.AllAsReadOnly<Student>()).Returns(new List<Student>().AsQueryable().BuildMock());
+            // No need to setup remarks because existence check fails first.
 
-            repositoryMock.Setup(r => r.AllAsReadOnly<Remark>())
-                .Returns(new List<Remark>().AsQueryable().BuildMock());
-
-            // Act
-            var result = await adminStudentService.GetStudentRemarksAsync(studentId);
-
-            // Assert
-            Assert.That(result, Is.Empty);
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.GetStudentRemarksAsync(studentId));
+            Assert.That(ex!.Message, Is.EqualTo($"Student with ID: {studentId} not found."));
         }
 
         [Test]
@@ -646,7 +573,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task EditRemarkAsync_ShouldThrowArgumentException_WhenRemarkDoesNotExist()
+        public async Task EditRemarkAsync_ShouldThrowKeyNotFoundException_WhenRemarkDoesNotExist()
         {
             // Arrange
             var remarkId = 1;
@@ -660,8 +587,8 @@ namespace Tests.Admin
                 .Returns(new List<Remark>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => adminStudentService.EditRemarkAsync(remarkId, model));
-            Assert.That(ex.Message, Is.EqualTo("Remark not found."));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.EditRemarkAsync(remarkId, model));
+            Assert.That(ex.Message, Is.EqualTo("Remark with ID: 1 not found."));
         }
         [Test]
         public async Task GetRemarkFormModelByIdAsync_ShouldReturnRemarkForm_WhenRemarkExists()
@@ -690,7 +617,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task GetRemarkFormModelByIdAsync_ShouldThrowArgumentException_WhenRemarkDoesNotExist()
+        public async Task GetRemarkFormModelByIdAsync_ShouldThrowKeyNotFoundException_WhenRemarkDoesNotExist()
         {
             // Arrange
             var remarkId = 1;
@@ -699,48 +626,66 @@ namespace Tests.Admin
                 .Returns(new List<Remark>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => adminStudentService.GetRemarkFormModelByIdAsync(remarkId));
-            Assert.That(ex.Message, Is.EqualTo("Remark not found."));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.GetRemarkFormModelByIdAsync(remarkId));
+            Assert.That(ex.Message, Is.EqualTo("Remark with ID: 1 not found."));
         }
 
         [Test]
-        public async Task GetStudentAbsencesAsync_ShouldReturnAbsences_WhenAbsencesExist()
+        public async Task GetStudentAbsencesAsync_ReturnsAbsences_WhenAbsencesExist()
         {
             // Arrange
             var studentId = 1;
-            var absences = new List<Absence>
-            {
-                new Absence { Id = 1, StudentId = studentId, CourseId = 1, Date = new DateTime(2024, 12, 1), IsDeleted = false, Course = new Course { Name = "Math" } },
-                new Absence { Id = 2, StudentId = studentId, CourseId = 2, Date = new DateTime(2024, 12, 2), IsDeleted = false, Course = new Course { Name = "Science" } }
-            };
+            var students = new List<Student> { new Student { Id = studentId, IsDeleted = false } }
+                .AsQueryable().BuildMock();
+            repositoryMock.Setup(r => r.AllAsReadOnly<Student>()).Returns(students);
 
-            repositoryMock.Setup(r => r.AllAsReadOnly<Absence>())
-                .Returns(absences.AsQueryable().BuildMock());
+            var absencesList = new List<Absence>
+            {
+                new Absence { Id = 1, StudentId = studentId, Course = new Course { Name = "Math" }, Date = new DateTime(2024,12,1), IsDeleted = false },
+                new Absence { Id = 2, StudentId = studentId, Course = new Course { Name = "Science" }, Date = new DateTime(2024,12,2), IsDeleted = false }
+            }.AsQueryable().BuildMock();
+            repositoryMock.Setup(r => r.AllAsReadOnly<Absence>()).Returns(absencesList);
 
             // Act
-            var result = await adminStudentService.GetStudentAbsencesAsync(studentId);
+            var result = (await adminStudentService.GetStudentAbsencesAsync(studentId)).ToList();
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.First().CourseName, Is.EqualTo("Math"));
-            Assert.That(result.Last().CourseName, Is.EqualTo("Science"));
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result[0].CourseName, Is.EqualTo("Math"));
+            Assert.That(result[1].CourseName, Is.EqualTo("Science"));
         }
 
         [Test]
-        public async Task GetStudentAbsencesAsync_ShouldReturnEmpty_WhenNoAbsencesExist()
+        public async Task GetStudentAbsencesAsync_ReturnsEmpty_WhenNoAbsencesExist()
         {
             // Arrange
             var studentId = 1;
+            var students = new List<Student> { new Student { Id = studentId, IsDeleted = false } }
+                .AsQueryable().BuildMock();
+            repositoryMock.Setup(r => r.AllAsReadOnly<Student>()).Returns(students);
 
-            repositoryMock.Setup(r => r.AllAsReadOnly<Absence>())
-                .Returns(new List<Absence>().AsQueryable().BuildMock());
+            var emptyAbsences = new List<Absence>().AsQueryable().BuildMock();
+            repositoryMock.Setup(r => r.AllAsReadOnly<Absence>()).Returns(emptyAbsences);
 
             // Act
             var result = await adminStudentService.GetStudentAbsencesAsync(studentId);
 
             // Assert
             Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public void GetStudentAbsencesAsync_ThrowsKeyNotFoundException_WhenStudentDoesNotExist()
+        {
+            // Arrange
+            var studentId = 999;
+            repositoryMock.Setup(r => r.AllAsReadOnly<Student>()).Returns(new List<Student>().AsQueryable().BuildMock());
+            // Absences setup not required because existence check fails first.
+
+            // Act & Assert
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.GetStudentAbsencesAsync(studentId));
+            Assert.That(ex!.Message, Is.EqualTo($"Student with ID: {studentId} not found."));
         }
 
         [Test]
@@ -770,7 +715,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task GetAbsenceFormModelByIdAsync_ShouldThrowArgumentException_WhenAbsenceDoesNotExist()
+        public async Task GetAbsenceFormModelByIdAsync_ShouldThrowKeyNotFoundException_WhenAbsenceDoesNotExist()
         {
             // Arrange
             var absenceId = 1;
@@ -779,8 +724,8 @@ namespace Tests.Admin
                 .Returns(new List<Absence>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => adminStudentService.GetAbsenceFormModelByIdAsync(absenceId));
-            Assert.That(ex.Message, Is.EqualTo("Absence not found."));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.GetAbsenceFormModelByIdAsync(absenceId));
+            Assert.That(ex.Message, Is.EqualTo("Absence with ID: 1 not found."));
         }
 
         [Test]
@@ -817,7 +762,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task EditAbsenceAsync_ShouldThrowArgumentException_WhenAbsenceDoesNotExist()
+        public async Task EditAbsenceAsync_ShouldThrowKeyNotFoundException_WhenAbsenceDoesNotExist()
         {
             // Arrange
             var absenceId = 1;
@@ -831,8 +776,8 @@ namespace Tests.Admin
                 .Returns(new List<Absence>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => adminStudentService.EditAbsenceAsync(absenceId, model));
-            Assert.That(ex.Message, Is.EqualTo("Absence not found."));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.EditAbsenceAsync(absenceId, model));
+            Assert.That(ex.Message, Is.EqualTo("Absence with ID: 1 not found."));
         }
 
         [Test]
@@ -860,7 +805,7 @@ namespace Tests.Admin
         }
 
         [Test]
-        public async Task DeleteAbsenceAsync_ShouldThrowArgumentException_WhenAbsenceDoesNotExist()
+        public async Task DeleteAbsenceAsync_ShouldThrowException_WhenAbsenceDoesNotExist()
         {
             // Arrange
             var absenceId = 1;
@@ -869,8 +814,8 @@ namespace Tests.Admin
                 .Returns(new List<Absence>().AsQueryable().BuildMock());
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => adminStudentService.DeleteAbsenceAsync(absenceId));
-            Assert.That(ex.Message, Is.EqualTo("Absence not found."));
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(() => adminStudentService.DeleteAbsenceAsync(absenceId));
+            Assert.That(ex.Message, Is.EqualTo("Absence with ID: 1 not found."));
         }
 
 

@@ -8,6 +8,6 @@
         public string CourseName { get; set; } = string.Empty;
         public int CourseId { get; set; }
         public IEnumerable<TeacherCourseServiceModel> Courses { get; set; } = new List<TeacherCourseServiceModel>();
-        public DateTime AbsenceDate { get; set; } = DateTime.Now;
+        public DateTime AbsenceDate { get; set; } = DateTime.UtcNow;
     }
 }

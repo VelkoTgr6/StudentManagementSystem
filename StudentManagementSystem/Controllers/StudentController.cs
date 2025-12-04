@@ -27,10 +27,6 @@ namespace StudentManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            if (id == 0) 
-            { 
-
-            }
             var model = new StudentDetailsViewModel();
             return View();
         }

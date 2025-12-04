@@ -1,20 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StudentManagementSystem.Core.Contracts;
-using StudentManagementSystem.Core.Models.Student;
 using StudentManagementSystem.Core.Models.Teacher;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
-using System.Diagnostics;
 
 namespace StudentManagementSystem.Core.Services
 {
     public class TeacherService : ITeacherService
     {
         private readonly IRepository repository;
+        private readonly ILogger<TeacherService> logger;
 
-        public TeacherService(IRepository _repository)
+        public TeacherService(IRepository _repository, ILogger<TeacherService> _logger)
         {
             repository = _repository;
+            logger = _logger;
         }
 
         public async Task<int> AddGradeToStudent(GradeFormModel model, int studentId)
@@ -26,7 +27,8 @@ namespace StudentManagementSystem.Core.Services
 
             if (student == null)
             {
-                throw new ArgumentNullException(nameof(student), "Student not found");
+                logger.LogWarning($"Attempt to add grade to missing/deleted student with ID: {studentId}");
+                throw new KeyNotFoundException($"Student with id {studentId} was not found.");
             }
 
             var course = await repository.All<Course>()
@@ -35,7 +37,8 @@ namespace StudentManagementSystem.Core.Services
 
             if (course == null)
             {
-                throw new ArgumentNullException(nameof(course), "Course not found");
+                logger.LogWarning($"Attempt to add grade to missing/deleted course with ID: {model.CourseId}");
+                throw new KeyNotFoundException($"Course with id {model.CourseId} was not found.");
             }
 
             if (model.CustomGradeType == null)
@@ -55,6 +58,8 @@ namespace StudentManagementSystem.Core.Services
 
                 await repository.SaveChangesAsync();
 
+                logger.LogInformation($"Added custom grade ID: {grade.Id} to student ID: {studentId} for course ID: {model.CourseId}");
+
                 return grade.Id;
             }
 
@@ -73,6 +78,8 @@ namespace StudentManagementSystem.Core.Services
 
             await repository.SaveChangesAsync();
 
+            logger.LogInformation($"Added grade ID: {customGrade.Id} to student ID: {studentId} for course ID: {model.CourseId}");
+
             return customGrade.Id;
 
         }
@@ -85,12 +92,17 @@ namespace StudentManagementSystem.Core.Services
 
             if (teacher == null)
             {
-                throw new ArgumentNullException(nameof(teacher));
+                throw new KeyNotFoundException($"Teacher with user ID {userId} was not found.");
             }
 
             var teacherCourseIds = teacher.Courses
                 .Select(t => t.Id)
                 .ToList();
+
+            if (!teacherCourseIds.Any())
+            {
+                throw new KeyNotFoundException($"Teacher with user ID {userId} has no courses assigned.");
+            }
 
             var classCourses = await repository
                 .AllAsReadOnly<ClassCourse>()
@@ -102,6 +114,11 @@ namespace StudentManagementSystem.Core.Services
                 })
                 .Distinct()
                 .ToListAsync();
+
+            if (!classCourses.Any())
+            {
+                throw new KeyNotFoundException($"No classes found for teacher with user ID {userId}.");
+            }
 
             var sortedClassNames = SortClassNames(classCourses);
 
@@ -168,7 +185,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (student == null)
             {
-                throw new ArgumentNullException(nameof(student), "Student not found");
+                throw new KeyNotFoundException($"Student with ID {studentId} not found");
             }
 
             return student;
@@ -181,7 +198,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (teacher == null)
             {
-                throw new ArgumentNullException(nameof(teacher));
+                throw new KeyNotFoundException($"Teacher with user ID {userId} not found");
             }
 
             var students = await repository.All<Student>()
@@ -203,6 +220,11 @@ namespace StudentManagementSystem.Core.Services
             var teacher = await repository.AllAsReadOnly<Teacher>()
                 .Include(t => t.Courses.Where(c => !c.IsDeleted))
                 .FirstOrDefaultAsync(t => t.UserId == teacherId);
+
+            if (teacher == null)
+            {
+                throw new KeyNotFoundException($"Teacher with user ID {teacherId} not found");
+            }
 
             var teacherCourses = teacher?.Courses
                 .Select(t => new TeacherCourseServiceModel
@@ -231,7 +253,8 @@ namespace StudentManagementSystem.Core.Services
 
             if (student == null)
             {
-                throw new ArgumentNullException(nameof(student), "Student not found");
+                logger.LogWarning($"Attempt to add absence to missing/deleted student with ID: {studentId}");
+                throw new KeyNotFoundException($"Student with ID {studentId} not found");
             }
 
             var course = await repository.All<Course>()
@@ -240,19 +263,22 @@ namespace StudentManagementSystem.Core.Services
 
             if (course == null)
             {
-                throw new ArgumentNullException(nameof(course), "Course not found");
+                logger.LogWarning($"Attempt to add absence to missing/deleted course with ID: {model.CourseId}");
+                throw new KeyNotFoundException($"Course with ID {model.CourseId} not found");
             }
 
             var absence = new Absence
             {
                 StudentId = studentId,
                 CourseId = model.CourseId,
-                Date = model.AbsenceDate
+                Date = DateTime.SpecifyKind(model.AbsenceDate, DateTimeKind.Utc)
             };
 
             student.Аbsences.Add(absence);
 
             await repository.SaveChangesAsync();
+
+            logger.LogInformation($"Added absence ID: {absence.Id} to student ID: {studentId} for course ID: {model.CourseId}");
 
             return absence.Id;
         }
@@ -268,7 +294,8 @@ namespace StudentManagementSystem.Core.Services
 
             if (student == null)
             {
-                throw new ArgumentNullException(nameof(student), "Student not found");
+                logger.LogWarning($"Attempt to add remark to missing/deleted student with ID: {studentId}");
+                throw new KeyNotFoundException($"Student with ID {studentId} not found");
             }
 
             var course = await repository.All<Course>()
@@ -277,7 +304,8 @@ namespace StudentManagementSystem.Core.Services
 
             if (course == null)
             {
-                throw new ArgumentNullException(nameof(course), "Course not found");
+                logger.LogWarning($"Attempt to add remark to missing/deleted course with ID: {model.CourseId}");
+                throw new KeyNotFoundException($"Course with ID {model.CourseId} not found");
             }
 
             var remark = new Remark
@@ -286,12 +314,14 @@ namespace StudentManagementSystem.Core.Services
                 TeacherId = model.TeacherId,
                 CourseId = model.CourseId,
                 RemarkText = model.RemarkText,
-                Date = DateTime.Now
+                Date = DateTime.UtcNow
             };
 
             student.Remarks.Add(remark);
 
             await repository.SaveChangesAsync();
+
+            logger.LogInformation($"Added remark ID: {remark.Id} to student ID: {studentId} for course ID: {model.CourseId}");
 
             return remark.Id;
         }
@@ -303,7 +333,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (teacher == null)
             {
-                throw new ArgumentNullException(nameof(teacher), "Teacher not found");
+                throw new KeyNotFoundException($"Teacher with user ID {userId} was not found.");
             }
 
             return teacher.Id;
@@ -335,7 +365,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (student == null)
             {
-                throw new ArgumentNullException(nameof(student), "Student not found");
+                throw new KeyNotFoundException($"Student with ID {studentId} not found");
             }
 
             if (student.Remarks == null)
@@ -346,6 +376,11 @@ namespace StudentManagementSystem.Core.Services
             var remarkExists = student.Remarks
                 .Any(r => r.RemarkText.ToLower() == remarkText.ToLower() &&
                           r.CourseId == courseId);
+
+            if (remarkExists)
+            {
+                logger.LogInformation($"Remark already exists for student ID: {studentId} with text: {remarkText} for course ID: {courseId}");
+            }
 
             return remarkExists;
         }
@@ -359,7 +394,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (courseName == null)
             {
-                throw new ArgumentNullException(nameof(courseName), "Course not found");
+                throw new KeyNotFoundException($"Course with ID {courseId} not found");
             }
 
             return courseName;
@@ -375,7 +410,6 @@ namespace StudentManagementSystem.Core.Services
                     StudentId = g.StudentId,
                     CourseId = g.CourseId,
                     GradeScore = g.GradeScore,
-
                     GradeType = g.GradeType,
                     SelectedCourseId = g.CourseId,
                     SelectedGrade = g.GradeScore.ToString(),
@@ -385,7 +419,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (grade == null)
             {
-                throw new ArgumentNullException(nameof(grade), "Grade not found");
+                throw new KeyNotFoundException($"Grade with ID {gradeId} not found");
             }
 
             return grade;
@@ -393,12 +427,13 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<int> EditGradeAsync(int gradeId, GradeFormModel model)
         {
-            var grade =await repository.All<Grade>()
+            var grade = await repository.All<Grade>()
                 .FirstOrDefaultAsync(g => g.Id == gradeId && !g.IsDeleted);
 
             if (grade == null)
             {
-                throw new ArgumentNullException(nameof(grade), "Grade not found");
+                logger.LogWarning($"Attempt to edit missing/deleted grade with ID: {gradeId}");
+                throw new KeyNotFoundException($"Grade with ID {gradeId} not found");
             }
 
             if (model.CustomGradeType == null)
@@ -422,6 +457,8 @@ namespace StudentManagementSystem.Core.Services
 
             await repository.SaveChangesAsync();
 
+            logger.LogInformation($"Edited succesfully grade ID: {grade.Id}");
+
             return grade.Id;
         }
 
@@ -432,30 +469,33 @@ namespace StudentManagementSystem.Core.Services
 
             if (grade == null)
             {
-                throw new ArgumentNullException(nameof(grade), "Grade not found");
+                logger.LogWarning($"Attempt to delete missing/deleted grade with ID: {gradeId}");
+                throw new KeyNotFoundException($"Grade with ID {gradeId} not found");
             }
 
             grade.IsDeleted = true;
 
             await repository.SaveChangesAsync();
+
+            logger.LogInformation($"Deleted succesfully grade ID: {grade.Id}");
         }
 
         public async Task<AbsenceFormViewModel> GetAbsenceByIdAsync(int absenceId)
         {
-            var absence =await repository.All<Absence>()
+            var absence =await repository.AllAsReadOnly<Absence>()
                 .Where(a => a.Id == absenceId && !a.IsDeleted)
                 .Select(a=> new AbsenceFormViewModel
                 {
                     Id = absenceId,
                     StudentId = a.StudentId,
                     CourseId = a.CourseId,
-                    AbsenceDate = a.Date.Date
+                    AbsenceDate = a.Date
                 })
                 .FirstOrDefaultAsync();
 
             if (absence == null)
             {
-                throw new ArgumentNullException(nameof(absence), "Absence not found");
+                throw new KeyNotFoundException($"Absence with ID {absenceId} not found");
             }
 
             return absence;
@@ -463,35 +503,42 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<int> EditAbsenceAsync(int absenceId, AbsenceFormViewModel model)
         {
-            var absence =await repository.All<Absence>()
+            var absence = await repository.All<Absence>()
                 .FirstOrDefaultAsync(a => a.Id == absenceId && !a.IsDeleted);
 
             if (absence == null)
             {
-                throw new ArgumentNullException(nameof(absence), "Absence not found");
+                logger.LogWarning($"Attempt to edit missing/deleted absence with ID: {absenceId}");
+                throw new KeyNotFoundException($"Absence with ID {absenceId} not found");
             }
 
-            absence.Date = model.AbsenceDate;
+            // Ensure DateTime written to Postgres has Kind=Utc
+            absence.Date = DateTime.SpecifyKind(model.AbsenceDate, DateTimeKind.Utc);
             absence.CourseId = model.CourseId;
 
             await repository.SaveChangesAsync();
+
+            logger.LogInformation($"Edited succesfully absence ID: {absence.Id}");
 
             return absence.Id;
         }
 
         public async Task DeleteAbsenceAsync(int absenceId)
         {
-            var absence =await repository.All<Absence>()
+            var absence = await repository.All<Absence>()
                 .FirstOrDefaultAsync(a => a.Id == absenceId && !a.IsDeleted);
             
             if (absence == null)
             {
-                throw new ArgumentNullException(nameof(absence), "Absence not found");
+                logger.LogWarning($"Attempt to delete missing/deleted absence with ID: {absenceId}");
+                throw new KeyNotFoundException($"Absence with ID {absenceId} not found");
             }
 
             absence.IsDeleted = true;
 
             await repository.SaveChangesAsync();
+
+            logger.LogInformation($"Deleted succesfully absence ID: {absence.Id}");
         }
 
         public async Task<RemarkFormViewModel> GetRemarkByIdAsync(int remarkId)
@@ -510,7 +557,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (remark == null)
             {
-                throw new ArgumentNullException(nameof(remark), "Remark not found");
+                throw new KeyNotFoundException($"Remark with ID {remarkId} not found");
             }
 
             return remark;
@@ -523,13 +570,16 @@ namespace StudentManagementSystem.Core.Services
 
             if (remark == null)
             {
-                throw new ArgumentNullException(nameof(remark), "Remark not found");
+                logger.LogWarning($"Attempt to edit missing/deleted remark with ID: {remarkId}");
+                throw new KeyNotFoundException($"Remark with ID {remarkId} not found");
             }
 
             remark.RemarkText = model.RemarkText;
             remark.CourseId = model.CourseId;
 
             await repository.SaveChangesAsync();
+
+            logger.LogInformation($"Edited succesfully remark ID: {remark.Id}");
 
             return remark.Id;
         }
@@ -541,38 +591,54 @@ namespace StudentManagementSystem.Core.Services
 
             if (remark == null)
             {
-                throw new ArgumentNullException(nameof(remark), "Remark not found");
+                logger.LogWarning($"Attempt to delete missing/deleted remark with ID: {remarkId}");
+                throw new KeyNotFoundException($"Remark with ID {remarkId} not found");
             }
 
             remark.IsDeleted = true;
 
             await repository.SaveChangesAsync();
+
+            logger.LogInformation($"Deleted succesfully remark ID: {remark.Id}");
         }
 
         public async Task<IEnumerable<TeacherNewsServiceModel>> GetAllNewsByTeacherIdAsync(string teacherId)
         {
-            if (repository == null)
+            var teacher = await repository.AllAsReadOnly<Teacher>()
+                .FirstOrDefaultAsync(t => t.UserId == teacherId && !t.IsDeleted);
+
+            if (teacher == null)
             {
-                throw new InvalidOperationException("Repository is not initialized.");
+                throw new KeyNotFoundException($"Teacher with ID {teacherId} not found");
             }
+
             var teacherNews =await repository.AllAsReadOnly<News>()
-                .Where(tn => tn.Publisher.Id == teacherId && tn.IsDeleted == false && 
-                        tn.Title != "New Grade!" && tn.Title != "New Absence!" && tn.Title != "New Remark!")
-                .Select(tn => new TeacherNewsServiceModel
-                {
-                    Id = tn.Id,
-                    Title = tn.Title,
-                    CreatedOn = tn.Date,
-                    TeacherId = tn.PublisherId
-                })
-                .OrderByDescending(tn => tn.CreatedOn)
-                .ToListAsync();
+            .Where(tn => tn.Publisher.Id == teacherId && tn.IsDeleted == false && 
+                    tn.Title != "New Grade!" && tn.Title != "New Absence!" && tn.Title != "New Remark!")
+            .Select(tn => new TeacherNewsServiceModel
+            {
+                Id = tn.Id,
+                Title = tn.Title,
+                CreatedOn = tn.Date,
+                TeacherId = tn.PublisherId
+            })
+            .OrderByDescending(tn => tn.CreatedOn)
+            .ToListAsync();
 
             return teacherNews;
         }
 
         public async Task<int> AddNewsToTeacherAsync(TeacherNewsFormViewModel model)
         {
+            var teacher = await repository.AllAsReadOnly<Teacher>()
+                .FirstOrDefaultAsync(t => t.UserId == model.TeacherId && !t.IsDeleted);
+
+            if (teacher == null)
+            {
+                logger.LogWarning($"Attempt to add news to missing/deleted teacher with ID: {model.TeacherId}");
+                throw new KeyNotFoundException($"Teacher with ID {model.TeacherId} not found");
+            }
+
             var news = new News
             {
                 Title = model.Title,
@@ -584,6 +650,8 @@ namespace StudentManagementSystem.Core.Services
             await repository.AddAsync(news);
             await repository.SaveChangesAsync();
 
+            logger.LogInformation($"Added news successfully with ID: {news.Id} to teacher with ID: {model.TeacherId}");
+
             return news.Id;
         }
 
@@ -594,7 +662,8 @@ namespace StudentManagementSystem.Core.Services
 
             if (news == null)
             {
-                throw new ArgumentNullException(nameof(news), "News not found");
+                logger.LogWarning($"Attempt to edit missing/deleted news with ID: {newsId}");
+                throw new KeyNotFoundException($"News with ID {newsId} not found");
             }
 
             news.Title = model.Title;
@@ -602,6 +671,8 @@ namespace StudentManagementSystem.Core.Services
             news.Date = DateTime.UtcNow;
 
             await repository.SaveChangesAsync();
+
+            logger.LogInformation($"Edited news successfully with ID: {news.Id}");
 
             return news.Id;
         }
@@ -613,10 +684,13 @@ namespace StudentManagementSystem.Core.Services
 
             if (news == null)
             {
-                throw new ArgumentNullException(nameof(news), "News not found");
+                logger.LogWarning($"Attempt to delete missing/deleted news with ID: {newsId}");
+                throw new KeyNotFoundException($"News with ID {newsId} not found");
             }
 
             news.IsDeleted = true;
+
+            logger.LogInformation($"Deleted news successfully with ID: {news.Id}");
 
             await repository.SaveChangesAsync();
         }
@@ -636,7 +710,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (news == null)
             {
-                throw new ArgumentNullException(nameof(news), "News not found");
+                throw new KeyNotFoundException($"News with ID {newsId} not found");
             }
 
             return news;
@@ -659,7 +733,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (!students.Any())
             {
-                throw new ArgumentNullException(nameof(students), "Students not found");
+                throw new KeyNotFoundException($"Students not found");
             }
 
             return students;
@@ -719,7 +793,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (student == null)
             {
-                throw new ArgumentNullException(nameof(student), "Student not found");
+                throw new KeyNotFoundException($"Student with ID {studentId} not found");
             }
 
             return student;
@@ -732,10 +806,22 @@ namespace StudentManagementSystem.Core.Services
                 .Select(c => c.Name)
                 .FirstOrDefaultAsync();
 
+            if (courseName == null)
+            {
+                logger.LogWarning($"Attempt to add grade news to missing/deleted course with ID: {courseId}");
+                throw new KeyNotFoundException($"Course with ID {courseId} not found");
+            }
+
             var studentName = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => $"{s.FirstName} {s.MiddleName} {s.LastName}")
                 .FirstOrDefaultAsync();
+
+            if (studentName == null)
+            {
+                logger.LogWarning($"Attempt to add grade news to missing/deleted student with ID: {studentId}");
+                throw new KeyNotFoundException($"Student with ID {studentId} not found");
+            }
 
             var news = new News
             {
@@ -749,6 +835,8 @@ namespace StudentManagementSystem.Core.Services
 
             await repository.SaveChangesAsync();
 
+            logger.LogInformation($"Added grade news successfully with ID: news ID: {news.Id} for student ID: {studentId}");
+
             return news.Id;
         }
 
@@ -759,10 +847,22 @@ namespace StudentManagementSystem.Core.Services
                 .Select(c => c.Name)
                 .FirstOrDefaultAsync();
 
+            if (courseName == null)
+            {
+                logger.LogWarning($"Attempt to add remark news to missing/deleted course with ID: {courseId}");
+                throw new KeyNotFoundException($"Course with ID {courseId} not found");
+            }
+
             var studentName = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => $"{s.FirstName} {s.MiddleName} {s.LastName}")
                 .FirstOrDefaultAsync();
+
+            if (studentName == null)
+            {
+                logger.LogWarning($"Attempt to add remark news to missing/deleted student with ID: {studentId}");
+                throw new KeyNotFoundException($"Student with ID {studentId} not found");
+            }
 
             var news = new News
             {
@@ -776,6 +876,8 @@ namespace StudentManagementSystem.Core.Services
 
             await repository.SaveChangesAsync();
 
+            logger.LogInformation($"Added remark news successfully with ID: news ID: {news.Id} for student ID: {studentId}");
+
             return news.Id;
         }
 
@@ -786,10 +888,22 @@ namespace StudentManagementSystem.Core.Services
                  .Select(c => c.Name)
                  .FirstOrDefaultAsync();
 
+            if (courseName == null)
+            {
+                logger.LogWarning($"Attempt to add absence news to missing/deleted course with ID: {courseId}");
+                throw new KeyNotFoundException($"Course with ID {courseId} not found");
+            }
+
             var studentName = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => $"{s.FirstName} {s.MiddleName} {s.LastName}")
                 .FirstOrDefaultAsync();
+
+            if (studentName == null)
+            {
+                logger.LogWarning($"Attempt to add absence news to missing/deleted student with ID: {studentId}");
+                throw new KeyNotFoundException($"Student with ID {studentId} not found");
+            }
 
             var news = new News
             {
@@ -803,15 +917,24 @@ namespace StudentManagementSystem.Core.Services
 
             await repository.SaveChangesAsync();
 
+            logger.LogInformation($"Added absence news successfully with ID: news ID: {news.Id} for student ID: {studentId}");
+
             return news.Id;
         }
 
         public async Task<int> GetTeacherByIdAsync(string userId)
         {
-            return await repository.AllAsReadOnly<Teacher>()
+            var teacher = await repository.AllAsReadOnly<Teacher>()
                 .Where(t => t.UserId == userId && !t.IsDeleted)
                 .Select(t => t.Id)
                 .FirstOrDefaultAsync();
+
+            if (teacher == 0)
+            {
+                throw new KeyNotFoundException($"Teacher with user ID {userId} not found");
+            }
+
+            return teacher;
         }
 
         public async Task<TeacherProfileViewModel> GetTeacherProfileAsync(int teacherId)
@@ -831,10 +954,9 @@ namespace StudentManagementSystem.Core.Services
                 })
                 .FirstOrDefaultAsync();
 
-
             if (teacher == null)
             {
-                throw new ArgumentException();
+                throw new KeyNotFoundException($"Teacher with ID {teacherId} not found");
             }
 
             return teacher;

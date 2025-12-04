@@ -1,6 +1,7 @@
 ﻿using MockQueryable;
 using MockQueryable.Moq;
 using Moq;
+using NUnit.Framework;
 using StudentManagementSystem.Core.Services;
 using StudentManagementSystem.Infrastructure.Data.Common;
 using StudentManagementSystem.Infrastructure.Data.Models;
@@ -72,6 +73,9 @@ namespace Tests
             var mockAbsences = absences.AsQueryable().BuildMock();
             mockRepository.Setup(r => r.AllAsReadOnly<Absence>()).Returns(mockAbsences);
 
+            var students = new List<Student> { new Student { Id = studentId, IsDeleted = false } }.AsQueryable().BuildMock();
+            mockRepository.Setup(r => r.AllAsReadOnly<Student>()).Returns(students);
+
             
             var result = await studentService.GetAllAbsencesAsync(studentId);
 
@@ -97,7 +101,9 @@ namespace Tests
             var mockRemarks = remarks.AsQueryable().BuildMock();
             mockRepository.Setup(r => r.AllAsReadOnly<Remark>()).Returns(mockRemarks);
 
-            
+            var students = new List<Student> { new Student { Id = studentId, IsDeleted = false } }.AsQueryable().BuildMock();
+            mockRepository.Setup(r => r.AllAsReadOnly<Student>()).Returns(students);
+
             var result = await studentService.GetAllRemarksAsync(studentId);
 
             
@@ -228,18 +234,15 @@ namespace Tests
         }
 
         [Test]
-        public async Task GetStudentIdAsync_ShouldReturnZero_WhenUserIdDoesNotExist()
+        public async Task GetStudentIdAsync_ShouldReturnException_WhenUserIdDoesNotExist()
         {
             
             var userId = "user123";
             var mockStudents = new List<Student>().AsQueryable().BuildMock();
             mockRepository.Setup(r => r.AllAsReadOnly<Student>()).Returns(mockStudents);
 
-            
-            var result = await studentService.GetStudentIdAsync(userId);
-
-            
-            Assert.AreEqual(0, result);
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await studentService.GetStudentIdAsync(userId));
+            Assert.That(ex.Message, Is.EqualTo($"Student id for user '{userId}' was not found."));
         }
     }
 }

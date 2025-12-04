@@ -12,15 +12,18 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         private readonly IAdminScheduleService scheduleService;
         private readonly IAdminCourseService adminCourseService;
         private readonly IAdminClassService adminClassService;
+        private readonly ILogger<AdminScheduleController> logger;
 
         public AdminScheduleController(
             IAdminScheduleService _scheduleService,
             IAdminCourseService _adminCourseService,
-            IAdminClassService _adminClassService)
+            IAdminClassService _adminClassService,
+            ILogger<AdminScheduleController> _logger)
         {
             scheduleService = _scheduleService;
             adminCourseService = _adminCourseService;
             adminClassService = _adminClassService;
+            logger = _logger;
         }
 
         [HttpGet]
@@ -34,6 +37,13 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         public async Task<IActionResult> ClassSchedule(int classId)
         {
             var model = await scheduleService.GetCourseSchedulesByIdAsync(classId);
+
+            if (!model.Any())
+            {
+                logger.LogInformation($"No schedules found for class with ID: {classId}");
+                return NotFound();
+            }
+
             return View(model);
         }
 
@@ -51,18 +61,28 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(CourseScheduleInputModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await scheduleService.AddCourseScheduleAsync(model);
-                return RedirectToAction("Index", "AdminHome");
+                return View(model);
             }
-            return View(model);
+
+            await scheduleService.AddCourseScheduleAsync(model);
+
+            logger.LogInformation($"New schedule added for class ID: {model.ClassId}, course ID: {model.CourseId}");
+
+            return RedirectToAction("Index", "AdminHome");
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var model = await scheduleService.GetCourseScheduleByIdAsync(id);
+
+            if (model == null)
+            {
+                logger.LogWarning($"Schedule with ID: {id} not found for editing.");
+                return NotFound();
+            }
 
             model.Courses = await adminCourseService.GetAllCoursesAsync();
             model.Classes = await adminClassService.GetAllClassesAsync();
@@ -72,20 +92,28 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, CourseScheduleInputModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await scheduleService.EditCourseScheduleAsync(id, model);
-                return RedirectToAction(nameof(ClassSchedule), new { classId = model.ClassId });
+                model.Courses = await adminCourseService.GetAllCoursesAsync();
+                model.Classes = await adminClassService.GetAllClassesAsync();
+
+                return View(model);
             }
-            model.Courses = await adminCourseService.GetAllCoursesAsync();
-            model.Classes = await adminClassService.GetAllClassesAsync();
-            return View(model);
+
+            await scheduleService.EditCourseScheduleAsync(id, model);
+
+            logger.LogInformation($"Schedule with ID: {id} has been edited.");
+
+            return RedirectToAction(nameof(ClassSchedule), new { classId = model.ClassId });
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             await scheduleService.DeleteCourseScheduleAsync(id);
+
+            logger.LogInformation($"Schedule with ID: {id} has been deleted.");
+
             return RedirectToAction(nameof(Index));
         }
     }

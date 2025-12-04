@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using MockQueryable;
 using Moq;
+using StudentManagementSystem.Areas.Admin.Controllers;
 using StudentManagementSystem.Core.Models.Admin.Teacher;
 using StudentManagementSystem.Core.Services.Admin;
 using StudentManagementSystem.Infrastructure.Data.Common;
@@ -14,12 +16,14 @@ namespace Tests.Admin
     {
         private Mock<IRepository> mockRepository;
         private AdminTeacherService adminTeacherService;
+        private Mock<ILogger<AdminTeacherService>> mockLogger;
 
         [SetUp]
         public void Setup()
         {
             mockRepository = new Mock<IRepository>();
-            adminTeacherService = new AdminTeacherService(mockRepository.Object);
+            mockLogger = new Mock<ILogger<AdminTeacherService>>();
+            adminTeacherService = new AdminTeacherService(mockRepository.Object, mockLogger.Object);
         }
 
         [Test]
@@ -313,7 +317,7 @@ namespace Tests.Admin
                 .Returns(new List<Teacher>().AsQueryable().BuildMock());
 
              
-            await Task.Run(() => Assert.ThrowsAsync<ArgumentException>(async () => await adminTeacherService.GetTeacherDetailsModelByIdAsync(teacherId)));
+            await Task.Run(() => Assert.ThrowsAsync<KeyNotFoundException>(async () => await adminTeacherService.GetTeacherDetailsModelByIdAsync(teacherId)));
         }
 
         [Test]
