@@ -12,15 +12,18 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         private readonly IAdminClassService adminClassService;
         private readonly IAdminTeacherService adminTeacherService;
         private readonly IAdminCourseService adminCourseService;
+        private readonly ILogger<AdminClassController> logger;
 
         public AdminClassController(
-            IAdminClassService adminClassService,
-            IAdminTeacherService adminTeacherService,
-            IAdminCourseService adminCourseService)
+            IAdminClassService _adminClassService,
+            IAdminTeacherService _adminTeacherService,
+            IAdminCourseService _adminCourseService,
+            ILogger<AdminClassController> _logger)
         {
-            this.adminClassService = adminClassService;
-            this.adminTeacherService = adminTeacherService;
-            this.adminCourseService = adminCourseService;
+            adminClassService = _adminClassService;
+            adminTeacherService = _adminTeacherService;
+            adminCourseService = _adminCourseService;
+            logger = _logger;
         }
 
         [HttpGet]
@@ -53,6 +56,9 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             }
 
             var id = await adminClassService.CreateClassAsync(model);
+
+            logger.LogInformation($"Administrator created class {model.Name} with ID: {id} .");
+
             return RedirectToAction(nameof(DetailsClass), new { id });
         }
 
@@ -78,7 +84,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         {
             if (await adminClassService.ClassExistAsync(id) == false)
             {
-                return BadRequest();
+                return NotFound();
             }
             var course = await adminClassService.GetClassDetailsModelByIdAsync(id);
             return View(course);
@@ -98,6 +104,11 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 model.Teachers = await adminTeacherService.GetFreeTeachersAsync();
                 model.AvailableCourses = await adminCourseService.GetAllCoursesAsync();
             }
+            else
+            {
+                return BadRequest();
+            }
+
             return View(model);
         }
 
@@ -115,6 +126,9 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 return View(model);
             }
             await adminClassService.EditClassAsync(id, model);
+
+            logger.LogInformation($"Administrator edited class {model.Name} with ID: {id} .");
+
             return RedirectToAction(nameof(DetailsClass), new { id });
         }
 
@@ -123,9 +137,12 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         {
             if (await adminClassService.ClassExistAsync(id) == false)
             {
-                return BadRequest();
+                return NotFound();
             }
             await adminClassService.DeleteClassAsync(id);
+
+            logger.LogInformation($"Administrator deleted class with ID: {id} .");
+
             return RedirectToAction(nameof(AllClasses));
         }
     }

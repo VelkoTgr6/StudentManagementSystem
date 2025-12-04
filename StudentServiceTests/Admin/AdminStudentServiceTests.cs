@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using MockQueryable;
 using MockQueryable.Moq;
 using Moq;
@@ -14,13 +15,15 @@ namespace Tests.Admin
     public class AdminStudentServiceTests
     {
         private Mock<IRepository> repositoryMock;
+        private Mock<ILogger<AdminStudentService>> loggerMock;
         private AdminStudentService adminStudentService;
 
         [SetUp]
         public void SetUp()
         {
             repositoryMock = new Mock<IRepository>();
-            adminStudentService = new AdminStudentService(repositoryMock.Object);
+            loggerMock = new Mock<ILogger<AdminStudentService>>();
+            adminStudentService = new AdminStudentService(repositoryMock.Object, loggerMock.Object);
         }
 
         [Test]
@@ -151,7 +154,7 @@ namespace Tests.Admin
 
             mockRepository.Setup(r => r.AllAsReadOnly<Student>()).Returns(students.Object);
 
-            var service = new AdminStudentService(mockRepository.Object);
+            var service = new AdminStudentService(mockRepository.Object, loggerMock.Object);
 
             // Act
             var result = await service.GetStudentByIdAsync(studentId);

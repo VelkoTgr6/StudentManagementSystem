@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StudentManagementSystem.Core.Contracts.Admin;
 using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Class;
@@ -11,10 +12,12 @@ namespace StudentManagementSystem.Core.Services.Admin
     public class AdminClassService : IAdminClassService
     {
         private readonly IRepository repository;
+        private readonly ILogger<AdminClassService> logger;
 
-        public AdminClassService(IRepository _repository)
+        public AdminClassService(IRepository _repository, ILogger<AdminClassService> _logger)
         {
             repository = _repository;
+            logger = _logger;
         }
 
         public async Task<ClassQueryServiceModel> AllAsync(string? teacher = null, string? searchTerm = null, ClassSorting sorting = ClassSorting.Name, int currentPage = 1, int classesPerPage = 10)
@@ -76,6 +79,15 @@ namespace StudentManagementSystem.Core.Services.Admin
 
         public async Task<int> CreateClassAsync(ClassFormViewModel model)
         {
+            var exists = await repository.AllAsReadOnly<Class>()
+                .AnyAsync(c => c.Name.ToLower() == model.Name.ToLower() && c.IsDeleted == false);
+
+            if (exists)
+            {
+                logger.LogWarning($"Attempt to create duplicate class with name: {model.Name}");
+                throw new InvalidOperationException($"Class with the same name {model.Name} already exists.");
+            }
+
             var entity = new Class
             {
                 Name = model.Name,
@@ -92,6 +104,8 @@ namespace StudentManagementSystem.Core.Services.Admin
             await repository.AddAsync(entity);
             await repository.SaveChangesAsync();
 
+            logger.LogInformation($"Class created with ID: {entity.Id} and Name: {entity.Name}");
+
             return entity.Id;
         }
 
@@ -103,8 +117,15 @@ namespace StudentManagementSystem.Core.Services.Admin
             {
                 selectedClass.IsDeleted = true;
             }
+            else
+            {
+                logger.LogWarning($"Attempt to delete non-existing or already deleted class with ID: {id}");
+                throw new KeyNotFoundException($"Class with ID {id} not found or already deleted.");
+            }
 
             await repository.SaveChangesAsync();
+
+            logger.LogInformation($"Class with ID: {id} has been marked as deleted.");
         }
 
         public async Task EditClassAsync(int id, ClassFormViewModel model)
@@ -143,10 +164,16 @@ namespace StudentManagementSystem.Core.Services.Admin
                     if (courseToRemove != null)
                     {
                         entity.ClassCourses.Remove(courseToRemove);
+                        logger.LogInformation($"Removed course with ID: {courseId} from class ID: {id}");
                     }
                 }
 
                 await repository.SaveChangesAsync();
+            }
+            else
+            {
+                logger.LogWarning($"Attempt to edit non-existing or deleted class with ID: {id}");
+                throw new KeyNotFoundException($"Class with ID {id} not found.");
             }
         }
 
@@ -162,6 +189,11 @@ namespace StudentManagementSystem.Core.Services.Admin
                 })
                 .ToListAsync();
 
+            if (!classes.Any())
+            {
+                throw new InvalidOperationException("No classes found.");
+            }
+
             classes = SortClassNames(classes.Select(c => c.Name))
                 .Select(name => classes.First(c => c.Name == name))
                 .ToList();
@@ -176,6 +208,11 @@ namespace StudentManagementSystem.Core.Services.Admin
                 .Where(c => !c.IsDeleted)
                 .Select(c => c.Name)
                 .ToListAsync();
+
+            if (!classes.Any())
+            {
+                throw new InvalidOperationException("No classes found.");
+            }
 
             classes = SortClassNames(classes).ToList();
 
@@ -205,7 +242,7 @@ namespace StudentManagementSystem.Core.Services.Admin
 
             if (classDetails == null)
             {
-                throw new InvalidOperationException("Class not found.");
+                throw new KeyNotFoundException($"Class with ID {id} not found.");
             }
 
             return classDetails;

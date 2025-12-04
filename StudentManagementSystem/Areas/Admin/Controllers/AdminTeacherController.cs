@@ -13,15 +13,18 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         private readonly IAdminTeacherService adminTeacherService;
         private readonly IAdminCourseService adminCourseService;
         private readonly IAdminService adminService;
+        private readonly ILogger<AdminTeacherController> logger;
 
         public AdminTeacherController(
-            IAdminTeacherService adminTeacherService,
-            IAdminCourseService adminCourseService,
-            IAdminService adminService)
+            IAdminTeacherService _adminTeacherService,
+            IAdminCourseService _adminCourseService,
+            IAdminService _adminService,
+            ILogger<AdminTeacherController> _logger)
         {
-            this.adminTeacherService = adminTeacherService;
-            this.adminCourseService = adminCourseService;
-            this.adminService = adminService;
+            adminTeacherService = _adminTeacherService;
+            adminCourseService = _adminCourseService;
+            adminService = _adminService;
+            logger = _logger;
         }
 
         [HttpGet]
@@ -55,7 +58,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             }
 
             var id = await adminTeacherService.CreateTeacherAsync(model, profilePictureFile);
-
+            logger.LogInformation($"Created new teacher with ID: {id} and Name: {model.FirstName} {model.LastName}");
             return RedirectToAction(nameof(DetailsTeacher), new { id });
         }
 
@@ -111,7 +114,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
         {
             if (await adminTeacherService.ExistAsync(id) == false)
             {
-                return BadRequest();
+                return NotFound();
             }
             if (!ModelState.IsValid)
             {
@@ -120,6 +123,8 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
             }
 
             await adminTeacherService.EditTeacherAsync(id, model, profilePictureFile);
+
+            logger.LogInformation($"Edited teacher with ID: {id} to Name: {model.FirstName} {model.LastName}");
 
             return RedirectToAction(nameof(DetailsTeacher), new { id });
         }
@@ -132,6 +137,7 @@ namespace StudentManagementSystem.Areas.Admin.Controllers
                 return BadRequest();
             }
             await adminTeacherService.DeleteTeacherAsync(id);
+            logger.LogInformation($"Deleted teacher with ID: {id}");
             return RedirectToAction(nameof(AllTeachers));
         }
 

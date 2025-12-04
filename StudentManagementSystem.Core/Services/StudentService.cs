@@ -17,17 +17,22 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<bool> ExistByIdAsync(string userId)
         {
+            ValidateString(userId, nameof(userId));
+
             return await repository.AllAsReadOnly<Student>()
                 .AnyAsync(s => s.UserId == userId);
         }
 
         public async Task<IEnumerable<StudentAbsencesViewModel>> GetAllAbsencesAsync(int studentId)
         {
+            ValidateId(studentId, nameof(studentId));
+            await EnsureStudentExistsAsync(studentId);
+
             var excusedAbsences = await repository.AllAsReadOnly<Absence>()
                 .Where(a => a.StudentId == studentId && a.IsDeleted)
                 .CountAsync();
 
-            var absences =await repository.AllAsReadOnly<Absence>()
+            var absences = await repository.AllAsReadOnly<Absence>()
                 .Where(a => a.StudentId == studentId)
                 .Select(a => new StudentAbsencesViewModel
                 {
@@ -42,6 +47,9 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<IEnumerable<StudentGradesViewModel>> GetAllGradesAsync(int studentId)
         {
+            ValidateId(studentId, nameof(studentId));
+            await EnsureStudentExistsAsync(studentId);
+
             var studentClassId = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => s.ClassId)
@@ -60,6 +68,11 @@ namespace StudentManagementSystem.Core.Services
                 })
                 .FirstOrDefaultAsync();
 
+            if (student == null)
+            {
+                throw new KeyNotFoundException($"Student with id {studentId} was not found.");
+            }
+
             var grades = await repository.AllAsReadOnly<Grade>()
                 .Where(g => g.StudentId == studentId)
                 .Include(g => g.Course)
@@ -75,29 +88,24 @@ namespace StudentManagementSystem.Core.Services
                 CourseName = course.Name,
                 Grades = grades
                     .Where(grade => grade.CourseId == course.Id)
-                    .Select(g=> new GradeServiceModel()
+                    .Select(g => new GradeServiceModel()
                     {
                         GradeScore = g.GradeScore.ToString(),
                         GradeType = g.GradeType,
                     })
                     .ToList(),
+                // Keep existing behavior: overall average repeated per course
                 AverageGrade = grades.Average(g => g.GradeScore).ToString("f2"),
                 StudentName = student.FirstName + " " + student.LastName
             }).ToList();
-
-            
 
             return courseGrades;
         }
 
         public async Task<IEnumerable<StudentNewsViewModel>> GetAllNewsForStudentAsync(int studentId)
         {
-            var teacherId = await repository.AllAsReadOnly<Student>()
-                .Where(s => s.Id == studentId && !s.IsDeleted)
-                .Include(s=>s.Class)
-                .Include(s => s.Class.Teacher)
-                .Select(s=>s.Class.Teacher.UserId)
-                .FirstOrDefaultAsync();
+            ValidateId(studentId, nameof(studentId));
+            await EnsureStudentExistsAsync(studentId);
 
             var teacherName = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
@@ -111,8 +119,14 @@ namespace StudentManagementSystem.Core.Services
                 .Select(s => $"{s.FirstName} {s.MiddleName} {s.LastName}")
                 .FirstOrDefaultAsync();
 
+            if (string.IsNullOrWhiteSpace(teacherName) || string.IsNullOrWhiteSpace(studentName))
+            {
+                // If key names are missing, there is nothing to filter or display meaningfully
+                return new List<StudentNewsViewModel>();
+            }
+
             var news = await repository.AllAsReadOnly<News>()
-                .Where(n=>!n.IsDeleted)
+                .Where(n => !n.IsDeleted)
                 .OrderByDescending(n => n.Date)
                 .ToListAsync();
 
@@ -120,12 +134,12 @@ namespace StudentManagementSystem.Core.Services
 
             foreach (var n in news)
             {
-                switch(n.Title)
+                switch (n.Title)
                 {
                     case "New Grade!":
-                       if (n.Content.Contains(studentName))
+                        if (n.Content?.Contains(studentName, StringComparison.OrdinalIgnoreCase) == true)
                         {
-                           var newNews= new StudentNewsViewModel
+                            var newNews = new StudentNewsViewModel
                             {
                                 Id = n.Id,
                                 Title = n.Title,
@@ -137,10 +151,10 @@ namespace StudentManagementSystem.Core.Services
                         }
                         break;
                     case "New Remark!":
-                        if (n.Content.Contains(studentName))
+                        if (n.Content?.Contains(studentName, StringComparison.OrdinalIgnoreCase) == true)
                         {
                             var newNews = new StudentNewsViewModel
-                            { 
+                            {
                                 Id = n.Id,
                                 Title = n.Title,
                                 Content = n.Content,
@@ -151,7 +165,7 @@ namespace StudentManagementSystem.Core.Services
                         }
                         break;
                     case "New Absence!":
-                        if (n.Content.Contains(studentName))
+                        if (n.Content?.Contains(studentName, StringComparison.OrdinalIgnoreCase) == true)
                         {
                             var newNews = new StudentNewsViewModel
                             {
@@ -185,13 +199,16 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<IEnumerable<StudentRemarksViewModel>> GetAllRemarksAsync(int studentId)
         {
-            var remarks =await repository.AllAsReadOnly<Remark>()
+            ValidateId(studentId, nameof(studentId));
+            await EnsureStudentExistsAsync(studentId);
+
+            var remarks = await repository.AllAsReadOnly<Remark>()
                 .Where(r => r.StudentId == studentId && r.IsDeleted == false)
                 .Select(r => new StudentRemarksViewModel
                 {
                     Content = r.RemarkText,
                     Date = r.Date.ToString("dd/MM/yyyy"),
-                    TeacherName =r.Teacher.Titles + " " + r.Teacher.FirstName + " " + r.Teacher.LastName,
+                    TeacherName = r.Teacher.Titles + " " + r.Teacher.FirstName + " " + r.Teacher.LastName,
                     CourseName = r.Course.Name
                 })
                 .ToListAsync();
@@ -201,8 +218,11 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<StudentHomePageViewModel> GetHomePageAsync(int studentId)
         {
-            var student =await repository.AllAsReadOnly<Student>()
-                .Include(s=>s.Аbsences)
+            ValidateId(studentId, nameof(studentId));
+            await EnsureStudentExistsAsync(studentId);
+
+            var student = await repository.AllAsReadOnly<Student>()
+                .Include(s => s.Аbsences)
                 .Include(s => s.Class)
                 .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => new StudentHomePageViewModel
@@ -212,23 +232,39 @@ namespace StudentManagementSystem.Core.Services
                     ClassName = s.Class.Name,
                     ClassTeacher = s.Class.Teacher.Titles + " " + s.Class.Teacher.FirstName + " " + s.Class.Teacher.LastName,
                     AbsencesCount = s.Аbsences.Count().ToString(),
-                    AverageGrade = s.Grades.Average(g => g.GradeScore).ToString("f2"),
+                    AverageGrade = (s.Grades.Any()
+                        ? s.Grades.Average(g => g.GradeScore)
+                        : 0.0).ToString("f2"),
                     GradesCount = s.Grades.Count().ToString(),
                     Remarks = s.Remarks.Count().ToString(),
                 })
                 .FirstOrDefaultAsync();
+
+            if (student == null)
+            {
+                throw new KeyNotFoundException($"Student with id {studentId} was not found.");
+            }
 
             return student;
         }
 
         public async Task<IEnumerable<StudentScheduleViewModel>> GetScheduleAsync(int studentId)
         {
-            var classId =await repository.AllAsReadOnly<Student>()
+            ValidateId(studentId, nameof(studentId));
+            await EnsureStudentExistsAsync(studentId);
+
+            var classId = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => s.ClassId)
                 .FirstOrDefaultAsync();
 
-            var schedule =await repository.AllAsReadOnly<CourseSchedule>()
+            // If the student has no class assigned, return empty schedule
+            if (classId == 0)
+            {
+                return new List<StudentScheduleViewModel>();
+            }
+
+            var schedule = await repository.AllAsReadOnly<CourseSchedule>()
                 .Include(s => s.Course)
                 .Where(s => s.ClassId == classId)
                 .Select(s => new StudentScheduleViewModel
@@ -246,7 +282,10 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<StudentProfileViewModel> GetStudentDetailsAsync(int studentId)
         {
-            var student =await repository.AllAsReadOnly<Student>()
+            ValidateId(studentId, nameof(studentId));
+            await EnsureStudentExistsAsync(studentId);
+
+            var student = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.Id == studentId && !s.IsDeleted)
                 .Select(s => new StudentProfileViewModel
                 {
@@ -266,7 +305,7 @@ namespace StudentManagementSystem.Core.Services
 
             if (student == null)
             {
-                throw new ArgumentException();
+                throw new KeyNotFoundException($"Student with id {studentId} was not found.");
             }
 
             return student;
@@ -274,10 +313,46 @@ namespace StudentManagementSystem.Core.Services
 
         public async Task<int> GetStudentIdAsync(string userId)
         {
-            return await repository.AllAsReadOnly<Student>()
+            ValidateString(userId, nameof(userId));
+
+            var id = await repository.AllAsReadOnly<Student>()
                 .Where(s => s.UserId == userId)
                 .Select(s => s.Id)
                 .FirstOrDefaultAsync();
+
+            if (id == 0)
+            {
+                throw new KeyNotFoundException($"Student id for user '{userId}' was not found.");
+            }
+
+            return id;
+        }
+
+        private static void ValidateId(int id, string paramName)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' must be a positive integer.");
+            }
+        }
+
+        private static void ValidateString(string value, string paramName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException($"Parameter '{paramName}' cannot be null or empty.", paramName);
+            }
+        }
+
+        private async Task EnsureStudentExistsAsync(int studentId)
+        {
+            var exists = await repository.AllAsReadOnly<Student>()
+                .AnyAsync(s => s.Id == studentId && !s.IsDeleted);
+
+            if (!exists)
+            {
+                throw new KeyNotFoundException($"Student with id {studentId} was not found or is deleted.");
+            }
         }
     }
 }

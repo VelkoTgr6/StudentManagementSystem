@@ -1,5 +1,6 @@
 ﻿using MockQueryable;
 using Moq;
+using Microsoft.Extensions.Logging;
 using StudentManagementSystem.Core.Models.Admin.Course;
 using StudentManagementSystem.Core.Services.Admin;
 using StudentManagementSystem.Infrastructure.Data.Common;
@@ -11,13 +12,15 @@ namespace Tests.Admin
     public class AdminCourseServiceTests
     {
         private Mock<IRepository> mockRepository;
+        private Mock<ILogger<AdminCourseService>> mockLogger;
         private AdminCourseService courseService;
 
         [SetUp]
         public void SetUp()
         {
             mockRepository = new Mock<IRepository>();
-            courseService = new AdminCourseService(mockRepository.Object);
+            mockLogger = new Mock<ILogger<AdminCourseService>>();
+            courseService = new AdminCourseService(mockRepository.Object, mockLogger.Object);
         }
 
         [Test]

@@ -1,4 +1,5 @@
-﻿using MockQueryable;
+﻿using Microsoft.Extensions.Logging;
+using MockQueryable;
 using Moq;
 using StudentManagementSystem.Core.Enumerations;
 using StudentManagementSystem.Core.Models.Admin.Class;
@@ -13,12 +14,14 @@ namespace Tests.Admin
     {
         private Mock<IRepository> mockRepository;
         private AdminClassService adminClassService;
+        private Mock<ILogger<AdminClassService>> mockLogger;
 
         [SetUp]
         public void SetUp()
         {
             mockRepository = new Mock<IRepository>();
-            adminClassService = new AdminClassService(mockRepository.Object);
+            mockLogger = new Mock<ILogger<AdminClassService>>();
+            adminClassService = new AdminClassService(mockRepository.Object, mockLogger.Object);
         }
         [Test]
         public async Task AllAsync_ShouldReturnPagedAndSortedClasses_WhenCalled()

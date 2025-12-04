@@ -1,5 +1,6 @@
 ﻿using MockQueryable;
 using Moq;
+using Microsoft.Extensions.Logging;
 using StudentManagementSystem.Core.Models.Teacher;
 using StudentManagementSystem.Core.Services;
 using StudentManagementSystem.Infrastructure.Data.Common;
@@ -12,12 +13,14 @@ namespace Tests
     {
         private TeacherService teacherService;
         private Mock<IRepository> mockRepository;
+        private Mock<ILogger<TeacherService>> mockLogger;
 
         [SetUp]
         public void Setup()
         {
             mockRepository = new Mock<IRepository>();
-            teacherService = new TeacherService(mockRepository.Object);
+            mockLogger = new Mock<ILogger<TeacherService>>();
+            teacherService = new TeacherService(mockRepository.Object, mockLogger.Object);
         }
 
         [Test]
@@ -1042,6 +1045,7 @@ namespace Tests
         }
     }
 }
+
 
 
 
